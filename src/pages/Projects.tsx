@@ -5,7 +5,7 @@ export function Projects() {
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b brutal-border pb-8">
-         <SectionHeader title="Project Showcase" number="03" subtitle="Products shipped by DSUC builders." />
+         <SectionHeader title="Project Showcase" subtitle="Products shipped by DSUC builders." />
          <ActionButton variant="primary" className="mt-4 md:mt-0 max-w-xs">Add Project</ActionButton>
       </div>
 

@@ -6,7 +6,7 @@
 
 This contains everything you need to run your app locally.
 
-View your app in AI Studio: https://ai.studio/apps/238b078e-e1cf-4c5f-8b02-cb2b45ba6fa2
+View your app in AI Studio: https://ai.studio/apps/9894556d-a3e0-4abd-924c-261417c733c2
 
 ## Run Locally
 
@@ -18,4 +18,3 @@ View your app in AI Studio: https://ai.studio/apps/238b078e-e1cf-4c5f-8b02-cb2b4
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
-# dsuc-test-v3

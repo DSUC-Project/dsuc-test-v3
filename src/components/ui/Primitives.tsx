@@ -18,7 +18,7 @@ export const SoftBrutalCard = React.forwardRef<HTMLDivElement, React.HTMLAttribu
       transition={{ duration: 0.2 }}
       ref={ref} 
       className={cn("bg-surface border brutal-border brutal-shadow-sm p-6 overflow-hidden", className)} 
-      {...props} 
+      {...(props as any)} 
     />
   )
 });
@@ -49,9 +49,19 @@ export const StatusBadge = ({ status, className }: { status: string, className?:
   )
 }
 
-export const SectionHeader = ({ title, number, subtitle }: { title: string, number?: string, subtitle?: string }) => (
-  <div className="mb-8 border-b brutal-border pb-4 flex items-end gap-4">
-    {number && <span className="font-display text-4xl md:text-6xl text-text-muted/30 -mb-2">{number}</span>}
+interface SectionHeaderProps {
+  title: string;
+  subtitle?: string;
+  number?: string;
+  showNumber?: boolean; // NEW — default false
+  className?: string;
+}
+
+export const SectionHeader = ({ title, showNumber = false, number, subtitle, className }: SectionHeaderProps) => (
+  <div className={cn("mb-8 border-b brutal-border pb-4 flex items-end gap-4", className)}>
+    {showNumber && number && (
+      <span className="font-display text-3xl text-text-muted/30">{number}</span>
+    )}
     <div>
       <h2 className="font-heading text-2xl md:text-3xl font-bold uppercase tracking-tight">{title}</h2>
       {subtitle && <p className="text-text-muted text-sm mt-1">{subtitle}</p>}

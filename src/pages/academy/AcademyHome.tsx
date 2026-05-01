@@ -1,146 +1,314 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
-import { ActionButton, SoftBrutalCard, StatusBadge, SectionHeader } from '@/components/ui/Primitives';
+import { SectionHeader, ActionButton } from '@/components/ui/Primitives';
+
+import type { AcademyLearnerStats, AcademyV2CommunityTrack, AcademyV2Path } from '@/types';
+import { fetchAcademyV2Catalog } from '@/lib/academy/v2Api';
+import { useAcademyProgressState } from '@/lib/academy/useAcademyProgress';
+import { countCompletedAcademyV2CourseUnits } from '@/lib/academy/v2Progress';
+import { useStore } from '@/store/useStore';
+
+const ACADEMY_TIME_ZONE = 'Asia/Ho_Chi_Minh';
+const academyDayFormatter = new Intl.DateTimeFormat('en-CA', {
+  timeZone: ACADEMY_TIME_ZONE,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+function academyDayKey(value: Date) {
+  const parts = academyDayFormatter.formatToParts(value);
+  const year = parts.find((part) => part.type === 'year')?.value || '0000';
+  const month = parts.find((part) => part.type === 'month')?.value || '00';
+  const day = parts.find((part) => part.type === 'day')?.value || '00';
+  return `${year}-${month}-${day}`;
+}
 
 export function AcademyHome() {
-  const isGuest = true; // Replace with proper auth context later
+  const navigate = useNavigate();
+  const { currentUser, walletAddress, authToken } = useStore();
+  const [paths, setPaths] = useState<AcademyV2Path[]>([]);
+  const [communityTracks, setCommunityTracks] = useState<AcademyV2CommunityTrack[]>([]);
+  const [learnerStats, setLearnerStats] = useState<AcademyLearnerStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const isGuest = !currentUser;
+
+  const identity = useMemo(
+    () => ({
+      userId: currentUser?.id ?? null,
+      walletAddress: walletAddress ?? null,
+    }),
+    [currentUser?.id, walletAddress]
+  );
+
+  const { state } = useAcademyProgressState({
+    identity,
+    currentUserId: currentUser?.id ?? null,
+    authToken,
+    walletAddress,
+  });
+
+  const getPathProgress = useCallback((path: AcademyV2Path) => {
+    let completed = 0;
+    let total = 0;
+    for (const course of path.courses || []) {
+      total += course.total_unit_count || 0;
+      completed += countCompletedAcademyV2CourseUnits(state.completedLessons, course.id);
+    }
+    return {
+      completed,
+      total,
+      pct: total > 0 ? Math.round((completed / total) * 100) : 0,
+    };
+  }, [state.completedLessons]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCatalog() {
+      setLoading(true);
+      setError('');
+      try {
+        const base = (import.meta as any).env.VITE_API_BASE_URL || '';
+        const data = await fetchAcademyV2Catalog(
+          base,
+          authToken || localStorage.getItem('auth_token'),
+          walletAddress
+        );
+
+        if (!cancelled) {
+          setPaths((data.curated_paths || []).slice().sort((a, b) => a.order - b.order));
+          setCommunityTracks(
+            (data.community_tracks || []).slice().sort((a, b) => a.sort_order - b.sort_order)
+          );
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          setError(err.message || 'Không thể tải lộ trình học viện.');
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadCatalog();
+    return () => {
+      cancelled = true;
+    };
+  }, [authToken, walletAddress]);
+
+  useEffect(() => {
+    if (!currentUser) {
+      setLearnerStats(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadLearnerStats() {
+      try {
+        const base = (import.meta as any).env.VITE_API_BASE_URL || '';
+        const token = authToken || localStorage.getItem('auth_token');
+        const headers: Record<string, string> = {};
+
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        } else if (walletAddress) {
+          headers['x-wallet-address'] = walletAddress;
+        }
+
+        const response = await fetch(`${base}/api/academy/stats`, {
+          headers,
+          credentials: 'include',
+        });
+        const result = await response.json().catch(() => null);
+
+        if (!cancelled && response.ok && result?.success && result?.data) {
+          setLearnerStats(result.data as AcademyLearnerStats);
+        }
+      } catch {
+        if (!cancelled) {
+          setLearnerStats(null);
+        }
+      }
+    }
+
+    void loadLearnerStats();
+    return () => {
+      cancelled = true;
+    };
+  }, [authToken, currentUser, walletAddress]);
+
+  const today = new Date();
+  
+  const last7Days = Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() - (6 - i));
+    return academyDayKey(d);
+  });
+
+  const dayLabel = (dateKey: string) => {
+      const parts = dateKey.split('-');
+      return `${parts[2]}/${parts[1]}`;
+  }
+
+  const openAuthModal = () => {
+      // For now do nothing or dispatch an event, assume handled by navbar for real login
+  }
 
   return (
-    <div className="container mx-auto px-4 py-12 md:py-24 space-y-24">
-      
-      {/* Academy Hero */}
-      <section className="max-w-4xl">
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-3 py-1 border brutal-border mb-8 bg-surface uppercase font-mono text-xs tracking-widest text-text-muted"
-        >
-          DSUC Academy / Curated Builder Paths
+    <div className="w-full">
+      <section className="container mx-auto px-4 pt-16 pb-12">
+        <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}
+          className="inline-flex items-center gap-2 px-3 py-1 border brutal-border mb-8 bg-surface font-mono text-xs uppercase tracking-widest text-text-muted">
+          <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+          DSUC Academy / Builder Education System
         </motion.div>
         
-        <motion.h1 
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="font-display font-bold text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[0.9] uppercase mb-8"
-        >
-          Learn code <br /> by shipping <br /> <span className="text-primary hover:text-accent transition-colors">real skills.</span>
+        <motion.h1 initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ delay: 0.1 }}
+          className="font-display font-bold text-5xl md:text-7xl tracking-tighter leading-[0.9] uppercase mb-6">
+          Learn Solana.<br />
+          <span className="text-primary">Build on-chain.</span><br />
+          Ship real products.
         </motion.h1>
-
-        <motion.p 
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="text-lg md:text-xl text-text-muted max-w-2xl mb-10 leading-relaxed font-sans"
-        >
-          Official DSUC learning paths for Solana, Rust, frontend, DeFi, security, infrastructure, and AI x Solana.
+        
+        <motion.p initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ delay: 0.2 }}
+          className="text-lg text-text-muted max-w-2xl mb-10 leading-relaxed font-sans">
+          Structured paths for Solana developers. From fundamentals to full-stack on-chain programs.
         </motion.p>
-        
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-wrap gap-4">
-          {isGuest ? (
-             <>
-               <ActionButton variant="primary">Start First Path</ActionButton>
-               <ActionButton variant="secondary">Login to Sync Progress</ActionButton>
-             </>
-          ) : (
-             <ActionButton variant="primary">Continue Learning &rarr;</ActionButton>
-          )}
-        </motion.div>
       </section>
 
-      {/* Streak Board */}
-      <section>
-        <div className="p-8 border brutal-border bg-main-bg relative overflow-hidden">
-           <div className="absolute top-0 right-0 p-8 opacity-5">
-              <span className="font-display text-9xl">🔥</span>
-           </div>
-           
-           <h3 className="font-heading font-bold uppercase text-xl mb-2">Builder Streak</h3>
-           {isGuest ? (
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-                <p className="text-text-muted">You are browsing as a guest. Login to track your progress and maintain your daily streak.</p>
-                <ActionButton variant="secondary">Login Now</ActionButton>
-              </div>
-           ) : (
-              <div className="flex items-center gap-6 mt-6">
-                <div className="text-center bg-surface border brutal-border p-4 min-w-[120px]">
-                  <p className="font-display text-4xl font-bold text-primary">12</p>
-                  <p className="font-mono text-xs uppercase text-text-muted">Day Streak</p>
-                </div>
-                <div className="text-center bg-surface border brutal-border p-4 min-w-[120px]">
-                  <p className="font-display text-4xl font-bold">450</p>
-                  <p className="font-mono text-xs uppercase text-text-muted">Points</p>
-                </div>
-              </div>
-           )}
-        </div>
-      </section>
-
-      {/* Curated Paths (Primary) */}
-      <section>
-        <SectionHeader title="Curated Paths" number="01" subtitle="Follow the official roadmap to master these domains." />
-        <div className="grid grid-cols-1 gap-8">
-           {[
-             { id: 'solana-core', title: 'Solana Core Developer', courses: 4, units: 32, progress: 25, status: 'IN_PROGRESS' },
-             { id: 'frontend-masters', title: 'Frontend Architecture', courses: 3, units: 24, progress: 0, status: 'AVAILABLE' },
-             { id: 'rust-systems', title: 'Rust Systems Programming', courses: 5, units: 40, progress: 0, status: 'LOCKED' }
-           ].map(path => (
-              <Link to={`/academy/path/${path.id}`} key={path.id} className="block group">
-                 <SoftBrutalCard className="flex flex-col md:flex-row md:items-center gap-8 group-hover:bg-main-bg transition-colors">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-3">
-                         <h3 className="font-heading font-bold text-2xl uppercase group-hover:text-primary transition-colors">{path.title}</h3>
-                         <StatusBadge status={path.status} className={
-                            path.status === 'IN_PROGRESS' ? 'text-primary border-primary' : 
-                            path.status === 'AVAILABLE' ? 'text-emerald-500 border-emerald-500' : 'opacity-50'
-                         } />
-                      </div>
-                      <p className="text-text-muted mb-4 max-w-xl">Master the fundamentals and advanced concepts required to build production-grade applications in this domain.</p>
-                      <div className="flex items-center gap-6 font-mono text-xs uppercase text-text-muted">
-                        <span>{path.courses} Courses</span>
-                        <span>{path.units} Units</span>
-                      </div>
-                    </div>
-                    {path.status !== 'LOCKED' && (
-                       <div className="w-full md:w-48 lg:w-64">
-                         <div className="flex justify-between font-mono text-[10px] mb-2">
-                           <span>Progress</span>
-                           <span>{path.progress}%</span>
-                         </div>
-                         <div className="h-2 w-full bg-border-main overflow-hidden">
-                           <div className="h-full bg-primary" style={{ width: `${path.progress}%` }} />
-                         </div>
-                       </div>
-                    )}
-                 </SoftBrutalCard>
-              </Link>
-           ))}
-        </div>
-      </section>
-
-      {/* Community Library (Secondary) */}
-      <section>
-        <div className="flex items-baseline justify-between mb-8 border-b brutal-border pb-4">
-          <div>
-            <h2 className="font-heading text-xl md:text-2xl font-bold uppercase tracking-tight">Community Library</h2>
-            <p className="text-text-muted text-sm mt-1">Extra lessons, reading tracks, and community-contributed content.</p>
+      <section className="container mx-auto px-4 mb-16">
+        <div className="bg-surface brutal-border brutal-shadow p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          
+          {/* Streak count */}
+          <div className="flex items-center gap-6">
+            <div className="text-center">
+              <p className="font-display font-black text-5xl text-primary leading-none">
+                {isGuest ? '—' : ((learnerStats as any)?.streak_current ?? learnerStats?.streak ?? 0)}
+              </p>
+              <p className="font-mono text-xs uppercase text-text-muted mt-1">Day Streak 🔥</p>
+            </div>
+            <div className="text-center">
+              <p className="font-display font-black text-5xl leading-none">
+                {isGuest ? '—' : ((learnerStats as any)?.xp_total ?? 0)}
+              </p>
+              <p className="font-mono text-xs uppercase text-text-muted mt-1">Total XP</p>
+            </div>
           </div>
-          <span className="font-display text-3xl text-text-muted/30">02</span>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-           {[1, 2, 3].map(i => (
-             <Link key={i} to={`/academy/community/track-${i}`} className="block group">
-               <div className="border brutal-border bg-main-bg p-6 hover:bg-surface transition-colors cursor-pointer h-full flex flex-col">
-                 <h4 className="font-bold mb-2 group-hover:text-primary transition-colors">Intro to Phantom Wallet Connect</h4>
-                 <p className="text-sm text-text-muted mb-4 flex-1">A quick community guide on setting up the Phantom wallet adapter in a React application.</p>
-                 <div className="flex items-center justify-between font-mono text-[10px] uppercase text-text-muted border-t brutal-border pt-4 mt-auto">
-                   <span>5 Lessons</span>
-                   <span className="font-bold group-hover:text-primary">View Track &rarr;</span>
-                 </div>
-               </div>
-             </Link>
-           ))}
+          
+          {/* Last 7 days dots */}
+          <div>
+            <p className="font-mono text-xs uppercase text-text-muted mb-2">Last 7 Days</p>
+            <div className="flex items-center gap-2">
+              {last7Days.map((day) => {
+                const isActive = learnerStats?.active_days?.includes(day) ?? false;
+                return (
+                  <div key={day} className="flex flex-col items-center gap-1">
+                    <div className={`w-4 h-4 rounded-full border brutal-border ${isActive ? 'bg-primary' : 'bg-main-bg'}`} />
+                    <span className="font-mono text-[9px] text-text-muted">{dayLabel(day)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          
+          {/* Guest CTA */}
+          {isGuest && (
+            <div className="flex items-center gap-4">
+              <p className="text-sm text-text-muted">Sign in to track your streak</p>
+              <ActionButton variant="secondary" onClick={openAuthModal}>Login</ActionButton>
+            </div>
+          )}
         </div>
       </section>
-      
+
+      <section className="container mx-auto px-4 mb-16">
+        <SectionHeader title="Curated Paths" subtitle="Official DSUC learning paths. Complete in order." />
+        
+        <div className="grid grid-cols-1 gap-6">
+          {paths?.map((path, i) => {
+            const pathProgress = getPathProgress(path);
+            const hasCourses = path.courses && path.courses.length > 0;
+            
+            return (
+              <motion.div key={path.id}
+                initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }} transition={{ delay: i * 0.05 }}>
+                
+                {hasCourses ? (
+                  <Link to={`/academy/path/${path.id}`} className="block group">
+                    <div className="bg-surface brutal-border brutal-shadow hover:bg-main-bg transition-colors p-6 flex flex-col md:flex-row md:items-center gap-6">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="font-heading font-bold text-xl group-hover:text-primary transition-colors">{path.title}</h3>
+                          {pathProgress.pct > 0 && pathProgress.pct < 100 && (
+                            <span className="px-2 py-0.5 border brutal-border font-mono text-[10px] uppercase text-primary border-primary">In Progress</span>
+                          )}
+                          {pathProgress.pct === 100 && (
+                            <span className="px-2 py-0.5 border brutal-border font-mono text-[10px] uppercase text-green-500 border-green-500">Completed</span>
+                          )}
+                        </div>
+                        <p className="text-sm text-text-muted mb-3 max-w-xl">{path.description}</p>
+                        <p className="font-mono text-xs text-text-muted uppercase">{path.courses.length} Courses</p>
+                      </div>
+                      {pathProgress.pct > 0 && (
+                        <div className="w-full md:w-56 shrink-0">
+                          <div className="flex justify-between font-mono text-[10px] mb-1">
+                            <span>Progress</span><span>{pathProgress.pct}%</span>
+                          </div>
+                          <div className="h-2 bg-border-main brutal-border">
+                            <div className="h-full bg-primary transition-all" style={{ width: `${pathProgress.pct}%` }} />
+                          </div>
+                        </div>
+                      )}
+                      {pathProgress.pct === 0 && (
+                        <div className="shrink-0">
+                           <ActionButton variant="secondary">Start Path &rarr;</ActionButton>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                ) : (
+                  // Coming soon path
+                  <div className="bg-surface brutal-border p-6 flex flex-col md:flex-row md:items-center gap-6 opacity-50">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="font-heading font-bold text-xl">{path.title}</h3>
+                        <span className="px-2 py-0.5 border brutal-border font-mono text-[10px] uppercase text-text-muted">Coming Soon</span>
+                      </div>
+                      <p className="text-sm text-text-muted">{path.description}</p>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="container mx-auto px-4 pb-16">
+        <SectionHeader title="Community Library" subtitle="Extra content contributed by the DSUC community." />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {communityTracks?.map((track, i) => (
+            <Link key={track.id} to={`/academy/community/${track.id}`} className="block group">
+              <div className="bg-surface brutal-border hover:bg-main-bg transition-colors p-5 h-full flex flex-col">
+                <h4 className="font-heading font-bold mb-2 group-hover:text-primary transition-colors">{track.title}</h4>
+                <p className="text-sm text-text-muted mb-4 flex-1 line-clamp-2">{track.description}</p>
+                <div className="flex items-center justify-between font-mono text-[10px] uppercase text-text-muted border-t brutal-border pt-4 mt-auto">
+                  <span>{track.lesson_count} Lessons</span>
+                  <span className="group-hover:text-primary">View Track &rarr;</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

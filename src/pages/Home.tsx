@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ActionButton, SoftBrutalCard, StatusBadge, SectionHeader } from '@/components/ui/Primitives';
+import { ContactModal } from '@/components/ui/ContactModal';
 
 function MarqueeStrip() {
   const text = "BUILD · LEARN · SHIP · SOLANA · WEB3 · CODE · COMMUNITY · DSUC LABS · ";
@@ -20,8 +21,11 @@ function MarqueeStrip() {
 }
 
 export function Home() {
+  const [contactOpen, setContactOpen] = React.useState(false);
+
   return (
     <div className="w-full">
+      <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
       {/* 10. HERO SECTION */}
       <section className="container mx-auto px-4 py-12 md:py-24 relative">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
@@ -60,7 +64,7 @@ export function Home() {
             >
               <Link to="/academy"><ActionButton variant="primary">Start Learning &rarr;</ActionButton></Link>
               <Link to="/projects"><ActionButton variant="secondary">Explore Projects</ActionButton></Link>
-              <ActionButton variant="secondary" className="border-dashed">Contact DSUC</ActionButton>
+              <ActionButton variant="secondary" className="border-dashed" onClick={() => setContactOpen(true)}>Contact DSUC</ActionButton>
             </motion.div>
           </div>
 
@@ -150,7 +154,7 @@ export function Home() {
       <div className="container mx-auto px-4 py-24 space-y-32">
         {/* Recent Events */}
         <section>
-          <SectionHeader title="Recent Events" number="01" subtitle="Upcoming sessions and past recordings." />
+          <SectionHeader title="Recent Events" subtitle="Upcoming sessions and past recordings." />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1,2,3].map(i => (
                <SoftBrutalCard key={i} className="flex flex-col group cursor-pointer hover:bg-main-bg">
@@ -169,23 +173,6 @@ export function Home() {
                  </div>
                </SoftBrutalCard>
             ))}
-          </div>
-        </section>
-
-        {/* Academy Preview */}
-        <section>
-          <SectionHeader title="Learn to Build" number="02" subtitle="Curated paths and community tracks for learning code." />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-             <div className="border brutal-border p-8 bg-surface">
-                <h3 className="font-heading font-bold text-xl uppercase mb-4">Curated Paths</h3>
-                <p className="text-text-muted mb-6">Official step-by-step learning roadmaps for Solana, Rust, and Frontend. Master the tools you need to ship real products.</p>
-                <Link to="/academy"><ActionButton variant="primary">Start Curated Path</ActionButton></Link>
-             </div>
-             <div className="border border-dashed brutal-border p-8 bg-main-bg">
-                <h3 className="font-heading font-bold text-xl uppercase mb-4">Community Library</h3>
-                <p className="text-text-muted mb-6">Extra lessons, quick guides, and ad-hoc tracks sourced organically from the builder community.</p>
-                <Link to="/academy/community"><ActionButton variant="secondary">Browse Library</ActionButton></Link>
-             </div>
           </div>
         </section>
 

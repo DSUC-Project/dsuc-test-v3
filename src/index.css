@@ -76,6 +76,77 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading tracking-tight;
   }
+
+  .prose-dsuc {
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .prose-dsuc h2 {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-top: 40px;
+    margin-bottom: 12px;
+    scroll-margin-top: 80px;
+  }
+
+  .prose-dsuc h3 {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-top: 28px;
+    margin-bottom: 8px;
+    scroll-margin-top: 80px;
+  }
+
+  .prose-dsuc p { margin-bottom: 16px; }
+
+  .prose-dsuc ul, .prose-dsuc ol { padding-left: 24px; margin-bottom: 16px; }
+  .prose-dsuc li { margin: 6px 0; line-height: 1.7; }
+  .prose-dsuc ul li::marker { color: var(--color-primary); }
+
+  .prose-dsuc blockquote {
+    border-left: 3px solid var(--color-primary);
+    padding: 12px 20px;
+    background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+    margin: 20px 0;
+    font-style: italic;
+  }
+
+  .prose-dsuc code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border-main);
+    border-radius: 3px;
+    padding: 2px 6px;
+    color: var(--color-dsuc-blue);
+  }
+
+  .prose-dsuc pre { margin: 16px 0; }
+  .prose-dsuc pre code { background: none; border: none; padding: 0; }
+
+  .prose-dsuc a { color: var(--color-primary); text-decoration: none; }
+  .prose-dsuc a:hover { text-decoration: underline; }
+
+  .prose-dsuc strong { color: var(--text-main); font-weight: 600; }
+
+  .prose-dsuc table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+  .prose-dsuc th {
+    text-align: left; font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; color: var(--text-muted);
+    padding: 8px 12px; border-bottom: 1.5px solid var(--border-main);
+  }
+  .prose-dsuc td { padding: 10px 12px; font-size: 14px; border-bottom: 1px solid var(--border-main); }
+
+  /* Task list checkboxes */
+  .prose-dsuc input[type="checkbox"] { accent-color: var(--color-primary); width: 14px; height: 14px; }
+  .prose-dsuc li:has(input[type="checkbox"]:checked) { color: var(--text-muted); text-decoration: line-through; }
 }
 
 @layer utilities {

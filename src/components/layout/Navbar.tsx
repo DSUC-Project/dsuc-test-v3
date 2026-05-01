@@ -4,6 +4,8 @@ import { NavLink, Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 import { AuthModalExample } from '../ui/ModalShell';
+import { useStore } from '@/store/useStore';
+import { mockUser } from '@/lib/mockData';
 
 // Simplified Theme context for demonstration
 export function useTheme() {
@@ -28,8 +30,9 @@ export function Navbar() {
   const location = useLocation();
   React.useEffect(() => setMobileMenuOpen(false), [location]); // Close menu on route change
 
-  // Dummy auth state
-  const isGuest = true;
+  // Real auth state
+  const currentUser = useStore(state => state.currentUser);
+  const isGuest = !currentUser;
 
   const navLinks = [
     { name: 'Members', path: '/members' },
@@ -56,7 +59,17 @@ export function Navbar() {
           
           {/* Logo */}
           <Link to="/home" className="flex items-center gap-2 font-display font-bold text-xl uppercase tracking-tighter">
-            <div className="w-6 h-6 bg-primary brutal-border brutal-shadow-sm flex items-center justify-center text-main-bg text-xs">D</div>
+            <div className="w-10 h-10 bg-primary brutal-border brutal-shadow-sm flex items-center justify-center overflow-hidden shrink-0">
+              <img 
+                src="/logo.png" 
+                alt="DSUC" 
+                className="w-7 h-7 object-contain"
+                onError={(e) => { 
+                  (e.target as HTMLImageElement).style.display = 'none';
+                  (e.target as HTMLImageElement).parentElement!.innerHTML = '<span class="font-display font-black text-main-bg text-sm leading-none">DS</span>';
+                }}
+              />
+            </div>
             DSUC Labs
           </Link>
 
@@ -123,7 +136,28 @@ export function Navbar() {
                 Login
               </button>
             ) : (
-              <Link to="/profile" className="w-8 h-8 rounded-full brutal-border bg-accent overflow-hidden" />
+              <div className="flex items-center gap-2">
+                <Link to="/profile" className="w-8 h-8 rounded-full brutal-border bg-accent overflow-hidden" title="Profile">
+                   {currentUser?.avatar && <img src={currentUser.avatar} alt="Avatar" className="w-full h-full object-cover" />}
+                </Link>
+                <button 
+                  onClick={() => useStore.getState().logout()} 
+                  className="px-2 py-1 border brutal-border text-xs uppercase hover:bg-surface"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+            {import.meta.env.DEV && (
+              <button
+                onClick={() => {
+                  useStore.setState({ currentUser: mockUser as any, isWalletConnected: true, authMethod: 'wallet' });
+                }}
+                className="hidden lg:flex items-center gap-1 px-2 py-1 border border-dashed border-primary/50 text-primary/60 font-mono text-[10px] uppercase hover:border-primary hover:text-primary transition-colors"
+                title="Dev: mock login as President"
+              >
+                Dev Login
+              </button>
             )}
           </div>
 
@@ -169,7 +203,10 @@ export function Navbar() {
                   {isGuest ? (
                      <button onClick={() => setAuthModalOpen(true)} className="px-4 py-2 bg-primary text-main-bg brutal-border font-bold">Login</button>
                   ) : (
-                     <Link to="/profile" className="px-4 py-2 border brutal-border hover:bg-main-bg">Profile</Link>
+                     <div className="flex items-center gap-2">
+                       <Link to="/profile" className="px-4 py-2 border brutal-border hover:bg-main-bg">Profile</Link>
+                       <button onClick={() => useStore.getState().logout()} className="px-4 py-2 border brutal-border hover:bg-main-bg">Logout</button>
+                     </div>
                   )}
                 </div>
               </div>

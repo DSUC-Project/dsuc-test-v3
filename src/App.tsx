@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import { PageShell } from './components/layout/PageShell';
 import { Home } from './pages/Home';
 import { AcademyHome } from './pages/academy/AcademyHome';
@@ -13,11 +13,23 @@ import { AcademyCourse } from './pages/academy/AcademyCourse';
 import { AcademyUnit } from './pages/academy/AcademyUnit';
 import { Projects } from './pages/Projects';
 import { Events } from './pages/Events';
+import { Members } from './pages/Members';
+import { Resources } from './pages/Resources';
 import { 
-  Members, MemberDetail, ProjectDetail, Resources, 
+  MemberDetail, ProjectDetail, 
   Work, Leaderboard, Meet, Finance, Admin, AcademyAdmin, Profile,
   CommunityTrack, CommunityLesson 
 } from './pages/Placeholders';
+
+function LegacyCommunityTrackRedirect() {
+  const { track = '' } = useParams<{ track: string }>();
+  return <Navigate to={`/academy/community/${track}`} replace />;
+}
+
+function LegacyCommunityLessonRedirect() {
+  const { track = '', lesson = '' } = useParams<{ track: string; lesson: string }>();
+  return <Navigate to={`/academy/community/${track}/${lesson}`} replace />;
+}
 
 export default function App() {
   return (
@@ -50,6 +62,9 @@ export default function App() {
           <Route path="/academy/path/:pathId" element={<AcademyPath />} />
           <Route path="/academy/course/:courseId" element={<AcademyCourse />} />
           
+          <Route path="/academy/track/:track" element={<LegacyCommunityTrackRedirect />} />
+          <Route path="/academy/learn/:track/:lesson" element={<LegacyCommunityLessonRedirect />} />
+
           <Route path="/academy/community/:track" element={<CommunityTrack />} />
           <Route path="/academy/community/:track/:lesson" element={<CommunityLesson />} />
         </Route>

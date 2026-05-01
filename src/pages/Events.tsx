@@ -4,7 +4,7 @@ import { SectionHeader, SoftBrutalCard, StatusBadge } from '@/components/ui/Prim
 export function Events() {
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
-      <SectionHeader title="Events & Sessions" number="04" subtitle="Workshops, meetups, and builder co-working sessions." />
+      <SectionHeader title="Events & Sessions" subtitle="Workshops, meetups, and builder co-working sessions." />
 
       <div className="flex gap-4 mb-8 border-b brutal-border pb-4 w-full overflow-auto font-mono text-xs uppercase font-bold">
         <button className="text-primary hover:text-primary transition-colors">Upcoming</button>
