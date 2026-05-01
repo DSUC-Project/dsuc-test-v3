@@ -1030,9 +1030,9 @@ export function AcademyAdmin() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8 pb-20">
-      <header className="flex flex-col gap-4 border-b border-primary/20 pb-6 lg:flex-row lg:items-end lg:justify-between">
+      <header className="flex flex-col gap-4 border-b border-cyber-blue/20 pb-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-[0.28em] text-primary">
+          <div className="inline-flex items-center gap-2 border border-cyber-blue/30 bg-cyber-blue/10 px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-[0.28em] text-cyber-blue">
             <Database size={14} aria-hidden="true" />
             Academy Admin
           </div>
@@ -1049,7 +1049,7 @@ export function AcademyAdmin() {
           type="button"
           onClick={() => void refreshAll(true)}
           disabled={loading || refreshing}
-          className="inline-flex min-h-11 items-center justify-center gap-2 border border-primary/50 bg-primary/10 px-4 py-2 font-display text-xs font-bold uppercase tracking-widest text-primary transition-colors hover:bg-primary hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyber-blue/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex min-h-11 items-center justify-center gap-2 border border-cyber-blue/50 bg-cyber-blue/10 px-4 py-2 font-display text-xs font-bold uppercase tracking-widest text-cyber-blue transition-colors hover:bg-cyber-blue hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyber-blue/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
         >
           <RefreshCw size={16} className={refreshing || loading ? 'animate-spin' : ''} aria-hidden="true" />
           Refresh
@@ -1084,10 +1084,10 @@ export function AcademyAdmin() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_420px]">
-        <div className="border border-primary/20 bg-surface/80 p-5">
-          <div className="flex flex-col gap-4 border-b border-brutal-border pb-4 md:flex-row md:items-end md:justify-between">
+        <div className="border border-cyber-blue/20 bg-surface/80 p-5">
+          <div className="flex flex-col gap-4 border-b border-white/8 pb-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <div className="inline-flex items-center gap-2 border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.24em] text-primary">
+              <div className="inline-flex items-center gap-2 border border-cyber-blue/25 bg-cyber-blue/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.24em] text-cyber-blue">
                 <Route size={13} aria-hidden="true" />
                 Curated Academy v2
               </div>
@@ -1103,11 +1103,11 @@ export function AcademyAdmin() {
                 type="button"
                 onClick={downloadCuratedSnapshot}
                 disabled={!curatedPaths.length}
-                className="inline-flex min-h-11 items-center rounded-full border border-primary/25 bg-primary/10 px-4 text-[11px] font-mono uppercase tracking-[0.18em] text-primary transition-colors hover:bg-primary hover:text-black disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyber-yellow/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="inline-flex min-h-11 items-center rounded-full border border-cyber-blue/25 bg-cyber-blue/10 px-4 text-[11px] font-mono uppercase tracking-[0.18em] text-cyber-blue transition-colors hover:bg-cyber-blue hover:text-black disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyber-yellow/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 Download snapshot
               </button>
-              <div className="rounded-full border border-brutal-border bg-surface px-4 py-2 text-[11px] font-mono uppercase tracking-[0.18em] text-white/48">
+              <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[11px] font-mono uppercase tracking-[0.18em] text-white/48">
                 Read-only for now
               </div>
             </div>
@@ -1115,15 +1115,15 @@ export function AcademyAdmin() {
 
           <div className="mt-5 grid gap-4 lg:grid-cols-2">
             {curatedPaths.length === 0 ? (
-              <div className="border border-dashed border-brutal-border bg-black/18 p-5 text-sm leading-7 text-white/52 lg:col-span-2">
+              <div className="border border-dashed border-white/12 bg-black/18 p-5 text-sm leading-7 text-white/52 lg:col-span-2">
                 No curated paths loaded from the local seed yet.
               </div>
             ) : (
               curatedPaths.map((path) => (
-                <article key={path.id} className="rounded-[20px] border border-brutal-border bg-black/18 p-4">
+                <article key={path.id} className="rounded-[20px] border border-white/10 bg-black/18 p-4">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <div className="inline-flex min-h-8 items-center rounded-full border border-accent/20 bg-accent/10 px-3 text-[10px] font-mono uppercase tracking-[0.22em] text-accent">
+                      <div className="inline-flex min-h-8 items-center rounded-full border border-cyber-yellow/20 bg-cyber-yellow/10 px-3 text-[10px] font-mono uppercase tracking-[0.22em] text-cyber-yellow">
                         {path.tag || path.difficulty}
                       </div>
                       <h3 className="mt-3 font-display text-lg font-bold uppercase tracking-[0.08em] text-white">
@@ -1150,10 +1150,10 @@ export function AcademyAdmin() {
             )}
           </div>
 
-          <div className="mt-6 border-t border-brutal-border pt-5">
-            <div className="flex flex-col gap-4 border-b border-brutal-border pb-4 md:flex-row md:items-end md:justify-between">
+          <div className="mt-6 border-t border-white/8 pt-5">
+            <div className="flex flex-col gap-4 border-b border-white/8 pb-4 md:flex-row md:items-end md:justify-between">
               <div>
-                <div className="inline-flex items-center gap-2 border border-accent/20 bg-accent/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.24em] text-accent">
+                <div className="inline-flex items-center gap-2 border border-cyber-yellow/20 bg-cyber-yellow/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.24em] text-cyber-yellow">
                   <Layers3 size={13} aria-hidden="true" />
                   Content browser
                 </div>
@@ -1165,7 +1165,7 @@ export function AcademyAdmin() {
                   but it gives ops a real map of the shipped Academy v2 curriculum.
                 </p>
               </div>
-              <div className="rounded-full border border-brutal-border bg-surface px-4 py-2 text-[11px] font-mono uppercase tracking-[0.18em] text-white/48">
+              <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[11px] font-mono uppercase tracking-[0.18em] text-white/48">
                 {selectedCuratedCourseMeta
                   ? `${selectedCuratedCourseMeta.pathTitle} / ${selectedCuratedCourseMeta.course.title}`
                   : 'Select a course'}
@@ -1173,17 +1173,17 @@ export function AcademyAdmin() {
             </div>
 
             {curatedPaths.length === 0 ? (
-              <div className="mt-5 border border-dashed border-brutal-border bg-black/18 p-5 text-sm leading-7 text-white/52">
+              <div className="mt-5 border border-dashed border-white/12 bg-black/18 p-5 text-sm leading-7 text-white/52">
                 Curated content browser will appear here after the seed catalog is available.
               </div>
             ) : (
               <>
                 <div className="mt-5 space-y-4">
                   {curatedPaths.map((path) => (
-                    <div key={path.id} className="rounded-[20px] border border-brutal-border bg-black/16 p-4">
+                    <div key={path.id} className="rounded-[20px] border border-white/10 bg-black/16 p-4">
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary/72">
+                          <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-cyber-blue/72">
                             {path.tag || path.difficulty}
                           </div>
                           <div className="mt-2 font-display text-lg font-bold uppercase tracking-[0.08em] text-white">
@@ -1204,8 +1204,8 @@ export function AcademyAdmin() {
                               onClick={() => setSelectedCuratedCourseId(course.id)}
                               className={`inline-flex min-h-11 items-center rounded-full border px-4 text-left text-[11px] font-mono uppercase tracking-[0.16em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyber-yellow/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                                 selected
-                                  ? 'border-accent/35 bg-accent/12 text-accent'
-                                  : 'border-brutal-border bg-surface text-white/66 hover:border-primary/35 hover:bg-primary/8 hover:text-white'
+                                  ? 'border-cyber-yellow/35 bg-cyber-yellow/12 text-cyber-yellow'
+                                  : 'border-white/10 bg-white/4 text-white/66 hover:border-cyber-blue/35 hover:bg-cyber-blue/8 hover:text-white'
                               }`}
                             >
                               {course.title}
@@ -1218,27 +1218,27 @@ export function AcademyAdmin() {
                 </div>
 
                 <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.05fr)_340px]">
-                  <div className="rounded-[22px] border border-brutal-border bg-black/18 p-5">
+                  <div className="rounded-[22px] border border-white/10 bg-black/18 p-5">
                     {curatedBrowserLoading ? (
                       <div className="space-y-4">
-                        <div className="h-6 w-48 animate-pulse rounded-full bg-surface" />
-                        <div className="h-24 animate-pulse rounded-[18px] bg-surface" />
-                        <div className="h-24 animate-pulse rounded-[18px] bg-surface" />
+                        <div className="h-6 w-48 animate-pulse rounded-full bg-white/10" />
+                        <div className="h-24 animate-pulse rounded-[18px] bg-white/8" />
+                        <div className="h-24 animate-pulse rounded-[18px] bg-white/8" />
                       </div>
                     ) : curatedBrowserError ? (
                       <div className="rounded-[18px] border border-red-400/30 bg-red-500/10 p-4 text-sm leading-7 text-red-100">
                         {curatedBrowserError}
                       </div>
                     ) : !curatedCourseDetail ? (
-                      <div className="rounded-[18px] border border-dashed border-brutal-border bg-surface p-4 text-sm leading-7 text-white/56">
+                      <div className="rounded-[18px] border border-dashed border-white/12 bg-white/4 p-4 text-sm leading-7 text-white/56">
                         Select a curated course to inspect its module and unit structure.
                       </div>
                     ) : (
                       <div className="space-y-5">
-                        <div className="rounded-[18px] border border-primary/18 bg-primary/8 p-5">
+                        <div className="rounded-[18px] border border-cyber-blue/18 bg-cyber-blue/8 p-5">
                           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                             <div>
-                              <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-primary/74">
+                              <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-cyber-blue/74">
                                 {selectedCuratedCourseMeta?.pathTitle || curatedCourseDetail.path_title}
                               </div>
                               <div className="mt-2 font-display text-2xl font-black uppercase tracking-[0.08em] text-white">
@@ -1266,11 +1266,11 @@ export function AcademyAdmin() {
                             return (
                               <section
                                 key={module.id}
-                                className="rounded-[18px] border border-brutal-border bg-surface p-4"
+                                className="rounded-[18px] border border-white/10 bg-white/4 p-4"
                               >
-                                <div className="flex flex-col gap-3 border-b border-brutal-border pb-4 sm:flex-row sm:items-end sm:justify-between">
+                                <div className="flex flex-col gap-3 border-b border-white/8 pb-4 sm:flex-row sm:items-end sm:justify-between">
                                   <div>
-                                    <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/74">
+                                    <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-cyber-yellow/74">
                                       Module {module.order || 0}
                                     </div>
                                     <div className="mt-2 font-display text-lg font-bold uppercase tracking-[0.08em] text-white">
@@ -1297,8 +1297,8 @@ export function AcademyAdmin() {
                                         onClick={() => setSelectedCuratedUnitId(unit.id)}
                                         className={`flex min-h-12 w-full items-center justify-between gap-3 rounded-[16px] border px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyber-yellow/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                                           selected
-                                            ? 'border-accent/35 bg-accent/10'
-                                            : 'border-brutal-border bg-black/18 hover:border-primary/35 hover:bg-primary/8'
+                                            ? 'border-cyber-yellow/35 bg-cyber-yellow/10'
+                                            : 'border-white/10 bg-black/18 hover:border-cyber-blue/35 hover:bg-cyber-blue/8'
                                         }`}
                                       >
                                         <div className="min-w-0 flex-1">
@@ -1309,7 +1309,7 @@ export function AcademyAdmin() {
                                             {unit.section} / {unit.type} / XP {unit.xp_reward}
                                           </div>
                                         </div>
-                                        <div className="rounded-full border border-brutal-border bg-surface px-3 py-1 text-[10px] font-mono uppercase tracking-[0.16em] text-white/54">
+                                        <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.16em] text-white/54">
                                           {unit.language || unit.type}
                                         </div>
                                       </button>
@@ -1324,18 +1324,18 @@ export function AcademyAdmin() {
                     )}
                   </div>
 
-                  <aside className="rounded-[22px] border border-brutal-border bg-black/18 p-5">
-                    <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-accent/74">
+                  <aside className="rounded-[22px] border border-white/10 bg-black/18 p-5">
+                    <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-cyber-yellow/74">
                       Unit preview
                     </div>
                     {curatedUnitLoading ? (
                       <div className="mt-4 space-y-4">
-                        <div className="h-6 w-40 animate-pulse rounded-full bg-surface" />
-                        <div className="h-24 animate-pulse rounded-[18px] bg-surface" />
-                        <div className="h-40 animate-pulse rounded-[18px] bg-surface" />
+                        <div className="h-6 w-40 animate-pulse rounded-full bg-white/10" />
+                        <div className="h-24 animate-pulse rounded-[18px] bg-white/8" />
+                        <div className="h-40 animate-pulse rounded-[18px] bg-white/8" />
                       </div>
                     ) : !curatedUnitDetail ? (
-                      <div className="mt-4 rounded-[18px] border border-dashed border-brutal-border bg-surface p-4 text-sm leading-7 text-white/56">
+                      <div className="mt-4 rounded-[18px] border border-dashed border-white/12 bg-white/4 p-4 text-sm leading-7 text-white/56">
                         Choose a unit to inspect its lesson brief, starter code, tests, and hint footprint.
                       </div>
                     ) : (
@@ -1359,8 +1359,8 @@ export function AcademyAdmin() {
                           <MiniMetric value={String(curatedUnitDetail.hints.length)} label="hints" />
                         </div>
 
-                        <div className="rounded-[18px] border border-brutal-border bg-surface p-4">
-                          <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-primary/74">
+                        <div className="rounded-[18px] border border-white/10 bg-white/4 p-4">
+                          <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-cyber-blue/74">
                             Runtime profile
                           </div>
                           <div className="mt-3 space-y-2 text-sm text-white/66">
@@ -1371,8 +1371,8 @@ export function AcademyAdmin() {
                           </div>
                         </div>
 
-                        <div className="rounded-[18px] border border-brutal-border bg-surface p-4">
-                          <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-accent/74">
+                        <div className="rounded-[18px] border border-white/10 bg-white/4 p-4">
+                          <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-cyber-yellow/74">
                             Test map
                           </div>
                           <div className="mt-3 space-y-2">
@@ -1384,7 +1384,7 @@ export function AcademyAdmin() {
                               curatedUnitDetail.tests.slice(0, 5).map((test) => (
                                 <div
                                   key={test.id}
-                                  className="rounded-[14px] border border-brutal-border bg-black/18 px-3 py-2 text-sm leading-6 text-white/66"
+                                  className="rounded-[14px] border border-white/10 bg-black/18 px-3 py-2 text-sm leading-6 text-white/66"
                                 >
                                   <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-white/42">
                                     {test.hidden ? 'Hidden check' : 'Visible check'}
@@ -1396,12 +1396,12 @@ export function AcademyAdmin() {
                           </div>
                         </div>
 
-                        <div className="rounded-[18px] border border-brutal-border bg-black/28 p-4">
-                          <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-primary/74">
+                        <div className="rounded-[18px] border border-white/10 bg-black/28 p-4">
+                          <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-cyber-blue/74">
                             Starter code preview
                           </div>
                           {curatedUnitDetail.code ? (
-                            <pre className="mt-3 max-h-[320px] overflow-auto rounded-[14px] border border-primary/18 bg-black/40 p-4 font-mono text-xs leading-6 text-cyan-100">
+                            <pre className="mt-3 max-h-[320px] overflow-auto rounded-[14px] border border-cyber-blue/18 bg-black/40 p-4 font-mono text-xs leading-6 text-cyan-100">
                               <code>{curatedUnitDetail.code}</code>
                             </pre>
                           ) : (
@@ -1420,8 +1420,8 @@ export function AcademyAdmin() {
         </div>
 
         <aside className="space-y-6">
-          <div className="border border-primary/20 bg-surface/80 p-5">
-            <div className="flex items-center gap-2 border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.24em] text-primary">
+          <div className="border border-cyber-blue/20 bg-surface/80 p-5">
+            <div className="flex items-center gap-2 border border-cyber-blue/25 bg-cyber-blue/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.24em] text-cyber-blue">
               <Trophy size={13} aria-hidden="true" />
               Curated analytics
             </div>
@@ -1433,7 +1433,7 @@ export function AcademyAdmin() {
             </p>
 
             {!curatedAnalytics ? (
-              <div className="mt-5 border border-dashed border-brutal-border bg-black/18 p-4 text-sm leading-7 text-white/52">
+              <div className="mt-5 border border-dashed border-white/12 bg-black/18 p-4 text-sm leading-7 text-white/52">
                 No curated analytics available yet.
               </div>
             ) : (
@@ -1445,8 +1445,8 @@ export function AcademyAdmin() {
                   <MiniMetric value={String(curatedAnalytics.lane_split.community_learners)} label="community learners" />
                 </div>
 
-                <div className="rounded-[18px] border border-brutal-border bg-black/18 p-4">
-                  <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-accent/74">
+                <div className="rounded-[18px] border border-white/10 bg-black/18 p-4">
+                  <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-cyber-yellow/74">
                     Top curated paths
                   </div>
                   <div className="mt-3 space-y-3">
@@ -1456,7 +1456,7 @@ export function AcademyAdmin() {
                       </div>
                     ) : (
                       curatedAnalytics.top_paths.slice(0, 4).map((path) => (
-                        <div key={path.id} className="rounded-[14px] border border-brutal-border bg-surface p-3">
+                        <div key={path.id} className="rounded-[14px] border border-white/10 bg-white/4 p-3">
                           <div className="font-display text-sm font-black uppercase tracking-[0.08em] text-white">
                             {path.title}
                           </div>
@@ -1471,8 +1471,8 @@ export function AcademyAdmin() {
                   </div>
                 </div>
 
-                <div className="rounded-[18px] border border-brutal-border bg-black/18 p-4">
-                  <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-primary/74">
+                <div className="rounded-[18px] border border-white/10 bg-black/18 p-4">
+                  <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-cyber-blue/74">
                     Top curated courses
                   </div>
                   <div className="mt-3 space-y-3">
@@ -1482,7 +1482,7 @@ export function AcademyAdmin() {
                       </div>
                     ) : (
                       curatedAnalytics.top_courses.slice(0, 4).map((course) => (
-                        <div key={course.id} className="rounded-[14px] border border-brutal-border bg-surface p-3">
+                        <div key={course.id} className="rounded-[14px] border border-white/10 bg-white/4 p-3">
                           <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-white/42">
                             {course.path_title || 'Curated route'}
                           </div>
@@ -1503,8 +1503,8 @@ export function AcademyAdmin() {
             )}
           </div>
 
-          <div className="border border-accent/20 bg-surface/80 p-5">
-          <div className="flex items-center gap-2 border border-accent/20 bg-accent/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.24em] text-accent">
+          <div className="border border-cyber-yellow/20 bg-surface/80 p-5">
+          <div className="flex items-center gap-2 border border-cyber-yellow/20 bg-cyber-yellow/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.24em] text-cyber-yellow">
             <Users size={13} aria-hidden="true" />
             Learner overview
           </div>
@@ -1517,12 +1517,12 @@ export function AcademyAdmin() {
 
           <div className="mt-5 space-y-3">
             {topLearners.length === 0 ? (
-              <div className="border border-dashed border-brutal-border bg-black/18 p-4 text-sm leading-7 text-white/52">
+              <div className="border border-dashed border-white/12 bg-black/18 p-4 text-sm leading-7 text-white/52">
                 No learner activity recorded yet.
               </div>
             ) : (
               topLearners.map((learner, index) => (
-                <div key={learner.user_id} className="rounded-[18px] border border-brutal-border bg-black/18 p-4">
+                <div key={learner.user_id} className="rounded-[18px] border border-white/10 bg-black/18 p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/42">
@@ -1535,7 +1535,7 @@ export function AcademyAdmin() {
                         {learner.role} / {learner.member_type}
                       </div>
                     </div>
-                    <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.18em] text-primary">
+                    <div className="rounded-full border border-cyber-blue/20 bg-cyber-blue/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.18em] text-cyber-blue">
                       XP {learner.xp}
                     </div>
                   </div>
@@ -1550,8 +1550,8 @@ export function AcademyAdmin() {
           </div>
           </div>
 
-          <div className="border border-primary/20 bg-surface/80 p-5">
-            <div className="flex items-center gap-2 border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.24em] text-primary">
+          <div className="border border-cyber-blue/20 bg-surface/80 p-5">
+            <div className="flex items-center gap-2 border border-cyber-blue/25 bg-cyber-blue/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.24em] text-cyber-blue">
               <History size={13} aria-hidden="true" />
               Recent activity
             </div>
@@ -1564,12 +1564,12 @@ export function AcademyAdmin() {
 
             <div className="mt-5 space-y-3">
               {recentActivity.length === 0 ? (
-                <div className="border border-dashed border-brutal-border bg-black/18 p-4 text-sm leading-7 text-white/52">
+                <div className="border border-dashed border-white/12 bg-black/18 p-4 text-sm leading-7 text-white/52">
                   No activity recorded yet.
                 </div>
               ) : (
                 recentActivity.map((entry) => (
-                  <div key={entry.id} className="rounded-[18px] border border-brutal-border bg-black/18 p-4">
+                  <div key={entry.id} className="rounded-[18px] border border-white/10 bg-black/18 p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="font-display text-sm font-bold uppercase tracking-[0.08em] text-white">
@@ -1579,7 +1579,7 @@ export function AcademyAdmin() {
                           {entry.track} / {entry.lesson_id}
                         </div>
                       </div>
-                      <div className="rounded-full border border-brutal-border bg-surface px-3 py-1 text-[10px] font-mono uppercase tracking-[0.16em] text-white/54">
+                      <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.16em] text-white/54">
                         {entry.action.replace(/_/g, ' ')}
                       </div>
                     </div>
@@ -1611,7 +1611,7 @@ export function AcademyAdmin() {
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Boxes className="h-4 w-4 text-accent" aria-hidden="true" />
+            <Boxes className="h-4 w-4 text-cyber-yellow" aria-hidden="true" />
             <h2 className="font-display text-xl font-bold uppercase tracking-widest text-white">
               Community Tracks
             </h2>
@@ -1620,9 +1620,9 @@ export function AcademyAdmin() {
             Đây là lane DB-driven cũ để DSUC tự tạo nội dung riêng. Nó vẫn hoạt động song song trong lúc curated Academy v2 chưa có admin content model hoàn chỉnh.
           </p>
           {loading ? (
-            <div className="h-28 animate-pulse border border-brutal-border bg-white/[0.03]" />
+            <div className="h-28 animate-pulse border border-white/10 bg-white/[0.03]" />
           ) : trackOptions.length === 0 ? (
-            <div className="border border-dashed border-primary/30 bg-surface/60 p-6 text-sm text-white/60">
+            <div className="border border-dashed border-cyber-blue/30 bg-surface/60 p-6 text-sm text-white/60">
               No tracks yet. Create your first track on the right.
             </div>
           ) : (
@@ -1632,18 +1632,18 @@ export function AcademyAdmin() {
                   key={track.id}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="border border-brutal-border bg-surface/75 p-4"
+                  className="border border-white/10 bg-surface/75 p-4"
                 >
                   <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="border border-primary/30 bg-primary/10 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-primary">
+                        <span className="border border-cyber-blue/30 bg-cyber-blue/10 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-cyber-blue">
                           {track.id}
                         </span>
-                        <span className="border border-brutal-border bg-black/40 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-white/60">
+                        <span className="border border-white/10 bg-black/40 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-white/60">
                           {track.status}
                         </span>
-                        <span className="border border-brutal-border bg-black/40 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-white/60">
+                        <span className="border border-white/10 bg-black/40 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-white/60">
                           Lessons: {lessonCountByTrack.get(track.id) || 0}
                         </span>
                       </div>
@@ -1672,7 +1672,7 @@ export function AcademyAdmin() {
                             sort_order: Number(track.sort_order || 0),
                           });
                         }}
-                        className="inline-flex min-h-10 items-center justify-center gap-2 border border-primary/40 px-3 py-2 text-xs font-bold uppercase tracking-widest text-primary transition-colors hover:bg-primary hover:text-black"
+                        className="inline-flex min-h-10 items-center justify-center gap-2 border border-cyber-blue/40 px-3 py-2 text-xs font-bold uppercase tracking-widest text-cyber-blue transition-colors hover:bg-cyber-blue hover:text-black"
                       >
                         <Edit3 size={14} aria-hidden="true" />
                         Edit
@@ -1694,7 +1694,7 @@ export function AcademyAdmin() {
           )}
         </div>
 
-        <aside className="h-fit border border-primary/25 bg-surface/85 p-5 xl:sticky xl:top-28">
+        <aside className="h-fit border border-cyber-blue/25 bg-surface/85 p-5 xl:sticky xl:top-28">
           <form onSubmit={saveTrack} className="space-y-4">
             <div className="flex items-center justify-between gap-3">
               <h3 className="font-display text-xl font-bold uppercase tracking-widest text-white">
@@ -1704,7 +1704,7 @@ export function AcademyAdmin() {
                 <button
                   type="button"
                   onClick={resetTrackForm}
-                  className="min-h-10 border border-brutal-border px-3 py-2 text-xs font-bold uppercase tracking-widest text-white/60 transition-colors hover:border-brutal-border hover:text-white"
+                  className="min-h-10 border border-white/10 px-3 py-2 text-xs font-bold uppercase tracking-widest text-white/60 transition-colors hover:border-white/30 hover:text-white"
                 >
                   Cancel
                 </button>
@@ -1717,7 +1717,7 @@ export function AcademyAdmin() {
                 value={trackForm.id}
                 disabled={!!editingTrackId}
                 onChange={(event) => setTrackForm((prev) => ({ ...prev, id: event.target.value }))}
-                className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
                 placeholder="solana-beginner"
               />
             </label>
@@ -1727,7 +1727,7 @@ export function AcademyAdmin() {
               <input
                 value={trackForm.title}
                 onChange={(event) => setTrackForm((prev) => ({ ...prev, title: event.target.value }))}
-                className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
                 placeholder="Solana Beginner"
               />
             </label>
@@ -1737,7 +1737,7 @@ export function AcademyAdmin() {
               <input
                 value={trackForm.subtitle}
                 onChange={(event) => setTrackForm((prev) => ({ ...prev, subtitle: event.target.value }))}
-                className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
                 placeholder="Build your first onchain app"
               />
             </label>
@@ -1748,7 +1748,7 @@ export function AcademyAdmin() {
                 value={trackForm.description}
                 onChange={(event) => setTrackForm((prev) => ({ ...prev, description: event.target.value }))}
                 rows={3}
-                className="w-full resize-y border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="w-full resize-y border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
               />
             </label>
 
@@ -1758,7 +1758,7 @@ export function AcademyAdmin() {
                 <select
                   value={trackForm.status}
                   onChange={(event) => setTrackForm((prev) => ({ ...prev, status: event.target.value as PublishStatus }))}
-                  className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                  className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
                 >
                   {STATUS_OPTIONS.map((status) => (
                     <option key={status} value={status}>
@@ -1775,7 +1775,7 @@ export function AcademyAdmin() {
                   onChange={(event) => setTrackForm((prev) => ({ ...prev, sort_order: Number(event.target.value || 0) }))}
                   inputMode="numeric"
                   pattern="[0-9]*"
-                  className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                  className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
                 />
               </label>
             </div>
@@ -1783,7 +1783,7 @@ export function AcademyAdmin() {
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex min-h-12 w-full items-center justify-center gap-2 bg-accent px-4 py-3 font-display text-sm font-bold uppercase tracking-widest text-black transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 bg-cyber-yellow px-4 py-3 font-display text-sm font-bold uppercase tracking-widest text-black transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {editingTrackId ? <Save size={16} aria-hidden="true" /> : <Plus size={16} aria-hidden="true" />}
               {saving ? 'Saving...' : editingTrackId ? 'Save Track' : 'Create Track'}
@@ -1794,13 +1794,13 @@ export function AcademyAdmin() {
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="space-y-4">
-          <div className="grid gap-3 border border-brutal-border bg-surface/75 p-4 md:grid-cols-2">
+          <div className="grid gap-3 border border-white/10 bg-surface/75 p-4 md:grid-cols-2">
             <label className="space-y-2 text-xs font-mono uppercase tracking-widest text-white/60">
               Track Filter
               <select
                 value={filterTrack}
                 onChange={(event) => setFilterTrack(event.target.value)}
-                className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
               >
                 {trackOptions.map((track) => (
                   <option key={track.id} value={track.id}>
@@ -1816,9 +1816,9 @@ export function AcademyAdmin() {
 
           <h2 className="font-display text-xl font-bold uppercase tracking-widest text-white">Lessons</h2>
           {loading ? (
-            <div className="h-28 animate-pulse border border-brutal-border bg-white/[0.03]" />
+            <div className="h-28 animate-pulse border border-white/10 bg-white/[0.03]" />
           ) : lessonsForTrack.length === 0 ? (
-            <div className="border border-dashed border-primary/30 bg-surface/60 p-6 text-sm text-white/60">
+            <div className="border border-dashed border-cyber-blue/30 bg-surface/60 p-6 text-sm text-white/60">
               No lessons in selected track.
             </div>
           ) : (
@@ -1830,18 +1830,18 @@ export function AcademyAdmin() {
                     key={lesson.id}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="border border-brutal-border bg-surface/75 p-4"
+                    className="border border-white/10 bg-surface/75 p-4"
                   >
                     <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                       <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="border border-primary/30 bg-primary/10 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-primary">
+                          <span className="border border-cyber-blue/30 bg-cyber-blue/10 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-cyber-blue">
                             {lesson.track} / {lesson.lesson_id}
                           </span>
-                          <span className="border border-brutal-border bg-black/40 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-white/60">
+                          <span className="border border-white/10 bg-black/40 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-white/60">
                             {lesson.status}
                           </span>
-                          <span className="border border-brutal-border bg-black/40 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-white/60">
+                          <span className="border border-white/10 bg-black/40 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-white/60">
                             {lesson.minutes} min
                           </span>
                         </div>
@@ -1860,7 +1860,7 @@ export function AcademyAdmin() {
                             setEditingLessonId(lesson.id);
                             setLessonForm(lessonToForm(lesson));
                           }}
-                          className="inline-flex min-h-10 items-center justify-center gap-2 border border-primary/40 px-3 py-2 text-xs font-bold uppercase tracking-widest text-primary transition-colors hover:bg-primary hover:text-black"
+                          className="inline-flex min-h-10 items-center justify-center gap-2 border border-cyber-blue/40 px-3 py-2 text-xs font-bold uppercase tracking-widest text-cyber-blue transition-colors hover:bg-cyber-blue hover:text-black"
                         >
                           <Edit3 size={14} aria-hidden="true" />
                           Edit
@@ -1882,7 +1882,7 @@ export function AcademyAdmin() {
           )}
         </div>
 
-        <aside className="h-fit border border-primary/25 bg-surface/85 p-5 xl:sticky xl:top-28">
+        <aside className="h-fit border border-cyber-blue/25 bg-surface/85 p-5 xl:sticky xl:top-28">
           <form onSubmit={saveLesson} className="space-y-4">
             <div className="flex items-center justify-between gap-3">
               <h3 className="font-display text-xl font-bold uppercase tracking-widest text-white">
@@ -1892,7 +1892,7 @@ export function AcademyAdmin() {
                 <button
                   type="button"
                   onClick={resetLessonForm}
-                  className="min-h-10 border border-brutal-border px-3 py-2 text-xs font-bold uppercase tracking-widest text-white/60 transition-colors hover:border-brutal-border hover:text-white"
+                  className="min-h-10 border border-white/10 px-3 py-2 text-xs font-bold uppercase tracking-widest text-white/60 transition-colors hover:border-white/30 hover:text-white"
                 >
                   Cancel
                 </button>
@@ -1904,7 +1904,7 @@ export function AcademyAdmin() {
               <select
                 value={lessonForm.track}
                 onChange={(event) => setLessonForm((prev) => ({ ...prev, track: event.target.value }))}
-                className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
               >
                 {trackOptions.map((track) => (
                   <option key={track.id} value={track.id}>
@@ -1920,7 +1920,7 @@ export function AcademyAdmin() {
                 <input
                   value={lessonForm.lesson_id}
                   onChange={(event) => setLessonForm((prev) => ({ ...prev, lesson_id: event.target.value }))}
-                  className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                  className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
                   placeholder="module-1"
                 />
               </label>
@@ -1932,7 +1932,7 @@ export function AcademyAdmin() {
                   onChange={(event) => setLessonForm((prev) => ({ ...prev, minutes: Number(event.target.value || 0) }))}
                   inputMode="numeric"
                   pattern="[0-9]*"
-                  className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                  className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
                 />
               </label>
             </div>
@@ -1942,7 +1942,7 @@ export function AcademyAdmin() {
               <input
                 value={lessonForm.title}
                 onChange={(event) => setLessonForm((prev) => ({ ...prev, title: event.target.value }))}
-                className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
                 placeholder="Module 1: Intro"
               />
             </label>
@@ -1953,7 +1953,7 @@ export function AcademyAdmin() {
                 value={lessonForm.content_md}
                 onChange={(event) => setLessonForm((prev) => ({ ...prev, content_md: event.target.value }))}
                 rows={6}
-                className="w-full resize-y border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="w-full resize-y border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
               />
             </label>
 
@@ -1963,7 +1963,7 @@ export function AcademyAdmin() {
                 value={lessonForm.callouts_text}
                 onChange={(event) => setLessonForm((prev) => ({ ...prev, callouts_text: event.target.value }))}
                 rows={5}
-                className="w-full resize-y border border-primary/25 bg-black/50 px-3 py-2 font-mono text-xs text-white"
+                className="w-full resize-y border border-cyber-blue/25 bg-black/50 px-3 py-2 font-mono text-xs text-white"
               />
             </label>
 
@@ -1973,7 +1973,7 @@ export function AcademyAdmin() {
                 <select
                   value={lessonForm.status}
                   onChange={(event) => setLessonForm((prev) => ({ ...prev, status: event.target.value as PublishStatus }))}
-                  className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                  className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
                 >
                   {STATUS_OPTIONS.map((status) => (
                     <option key={status} value={status}>
@@ -1990,7 +1990,7 @@ export function AcademyAdmin() {
                   onChange={(event) => setLessonForm((prev) => ({ ...prev, sort_order: Number(event.target.value || 0) }))}
                   inputMode="numeric"
                   pattern="[0-9]*"
-                  className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                  className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
                 />
               </label>
             </div>
@@ -1998,7 +1998,7 @@ export function AcademyAdmin() {
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex min-h-12 w-full items-center justify-center gap-2 bg-accent px-4 py-3 font-display text-sm font-bold uppercase tracking-widest text-black transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 bg-cyber-yellow px-4 py-3 font-display text-sm font-bold uppercase tracking-widest text-black transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {editingLessonId ? <Save size={16} aria-hidden="true" /> : <Plus size={16} aria-hidden="true" />}
               {saving ? 'Saving...' : editingLessonId ? 'Save Lesson' : 'Create Lesson'}
@@ -2009,13 +2009,13 @@ export function AcademyAdmin() {
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="space-y-4">
-          <div className="grid gap-3 border border-brutal-border bg-surface/75 p-4 md:grid-cols-2">
+          <div className="grid gap-3 border border-white/10 bg-surface/75 p-4 md:grid-cols-2">
             <label className="space-y-2 text-xs font-mono uppercase tracking-widest text-white/60">
               Track
               <select
                 value={filterTrack}
                 onChange={(event) => setFilterTrack(event.target.value)}
-                className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
               >
                 {trackOptions.map((track) => (
                   <option key={track.id} value={track.id}>
@@ -2029,7 +2029,7 @@ export function AcademyAdmin() {
               <select
                 value={filterLesson}
                 onChange={(event) => setFilterLesson(event.target.value)}
-                className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
               >
                 {lessonsForTrack
                   .sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0))
@@ -2044,10 +2044,10 @@ export function AcademyAdmin() {
 
           <h2 className="font-display text-xl font-bold uppercase tracking-widest text-white">Questions</h2>
           {loading ? (
-            <div className="h-28 animate-pulse border border-brutal-border bg-white/[0.03]" />
+            <div className="h-28 animate-pulse border border-white/10 bg-white/[0.03]" />
           ) : filteredQuestions.length === 0 ? (
-            <div className="border border-dashed border-primary/30 bg-surface/60 p-8 text-center">
-              <Database className="mx-auto mb-3 h-10 w-10 text-primary/50" aria-hidden="true" />
+            <div className="border border-dashed border-cyber-blue/30 bg-surface/60 p-8 text-center">
+              <Database className="mx-auto mb-3 h-10 w-10 text-cyber-blue/50" aria-hidden="true" />
               <h3 className="font-display text-lg font-bold uppercase tracking-widest text-white">
                 No questions in this lesson
               </h3>
@@ -2062,15 +2062,15 @@ export function AcademyAdmin() {
                   key={question.id}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="border border-brutal-border bg-surface/75 p-4"
+                  className="border border-white/10 bg-surface/75 p-4"
                 >
                   <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div className="space-y-3">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="border border-primary/30 bg-primary/10 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-primary">
+                        <span className="border border-cyber-blue/30 bg-cyber-blue/10 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-cyber-blue">
                           {question.track} / {question.lesson_id} / {question.sort_order}
                         </span>
-                        <span className="border border-brutal-border bg-black/40 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-white/60">
+                        <span className="border border-white/10 bg-black/40 px-2 py-1 text-[10px] font-mono uppercase tracking-widest text-white/60">
                           {question.status}
                         </span>
                       </div>
@@ -2084,7 +2084,7 @@ export function AcademyAdmin() {
                             className={`border px-3 py-2 text-xs ${
                               choice.id === question.correct_choice_id
                                 ? 'border-emerald-400/50 bg-emerald-400/10 text-emerald-100'
-                                : 'border-brutal-border bg-black/30 text-white/70'
+                                : 'border-white/10 bg-black/30 text-white/70'
                             }`}
                           >
                             <span className="font-mono uppercase text-white/50">{choice.id}.</span> {choice.label}
@@ -2101,7 +2101,7 @@ export function AcademyAdmin() {
                           setEditingQuestionId(question.id);
                           setQuestionForm(questionToForm(question));
                         }}
-                        className="inline-flex min-h-10 items-center justify-center gap-2 border border-primary/40 px-3 py-2 text-xs font-bold uppercase tracking-widest text-primary transition-colors hover:bg-primary hover:text-black"
+                        className="inline-flex min-h-10 items-center justify-center gap-2 border border-cyber-blue/40 px-3 py-2 text-xs font-bold uppercase tracking-widest text-cyber-blue transition-colors hover:bg-cyber-blue hover:text-black"
                       >
                         <Edit3 size={14} aria-hidden="true" />
                         Edit
@@ -2123,7 +2123,7 @@ export function AcademyAdmin() {
           )}
         </div>
 
-        <aside className="h-fit border border-primary/25 bg-surface/85 p-5 xl:sticky xl:top-28">
+        <aside className="h-fit border border-cyber-blue/25 bg-surface/85 p-5 xl:sticky xl:top-28">
           <form onSubmit={saveQuestion} className="space-y-5">
             <div className="flex items-center justify-between gap-3">
               <h3 className="font-display text-xl font-bold uppercase tracking-widest text-white">
@@ -2133,7 +2133,7 @@ export function AcademyAdmin() {
                 <button
                   type="button"
                   onClick={resetQuestionForm}
-                  className="min-h-10 border border-brutal-border px-3 py-2 text-xs font-bold uppercase tracking-widest text-white/60 transition-colors hover:border-brutal-border hover:text-white"
+                  className="min-h-10 border border-white/10 px-3 py-2 text-xs font-bold uppercase tracking-widest text-white/60 transition-colors hover:border-white/30 hover:text-white"
                 >
                   Cancel
                 </button>
@@ -2156,7 +2156,7 @@ export function AcademyAdmin() {
                       lesson_id: firstLesson?.lesson_id || '',
                     }));
                   }}
-                  className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                  className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
                 >
                   {trackOptions.map((track) => (
                     <option key={track.id} value={track.id}>
@@ -2171,7 +2171,7 @@ export function AcademyAdmin() {
                 <select
                   value={questionForm.status}
                   onChange={(event) => setQuestionForm((prev) => ({ ...prev, status: event.target.value as PublishStatus }))}
-                  className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                  className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
                 >
                   {STATUS_OPTIONS.map((status) => (
                     <option key={status} value={status}>
@@ -2187,7 +2187,7 @@ export function AcademyAdmin() {
               <select
                 value={questionForm.lesson_id}
                 onChange={(event) => setQuestionForm((prev) => ({ ...prev, lesson_id: event.target.value }))}
-                className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
               >
                 {questionTrackOptions.map((lesson) => (
                   <option key={lesson.id} value={lesson.lesson_id}>
@@ -2203,7 +2203,7 @@ export function AcademyAdmin() {
                 value={questionForm.prompt}
                 onChange={(event) => setQuestionForm((prev) => ({ ...prev, prompt: event.target.value }))}
                 rows={4}
-                className="w-full resize-y border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="w-full resize-y border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
               />
             </label>
 
@@ -2216,20 +2216,20 @@ export function AcademyAdmin() {
                   <input
                     value={choice.id}
                     onChange={(event) => updateChoice(index, { id: event.target.value.trim() })}
-                    className="min-h-10 border border-primary/25 bg-black/50 px-2 text-center font-mono text-sm uppercase text-white"
+                    className="min-h-10 border border-cyber-blue/25 bg-black/50 px-2 text-center font-mono text-sm uppercase text-white"
                     spellCheck={false}
                   />
                   <input
                     value={choice.label}
                     onChange={(event) => updateChoice(index, { label: event.target.value })}
-                    className="min-h-10 border border-primary/25 bg-black/50 px-3 text-sm text-white"
+                    className="min-h-10 border border-cyber-blue/25 bg-black/50 px-3 text-sm text-white"
                     placeholder="Answer text"
                   />
                   <button
                     type="button"
                     onClick={() => removeChoice(index)}
                     disabled={questionForm.choices.length <= 2}
-                    className="inline-flex min-h-10 items-center justify-center border border-brutal-border text-white/60 transition-colors hover:border-red-400/50 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-30"
+                    className="inline-flex min-h-10 items-center justify-center border border-white/10 text-white/60 transition-colors hover:border-red-400/50 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-30"
                   >
                     <Trash2 size={15} aria-hidden="true" />
                   </button>
@@ -2238,7 +2238,7 @@ export function AcademyAdmin() {
               <button
                 type="button"
                 onClick={addChoice}
-                className="inline-flex min-h-10 items-center justify-center gap-2 border border-primary/30 px-3 py-2 text-xs font-bold uppercase tracking-widest text-primary transition-colors hover:bg-primary hover:text-black"
+                className="inline-flex min-h-10 items-center justify-center gap-2 border border-cyber-blue/30 px-3 py-2 text-xs font-bold uppercase tracking-widest text-cyber-blue transition-colors hover:bg-cyber-blue hover:text-black"
               >
                 <Plus size={14} aria-hidden="true" />
                 Add Choice
@@ -2250,7 +2250,7 @@ export function AcademyAdmin() {
               <select
                 value={questionForm.correct_choice_id}
                 onChange={(event) => setQuestionForm((prev) => ({ ...prev, correct_choice_id: event.target.value }))}
-                className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
               >
                 {questionForm.choices
                   .filter((choice) => choice.id.trim())
@@ -2268,7 +2268,7 @@ export function AcademyAdmin() {
                 value={questionForm.explanation}
                 onChange={(event) => setQuestionForm((prev) => ({ ...prev, explanation: event.target.value }))}
                 rows={4}
-                className="w-full resize-y border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="w-full resize-y border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
               />
             </label>
 
@@ -2279,14 +2279,14 @@ export function AcademyAdmin() {
                 onChange={(event) => setQuestionForm((prev) => ({ ...prev, sort_order: Number(event.target.value || 0) }))}
                 inputMode="numeric"
                 pattern="[0-9]*"
-                className="min-h-11 w-full border border-primary/25 bg-black/50 px-3 py-2 text-sm text-white"
+                className="min-h-11 w-full border border-cyber-blue/25 bg-black/50 px-3 py-2 text-sm text-white"
               />
             </label>
 
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex min-h-12 w-full items-center justify-center gap-2 bg-accent px-4 py-3 font-display text-sm font-bold uppercase tracking-widest text-black transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 bg-cyber-yellow px-4 py-3 font-display text-sm font-bold uppercase tracking-widest text-black transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Save size={16} aria-hidden="true" />
               {saving ? 'Saving...' : editingQuestionId ? 'Save Question' : 'Create Question'}
@@ -2310,8 +2310,8 @@ function AdminMetric({
   detail: string;
 }) {
   return (
-    <div className="rounded-[20px] border border-brutal-border bg-surface/78 p-4">
-      <div className="flex items-center gap-2 text-primary">{icon}</div>
+    <div className="rounded-[20px] border border-white/10 bg-surface/78 p-4">
+      <div className="flex items-center gap-2 text-cyber-blue">{icon}</div>
       <div className="mt-3 font-display text-3xl font-black text-white">{value}</div>
       <div className="mt-1 text-[10px] font-mono uppercase tracking-[0.22em] text-white/38">
         {label}
@@ -2323,7 +2323,7 @@ function AdminMetric({
 
 function MiniMetric({ value, label }: { value: string; label: string }) {
   return (
-    <div className="rounded-[16px] border border-brutal-border bg-surface px-3 py-3">
+    <div className="rounded-[16px] border border-white/10 bg-white/5 px-3 py-3">
       <div className="font-display text-xl font-black text-white">{value}</div>
       <div className="mt-1 text-[10px] font-mono uppercase tracking-[0.18em] text-white/40">
         {label}

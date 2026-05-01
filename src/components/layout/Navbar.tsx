@@ -3,29 +3,20 @@ import { Moon, Sun, Menu, X, ChevronDown } from 'lucide-react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
-import { AuthModalExample } from '../ui/ModalShell';
 import { useStore } from '@/store/useStore';
-import { mockUser } from '@/lib/mockData';
+import { AuthIntent } from '@/types';
 
-// Simplified Theme context for demonstration
-export function useTheme() {
-  const [theme, setTheme] = React.useState<'light' | 'dark'>('light');
-  
-  React.useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-  }, [theme]);
-
-  const toggleTheme = () => setTheme(t => t === 'light' ? 'dark' : 'light');
-  return { theme, toggleTheme };
-}
-
-export function Navbar() {
-  const { theme, toggleTheme } = useTheme();
+export function Navbar({
+  onAuthClick,
+  theme,
+  onToggleTheme,
+}: {
+  onAuthClick: (mode: AuthIntent) => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
+}) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [opsOpen, setOpsOpen] = React.useState(false);
-  const [authModalOpen, setAuthModalOpen] = React.useState(false);
   
   const location = useLocation();
   React.useEffect(() => setMobileMenuOpen(false), [location]); // Close menu on route change
@@ -33,6 +24,13 @@ export function Navbar() {
   // Real auth state
   const currentUser = useStore(state => state.currentUser);
   const isGuest = !currentUser;
+  
+  const isOfficialMember = currentUser?.memberType === 'member';
+  const isAdmin =
+    isOfficialMember &&
+    ['President', 'Vice-President'].includes(
+      currentUser?.role || ''
+    );
 
   const navLinks = [
     { name: 'Members', path: '/members' },
@@ -46,14 +44,15 @@ export function Navbar() {
     { name: 'Leaderboard', path: '/leaderboard' },
     { name: 'Meet', path: '/meet' },
     { name: 'Work', path: '/work' },
-    { name: 'Finance', path: '/finance' },
-    { name: 'Admin', path: '/admin' },
-    { name: 'Academy Admin', path: '/academy-admin' },
+    { name: 'Finance', path: '/finance', locked: !isOfficialMember },
+    ...(isAdmin ? [
+      { name: 'Admin', path: '/admin' },
+      { name: 'Academy Admin', path: '/academy-admin' },
+    ] : []),
   ];
 
   return (
     <>
-      <AuthModalExample isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
       <header className="sticky top-0 z-50 w-full border-b brutal-border bg-surface/90 backdrop-blur transition-colors">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           
@@ -63,7 +62,7 @@ export function Navbar() {
               <img 
                 src="/logo.png" 
                 alt="DSUC" 
-                className="w-7 h-7 object-contain"
+                className="w-7 h-7 object-contain mix-blend-multiply dark:mix-blend-normal"
                 onError={(e) => { 
                   (e.target as HTMLImageElement).style.display = 'none';
                   (e.target as HTMLImageElement).parentElement!.innerHTML = '<span class="font-display font-black text-main-bg text-sm leading-none">DS</span>';
@@ -89,9 +88,9 @@ export function Navbar() {
             ))}
             
             {/* Operations Dropdown */}
-            <div className="relative" onMouseEnter={() => setOpsOpen(true)} onMouseLeave={() => setOpsOpen(false)}>
+            <div className="relative h-16 flex items-center" onMouseEnter={() => setOpsOpen(true)} onMouseLeave={() => setOpsOpen(false)}>
               <button className={cn(
-                "flex items-center gap-1 hover:text-primary transition-colors h-16",
+                "flex items-center gap-1 hover:text-primary transition-colors",
                 location.pathname.match(/\/(leaderboard|meet|work|finance|admin|academy-admin)/) ? "text-primary border-b-2 border-primary" : "text-text-muted"
               )}>
                 Operations <ChevronDown className="w-4 h-4" />
@@ -102,19 +101,26 @@ export function Navbar() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute top-full right-0 w-48 bg-surface brutal-border brutal-shadow py-2 flex flex-col z-50 block uppercase text-xs"
+                    className="absolute top-full right-0 w-48 bg-surface brutal-border brutal-shadow py-2 flex flex-col z-50 uppercase text-xs"
                   >
                     {opsLinks.map((link) => (
-                      <NavLink 
-                        key={link.path} 
-                        to={link.path}
-                        className={({isActive}) => cn(
-                          "px-4 py-2 hover:bg-main-bg transition-colors block",
-                          isActive ? "text-primary font-bold" : "text-text-main"
-                        )}
-                      >
-                        {link.name}
-                      </NavLink>
+                      link.locked ? (
+                        <div key={link.path} className="px-4 py-2 text-text-muted/50 cursor-not-allowed flex justify-between">
+                          <span>{link.name}</span>
+                          <span className="text-[9px]">Locked</span>
+                        </div>
+                      ) : (
+                        <NavLink 
+                          key={link.path} 
+                          to={link.path}
+                          className={({isActive}) => cn(
+                            "px-4 py-2 hover:bg-main-bg transition-colors block",
+                            isActive ? "text-primary font-bold bg-main-bg" : "text-text-main"
+                          )}
+                        >
+                          {link.name}
+                        </NavLink>
+                      )
                     ))}
                   </motion.div>
                 )}
@@ -124,40 +130,38 @@ export function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
-            <button onClick={toggleTheme} className="p-2 brutal-border bg-main-bg hover:bg-surface transition-colors" aria-label="Toggle Theme">
+            <button onClick={onToggleTheme} className="p-2 brutal-border bg-main-bg hover:bg-surface transition-colors" aria-label="Toggle Theme">
               {theme === 'light' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
             
             {isGuest ? (
               <button 
-                onClick={() => setAuthModalOpen(true)}
+                onClick={() => onAuthClick('login')}
                 className="px-4 py-2 bg-primary text-main-bg brutal-border brutal-shadow-sm font-bold text-sm uppercase tracking-wider hover:-translate-y-1 hover:shadow-[4px_6px_0px_0px_var(--shadow-brutal-color)] transition-all"
               >
                 Login
               </button>
             ) : (
-              <div className="flex items-center gap-2">
-                <Link to="/profile" className="w-8 h-8 rounded-full brutal-border bg-accent overflow-hidden" title="Profile">
-                   {currentUser?.avatar && <img src={currentUser.avatar} alt="Avatar" className="w-full h-full object-cover" />}
+              <div className="flex items-center gap-2 relative group cursor-pointer">
+                <Link to="/profile" className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full brutal-border bg-accent overflow-hidden" title="Profile">
+                    {currentUser?.avatar ? (
+                      <img src={currentUser.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center font-bold text-main-bg bg-primary text-xs">
+                        {(currentUser?.name || '?')[0].toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <span className="font-mono text-xs font-bold">{currentUser.name?.split(' ')[0] || 'User'}</span>
                 </Link>
-                <button 
-                  onClick={() => useStore.getState().logout()} 
-                  className="px-2 py-1 border brutal-border text-xs uppercase hover:bg-surface"
-                >
-                  Logout
-                </button>
+                <div className="absolute top-full right-0 mt-2 bg-surface brutal-border brutal-shadow opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all flex flex-col min-w-[120px]">
+                   <Link to="/profile" className="px-4 py-2 text-xs uppercase hover:bg-main-bg">Profile</Link>
+                   <button onClick={() => useStore.getState().logout()} className="px-4 py-2 text-xs uppercase hover:bg-main-bg text-left border-t brutal-border">
+                     Logout
+                   </button>
+                </div>
               </div>
-            )}
-            {import.meta.env.DEV && (
-              <button
-                onClick={() => {
-                  useStore.setState({ currentUser: mockUser as any, isWalletConnected: true, authMethod: 'wallet' });
-                }}
-                className="hidden lg:flex items-center gap-1 px-2 py-1 border border-dashed border-primary/50 text-primary/60 font-mono text-[10px] uppercase hover:border-primary hover:text-primary transition-colors"
-                title="Dev: mock login as President"
-              >
-                Dev Login
-              </button>
             )}
           </div>
 
@@ -178,11 +182,11 @@ export function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t brutal-border bg-surface truncate"
+              className="md:hidden border-t brutal-border bg-surface truncate overflow-y-auto max-h-[80vh]"
             >
               <div className="flex flex-col p-4 gap-4 uppercase font-bold text-sm">
                 {navLinks.map(link => (
-                  <NavLink key={link.path} to={link.path} className={({isActive}) => cn("p-2", isActive && "text-primary")}>
+                  <NavLink key={link.path} to={link.path} className={({isActive}) => cn("p-2", isActive && "text-primary bg-main-bg brutal-border")}>
                     {link.name}
                   </NavLink>
                 ))}
@@ -190,22 +194,28 @@ export function Navbar() {
                 <p className="text-xs text-text-muted p-2">Operations</p>
                 <div className="grid grid-cols-2 gap-2 pl-2">
                   {opsLinks.map(link => (
-                    <NavLink key={link.path} to={link.path} className={({isActive}) => cn("p-2 text-xs", isActive && "text-primary")}>
-                      {link.name}
-                    </NavLink>
+                    link.locked ? (
+                      <div key={link.path} className="p-2 text-xs opacity-50 flex items-center justify-between pointer-events-none">
+                        {link.name} <span className="text-[9px]">LOCKED</span>
+                      </div>
+                    ) : (
+                      <NavLink key={link.path} to={link.path} className={({isActive}) => cn("p-2 text-xs", isActive && "text-primary bg-main-bg brutal-border")}>
+                        {link.name}
+                      </NavLink>
+                    )
                   ))}
                 </div>
                 
-                <div className="flex items-center justify-between mt-4">
-                  <button onClick={toggleTheme} className="flex items-center gap-2 p-2 brutal-border">
+                <div className="flex items-center justify-between mt-4 border-t border-dashed border-border-main pt-4">
+                  <button onClick={onToggleTheme} className="flex items-center gap-2 p-2 brutal-border">
                     {theme === 'light' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />} Theme
                   </button>
                   {isGuest ? (
-                     <button onClick={() => setAuthModalOpen(true)} className="px-4 py-2 bg-primary text-main-bg brutal-border font-bold">Login</button>
+                     <button onClick={() => onAuthClick('login')} className="px-4 py-2 bg-primary text-main-bg brutal-border font-bold">Login</button>
                   ) : (
                      <div className="flex items-center gap-2">
                        <Link to="/profile" className="px-4 py-2 border brutal-border hover:bg-main-bg">Profile</Link>
-                       <button onClick={() => useStore.getState().logout()} className="px-4 py-2 border brutal-border hover:bg-main-bg">Logout</button>
+                       <button onClick={() => useStore.getState().logout()} className="px-4 py-2 border brutal-border hover:bg-main-bg text-white bg-red-600">Logout</button>
                      </div>
                   )}
                 </div>

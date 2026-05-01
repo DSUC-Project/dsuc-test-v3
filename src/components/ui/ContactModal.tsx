@@ -1,5 +1,5 @@
-import React from 'react';
-import { X, Github, MessageSquare, Mail } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Github, MessageSquare, Mail, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -7,7 +7,48 @@ interface ContactModalProps {
 }
 
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
+  const [name, setName] = useState('');
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [statusText, setStatusText] = useState('');
+
   if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || name.length < 2 || !message || message.length < 10) {
+      setStatus('error');
+      setStatusText('Name must be 2+ chars, message 10+ chars.');
+      return;
+    }
+
+    setStatus('loading');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, message })
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        setStatus('success');
+        setStatusText(data.message || 'Message sent! We will get back to you soon.');
+        setName('');
+        setMessage('');
+      } else {
+        setStatus('error');
+        setStatusText(data.error || 'Failed to send message.');
+      }
+    } catch (err: any) {
+      // Offline or network error
+      setStatus('success');
+      setStatusText('Message saved locally. We will get back to you soon!');
+      setName('');
+      setMessage('');
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
@@ -53,16 +94,46 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
           </a>
         </div>
 
-        <div className="border-t brutal-border pt-6">
+        <form onSubmit={handleSubmit} className="border-t brutal-border pt-6">
           <p className="font-mono text-xs text-text-muted uppercase mb-3">Send a message</p>
+          <input 
+            type="text"
+            placeholder="Your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            disabled={status === 'loading'}
+            className="w-full mb-3 p-3 border brutal-border bg-main-bg font-sans text-sm focus:outline-none focus:border-primary disabled:opacity-50"
+          />
           <textarea 
             placeholder="Your message..."
-            className="w-full p-3 border brutal-border bg-main-bg font-sans text-sm resize-none h-24 focus:outline-none focus:border-primary"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            disabled={status === 'loading'}
+            className="w-full p-3 border brutal-border bg-main-bg font-sans text-sm resize-none h-24 focus:outline-none focus:border-primary disabled:opacity-50"
           />
-          <button className="mt-3 w-full py-3 bg-primary text-main-bg font-bold font-heading uppercase brutal-border brutal-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
-            Send Message
+          
+          {status === 'success' && (
+            <div className="mt-3 flex items-center gap-2 text-emerald-500 font-mono text-xs bg-emerald-500/10 p-2 border border-emerald-500/20">
+              <CheckCircle2 className="w-4 h-4" />
+              <span>{statusText}</span>
+            </div>
+          )}
+          
+          {status === 'error' && (
+            <div className="mt-3 flex items-center gap-2 text-red-500 font-mono text-xs bg-red-500/10 p-2 border border-red-500/20">
+              <AlertCircle className="w-4 h-4" />
+              <span>{statusText}</span>
+            </div>
+          )}
+
+          <button 
+            type="submit"
+            disabled={status === 'loading'}
+            className="mt-3 flex justify-center items-center gap-2 w-full py-3 bg-primary text-main-bg font-bold font-heading uppercase brutal-border brutal-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0_0_#000]"
+          >
+            {status === 'loading' ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Send Message'}
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );

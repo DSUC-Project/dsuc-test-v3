@@ -627,9 +627,9 @@ export function Admin() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-primary/20 pb-6">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-cyber-blue/20 pb-6">
         <div>
-          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-primary mb-2">
+          <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-cyber-blue mb-2">
             Executive Admin
           </div>
           <h1 className="text-4xl font-display font-bold text-white">Control Plane</h1>
@@ -639,7 +639,7 @@ export function Admin() {
         </div>
         <button
           onClick={() => void refresh()}
-          className="bg-primary text-white hover:bg-white hover:text-black font-display font-bold text-sm px-5 py-3 brutal-btn bg-primary text-main-bg font-bold uppercase tracking-widest inline-flex items-center gap-2"
+          className="bg-cyber-blue text-white hover:bg-white hover:text-black font-display font-bold text-sm px-5 py-3 cyber-button uppercase tracking-widest inline-flex items-center gap-2"
         >
           <RefreshCw size={16} /> Refresh
         </button>
@@ -655,9 +655,9 @@ export function Admin() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         onSubmit={createUser}
-        className="bg-surface border brutal-border brutal-shadow-sm p-6 bg-surface/50 border border-primary/20 space-y-4"
+        className="cyber-card p-6 bg-surface/50 border border-cyber-blue/20 space-y-4"
       >
-        <div className="flex items-center gap-2 text-accent font-display font-bold uppercase tracking-widest">
+        <div className="flex items-center gap-2 text-cyber-yellow font-display font-bold uppercase tracking-widest">
           <Plus size={16} /> Create Account
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -666,19 +666,19 @@ export function Admin() {
             onChange={(e) => setCreateForm((prev) => ({ ...prev, name: e.target.value }))}
             placeholder="Name"
             required
-            className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+            className="bg-black/30 border border-white/10 p-3 text-white outline-none"
           />
           <input
             value={createForm.email}
             onChange={(e) => setCreateForm((prev) => ({ ...prev, email: e.target.value }))}
             placeholder="Email"
-            className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+            className="bg-black/30 border border-white/10 p-3 text-white outline-none"
           />
           <input
             value={createForm.wallet_address}
             onChange={(e) => setCreateForm((prev) => ({ ...prev, wallet_address: e.target.value }))}
             placeholder="Wallet address (optional)"
-            className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+            className="bg-black/30 border border-white/10 p-3 text-white outline-none"
           />
           <select
             value={createForm.member_type}
@@ -689,7 +689,7 @@ export function Admin() {
                 role: e.target.value === 'community' ? 'Community' : 'Member',
               }))
             }
-            className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+            className="bg-black/30 border border-white/10 p-3 text-white outline-none"
           >
             <option value="community">Community</option>
             <option value="member">Member</option>
@@ -698,7 +698,7 @@ export function Admin() {
             value={createForm.role}
             onChange={(e) => setCreateForm((prev) => ({ ...prev, role: e.target.value }))}
             disabled={createForm.member_type === 'community'}
-            className="bg-black/30 border border-brutal-border p-3 text-white outline-none disabled:opacity-50"
+            className="bg-black/30 border border-white/10 p-3 text-white outline-none disabled:opacity-50"
           >
             {createForm.member_type === 'community' ? (
               <option value="Community">Community</option>
@@ -712,7 +712,7 @@ export function Admin() {
           </select>
           <button
             type="submit"
-            className="bg-accent text-black hover:bg-white font-display font-bold py-3 brutal-btn bg-primary text-main-bg font-bold uppercase tracking-widest"
+            className="bg-cyber-yellow text-black hover:bg-white font-display font-bold py-3 cyber-button uppercase tracking-widest"
           >
             Create User
           </button>
@@ -736,24 +736,24 @@ export function Admin() {
             return (
               <div
                 key={user.id}
-                className="bg-surface border brutal-border brutal-shadow-sm p-5 bg-surface/50 border border-brutal-border space-y-4"
+                className="cyber-card p-5 bg-surface/50 border border-white/10 space-y-4"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
                   <input
                     value={draft?.name || ''}
                     onChange={(e) => updateDraft(user.id, { name: e.target.value })}
-                    className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+                    className="bg-black/30 border border-white/10 p-3 text-white outline-none"
                   />
                   <input
                     value={draft?.email || ''}
                     onChange={(e) => updateDraft(user.id, { email: e.target.value })}
-                    className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+                    className="bg-black/30 border border-white/10 p-3 text-white outline-none"
                   />
                   <input
                     value={draft?.wallet_address || ''}
                     onChange={(e) => updateDraft(user.id, { wallet_address: e.target.value })}
                     placeholder="Wallet"
-                    className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+                    className="bg-black/30 border border-white/10 p-3 text-white outline-none"
                   />
                   <select
                     value={draft?.member_type || 'member'}
@@ -762,7 +762,7 @@ export function Admin() {
                         member_type: e.target.value as 'member' | 'community',
                       })
                     }
-                    className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+                    className="bg-black/30 border border-white/10 p-3 text-white outline-none"
                   >
                     <option value="member">Member</option>
                     <option value="community">Community</option>
@@ -771,7 +771,7 @@ export function Admin() {
                     value={draft?.role || 'Member'}
                     onChange={(e) => updateDraft(user.id, { role: e.target.value })}
                     disabled={draft?.member_type === 'community'}
-                    className="bg-black/30 border border-brutal-border p-3 text-white outline-none disabled:opacity-50"
+                    className="bg-black/30 border border-white/10 p-3 text-white outline-none disabled:opacity-50"
                   >
                     {draft?.member_type === 'community' ? (
                       <option value="Community">Community</option>
@@ -787,7 +787,7 @@ export function Admin() {
                     <button
                       onClick={() => void saveUser(user.id)}
                       disabled={savingId === user.id || deletingKey === `user:${user.id}`}
-                      className="bg-primary text-white hover:bg-white hover:text-black font-display font-bold py-3 brutal-btn bg-primary text-main-bg font-bold uppercase tracking-widest disabled:opacity-60"
+                      className="bg-cyber-blue text-white hover:bg-white hover:text-black font-display font-bold py-3 cyber-button uppercase tracking-widest disabled:opacity-60"
                     >
                       {savingId === user.id ? 'Saving...' : 'Save'}
                     </button>
@@ -925,14 +925,14 @@ export function Admin() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {pendingFinance.length === 0 ? (
-            <div className="bg-surface border brutal-border brutal-shadow-sm p-5 bg-surface/50 border border-brutal-border text-white/40 font-mono text-sm">
+            <div className="cyber-card p-5 bg-surface/50 border border-white/10 text-white/40 font-mono text-sm">
               No pending finance requests.
             </div>
           ) : (
             pendingFinance.map((row) => (
               <div
                 key={row.id}
-                className="bg-surface border brutal-border brutal-shadow-sm p-5 bg-surface/50 border border-brutal-border space-y-4"
+                className="cyber-card p-5 bg-surface/50 border border-white/10 space-y-4"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -943,7 +943,7 @@ export function Admin() {
                       {row.date || row.created_at || 'No date'}
                     </div>
                   </div>
-                  <div className="text-accent font-display font-bold">
+                  <div className="text-cyber-yellow font-display font-bold">
                     {formatAmount(row.amount)} VND
                   </div>
                 </div>
@@ -978,39 +978,39 @@ export function Admin() {
           </p>
         </div>
 
-        <div className="bg-surface border brutal-border brutal-shadow-sm p-5 bg-surface/50 border border-brutal-border space-y-4">
+        <div className="cyber-card p-5 bg-surface/50 border border-white/10 space-y-4">
           <form onSubmit={createAgentKey} className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr),220px] gap-3">
             <input
               value={newAgentKeyName}
               onChange={(e) => setNewAgentKeyName(e.target.value)}
               placeholder="Key name (e.g. academy-bot-prod)"
               required
-              className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+              className="bg-black/30 border border-white/10 p-3 text-white outline-none"
             />
             <input
               value={newAgentKeyScopes}
               onChange={(e) => setNewAgentKeyScopes(e.target.value)}
               placeholder="Scopes, comma separated (default: *)"
-              className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+              className="bg-black/30 border border-white/10 p-3 text-white outline-none"
             />
             <button
               type="submit"
               disabled={agentKeySaving}
-              className="bg-accent text-black hover:bg-white font-display font-bold py-3 brutal-btn bg-primary text-main-bg font-bold uppercase tracking-widest disabled:opacity-60"
+              className="bg-cyber-yellow text-black hover:bg-white font-display font-bold py-3 cyber-button uppercase tracking-widest disabled:opacity-60"
             >
               {agentKeySaving ? 'Creating...' : 'Create Key'}
             </button>
           </form>
 
           {lastCreatedAgentKey && (
-            <div className="border border-accent/40 bg-accent/10 p-4 space-y-2">
-              <div className="text-xs font-mono uppercase tracking-[0.2em] text-accent">
+            <div className="border border-cyber-yellow/40 bg-cyber-yellow/10 p-4 space-y-2">
+              <div className="text-xs font-mono uppercase tracking-[0.2em] text-cyber-yellow">
                 New key (shown once)
               </div>
               <div className="text-sm font-mono text-white break-all">{lastCreatedAgentKey}</div>
               <button
                 onClick={() => void copyText(lastCreatedAgentKey)}
-                className="bg-black/30 border border-accent/40 text-accent px-3 py-2 text-xs font-display font-bold uppercase tracking-widest hover:bg-accent hover:text-black"
+                className="bg-black/30 border border-cyber-yellow/40 text-cyber-yellow px-3 py-2 text-xs font-display font-bold uppercase tracking-widest hover:bg-cyber-yellow hover:text-black"
               >
                 Copy
               </button>
@@ -1018,14 +1018,14 @@ export function Admin() {
           )}
 
           {rotatedAgentKey && (
-            <div className="border border-primary/40 bg-primary/10 p-4 space-y-2">
-              <div className="text-xs font-mono uppercase tracking-[0.2em] text-primary">
+            <div className="border border-cyber-blue/40 bg-cyber-blue/10 p-4 space-y-2">
+              <div className="text-xs font-mono uppercase tracking-[0.2em] text-cyber-blue">
                 Rotated key (shown once)
               </div>
               <div className="text-sm font-mono text-white break-all">{rotatedAgentKey}</div>
               <button
                 onClick={() => void copyText(rotatedAgentKey)}
-                className="bg-black/30 border border-primary/40 text-primary px-3 py-2 text-xs font-display font-bold uppercase tracking-widest hover:bg-primary hover:text-black"
+                className="bg-black/30 border border-cyber-blue/40 text-cyber-blue px-3 py-2 text-xs font-display font-bold uppercase tracking-widest hover:bg-cyber-blue hover:text-black"
               >
                 Copy
               </button>
@@ -1044,19 +1044,19 @@ export function Admin() {
                 return (
                   <div
                     key={keyRow.id}
-                    className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr),120px,360px] gap-3 items-center border border-brutal-border bg-black/20 p-3"
+                    className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr),120px,360px] gap-3 items-center border border-white/10 bg-black/20 p-3"
                   >
                     <input
                       value={draft?.name || ''}
                       onChange={(e) => updateAgentKeyDraft(keyRow.id, { name: e.target.value })}
-                      className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+                      className="bg-black/30 border border-white/10 p-3 text-white outline-none"
                     />
                     <input
                       value={draft?.scopesText || ''}
                       onChange={(e) =>
                         updateAgentKeyDraft(keyRow.id, { scopesText: e.target.value })
                       }
-                      className="bg-black/30 border border-brutal-border p-3 text-white outline-none font-mono text-sm"
+                      className="bg-black/30 border border-white/10 p-3 text-white outline-none font-mono text-sm"
                     />
                     <label className="flex items-center gap-2 text-xs font-mono text-white/60">
                       <input
@@ -1072,14 +1072,14 @@ export function Admin() {
                       <button
                         onClick={() => void saveAgentKey(keyRow.id)}
                         disabled={busySave || busyRotate || busyDelete}
-                        className="bg-primary text-white hover:bg-white hover:text-black font-display font-bold py-2 uppercase tracking-widest text-xs disabled:opacity-60"
+                        className="bg-cyber-blue text-white hover:bg-white hover:text-black font-display font-bold py-2 uppercase tracking-widest text-xs disabled:opacity-60"
                       >
                         {busySave ? 'Saving...' : 'Save'}
                       </button>
                       <button
                         onClick={() => void rotateAgentKey(keyRow.id)}
                         disabled={busySave || busyRotate || busyDelete}
-                        className="bg-accent/20 border border-accent/30 text-accent hover:bg-accent hover:text-black font-display font-bold py-2 uppercase tracking-widest text-xs disabled:opacity-60"
+                        className="bg-cyber-yellow/20 border border-cyber-yellow/30 text-cyber-yellow hover:bg-cyber-yellow hover:text-black font-display font-bold py-2 uppercase tracking-widest text-xs disabled:opacity-60"
                       >
                         {busyRotate ? 'Rotating...' : 'Rotate'}
                       </button>
@@ -1113,8 +1113,8 @@ export function Admin() {
           </p>
         </div>
 
-        <div className="bg-surface border brutal-border brutal-shadow-sm bg-surface/50 border border-brutal-border overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 px-5 py-3 border-b border-brutal-border text-[10px] font-mono uppercase tracking-[0.25em] text-white/40">
+        <div className="cyber-card bg-surface/50 border border-white/10 overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 px-5 py-3 border-b border-white/10 text-[10px] font-mono uppercase tracking-[0.25em] text-white/40">
             <div>User</div>
             <div>Lesson</div>
             <div>Action</div>
@@ -1146,7 +1146,7 @@ export function Admin() {
                       {activity.track} / {activity.lesson_id}
                     </div>
                   </div>
-                  <div className="text-primary font-mono uppercase text-xs">
+                  <div className="text-cyber-blue font-mono uppercase text-xs">
                     {activity.action.replaceAll('_', ' ')}
                   </div>
                   <div className="text-[11px] font-mono text-white/60">
@@ -1193,7 +1193,7 @@ function StatusSection<T extends { id: string; status?: string }>({
   onDelete: (entity: ContentEntity, id: string, label: string) => Promise<void>;
 }) {
   return (
-    <div className="bg-surface border brutal-border brutal-shadow-sm p-5 bg-surface/50 border border-brutal-border space-y-4">
+    <div className="cyber-card p-5 bg-surface/50 border border-white/10 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-display font-bold text-white uppercase">{title}</h3>
         <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/40">
@@ -1212,7 +1212,7 @@ function StatusSection<T extends { id: string; status?: string }>({
             return (
               <div
                 key={item.id}
-                className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),220px,240px] gap-3 items-center border border-brutal-border bg-black/20 px-4 py-3"
+                className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),220px,240px] gap-3 items-center border border-white/10 bg-black/20 px-4 py-3"
               >
                 <div className="min-w-0">
                   <div className="text-white font-display font-bold truncate">
@@ -1224,7 +1224,7 @@ function StatusSection<T extends { id: string; status?: string }>({
                 <select
                   value={draftStatus}
                   onChange={(e) => onDraftChange(entity, item.id, e.target.value)}
-                  className="bg-black/30 border border-brutal-border p-3 text-white outline-none"
+                  className="bg-black/30 border border-white/10 p-3 text-white outline-none"
                 >
                   {statusOptions.map((status) => (
                     <option key={status} value={status}>
@@ -1237,7 +1237,7 @@ function StatusSection<T extends { id: string; status?: string }>({
                   <button
                     onClick={() => void onSave(entity, item.id)}
                     disabled={savingKey === draftKey || deletingKey === `content:${entity}:${item.id}`}
-                    className="bg-primary text-white hover:bg-white hover:text-black font-display font-bold py-3 brutal-btn bg-primary text-main-bg font-bold uppercase tracking-widest disabled:opacity-60"
+                    className="bg-cyber-blue text-white hover:bg-white hover:text-black font-display font-bold py-3 cyber-button uppercase tracking-widest disabled:opacity-60"
                   >
                     {savingKey === draftKey ? 'Saving...' : 'Save'}
                   </button>
@@ -1268,8 +1268,8 @@ function StatCard({
   value: string;
 }) {
   return (
-    <div className="bg-surface border brutal-border brutal-shadow-sm p-5 bg-surface/50 border border-primary/20">
-      <div className="flex items-center gap-3 mb-4 text-primary">
+    <div className="cyber-card p-5 bg-surface/50 border border-cyber-blue/20">
+      <div className="flex items-center gap-3 mb-4 text-cyber-blue">
         <Icon size={18} />
         <span className="text-xs font-mono uppercase tracking-[0.25em]">
           {label}

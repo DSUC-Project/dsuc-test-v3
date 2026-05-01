@@ -615,20 +615,12 @@ export function AcademyLesson() {
       const completion = persistCompletedLesson();
 
       if (isFinalLessonInTrack) {
-        void completion.then(async (saved) => {
+        void completion.then((saved) => {
           if (!saved) {
             return;
           }
 
-          try {
-            const confetti = (await import('canvas-confetti')).default;
-            confetti({
-              particleCount: 150,
-              spread: 100,
-              origin: { y: 0.6 }
-            });
-          } catch(e) {}
-          
+          setShowCelebration(true);
           const audio = celebrationAudioRef.current;
           if (audio) {
             audio.currentTime = 0;
@@ -786,7 +778,7 @@ export function AcademyLesson() {
                     <div className="mb-3 flex items-center gap-3 font-display text-lg font-black text-brutal-black bg-white border-4 border-brutal-black px-4 py-2 w-fit uppercase tracking-widest">
                       <Terminal size={20} className="text-brutal-black" /> {callout.title || 'Lưu ý'}
                     </div>
-                    <div className="relative z-10 text-base font-bold leading-relaxed text-brutal-black bg-surface p-4 border-2 border-brutal-black">
+                    <div className="relative z-10 text-base font-bold leading-relaxed text-brutal-black bg-white/50 p-4 border-2 border-brutal-black">
                       {callout.body}
                     </div>
                   </div>
@@ -1078,7 +1070,7 @@ function CompletionCelebration({
             >
               Chúc mừng tốt nghiệp!
             </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg font-bold leading-relaxed text-brutal-black bg-surface p-4 border-2 border-brutal-black">
+            <p className="mx-auto mt-6 max-w-xl text-lg font-bold leading-relaxed text-brutal-black bg-white/80 p-4 border-2 border-brutal-black">
               Bạn đã chính thức vượt qua chuyên đề <span className="font-black text-brutal-blue">{graduationLabel}</span> bằng việc hoàn thành bài học cuối cùng{' '}
               <span className="font-black text-brutal-blue">{lessonTitle}</span>. Hãy tiếp tục duy trì thành tích đăng nhập này nhé.
             </p>

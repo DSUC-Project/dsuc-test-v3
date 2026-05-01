@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useEffect, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ActionButton, SoftBrutalCard, StatusBadge, SectionHeader } from '@/components/ui/Primitives';
 import { ContactModal } from '@/components/ui/ContactModal';
@@ -7,12 +7,16 @@ import { useStore } from '@/store/useStore';
 
 function MarqueeStrip() {
   const text = "BUILD · LEARN · SHIP · SOLANA · WEB3 · CODE · COMMUNITY · DSUC LABS · ";
+  const shouldReduceMotion = useReducedMotion();
+  const isMobile = window.innerWidth < 768;
+  const noAnimation = shouldReduceMotion || isMobile;
+
   return (
     <div className="w-full relative overflow-hidden py-4 border-y brutal-border bg-main-bg dark:bg-navy-surface flex items-center">
       <motion.div 
         className="flex whitespace-nowrap font-display uppercase font-bold text-2xl tracking-widest text-primary"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+        animate={noAnimation ? {} : { x: ["0%", "-50%"] }}
+        transition={noAnimation ? {} : { repeat: Infinity, duration: 25, ease: "linear" }}
       >
         <span>{text}{text}</span>
         <span>{text}{text}</span>
@@ -24,9 +28,25 @@ function MarqueeStrip() {
 export function Home() {
   const [contactOpen, setContactOpen] = React.useState(false);
   const { members, projects, events, currentUser } = useStore();
+  const [sysStatus, setSysStatus] = useState("CHECKING...");
+
+  useEffect(() => {
+    fetch('/api/health')
+      .then(r => {
+        if (r.ok) setSysStatus("ONLINE");
+        else setSysStatus("OFFLINE");
+      })
+      .catch(() => setSysStatus("OFFLINE"));
+  }, []);
 
   const recentEvents = events.slice(0, 3);
   const recentProjects = projects.slice(0, 3);
+  const recentMembers = members.slice(0, 8);
+  const featuredUnits = [
+    { id: 'wallet-adapter', title: 'Solana Wallet Adapter', description: 'Learn how to connect Solana wallets in React applications.' },
+    { id: 'anchor-programs', title: 'Intro to Anchor', description: 'Write your first Solana program using the Anchor framework.' },
+    { id: 'spl-tokens', title: 'SPL Token Creation', description: 'Mint and transfer your own custom tokens on Solana.' }
+  ];
 
   return (
     <div className="w-full">
@@ -98,7 +118,13 @@ export function Home() {
                      <span className="text-gray-300">status --check</span>
                   </div>
                   <div className="pl-4 space-y-1 text-gray-400">
-                     <p>['SYSTEM'] ............ <span className="text-emerald-400 font-bold">ONLINE</span></p>
+                     <p>['SYSTEM'] ............ 
+                        <span className={
+                           sysStatus === 'ONLINE' ? 'text-emerald-400 font-bold'
+                           : sysStatus === 'OFFLINE' ? 'text-red-500 font-bold'
+                           : 'text-yellow-400'
+                        }> {sysStatus}</span>
+                     </p>
                      <p>['DB_REGION'] ......... <span className="text-yellow-400">SGP_ASIA</span></p>
                      <p>['USER_MODE'] ......... <span className="text-primary">{currentUser ? 'AUTH_VERIFIED' : 'GUEST_MODE'}</span></p>
                   </div>
@@ -177,6 +203,29 @@ export function Home() {
 
       {/* Content Columns Wrapper */}
       <div className="container mx-auto px-4 py-24 space-y-32">
+        
+        {/* Academy Preview */}
+        {featuredUnits.length > 0 && (
+           <section>
+              <SectionHeader title="Academy" subtitle="Featured learning paths and tutorials for builders." />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                 {featuredUnits.map((lesson, i) => (
+                    <Link to="/academy" key={i} className="block group">
+                       <div className="p-5 border brutal-border hover:border-primary transition-colors bg-surface h-full flex flex-col">
+                          <h3 className="font-bold text-lg mb-2">{lesson.title}</h3>
+                          <p className="text-sm font-mono text-text-muted mb-4 line-clamp-2 leading-relaxed">{lesson.description}</p>
+                          <div className="mt-auto border-t brutal-border pt-4">
+                             <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted group-hover:text-primary transition-colors">
+                                Start Learning &rarr;
+                             </span>
+                          </div>
+                       </div>
+                    </Link>
+                 ))}
+              </div>
+           </section>
+        )}
+
         {/* Recent Events */}
         {recentEvents.length > 0 && (
           <section>
@@ -248,6 +297,28 @@ export function Home() {
               ))}
             </div>
           </section>
+        )}
+
+        {/* Members Preview */}
+        {recentMembers.length > 0 && (
+           <section>
+              <SectionHeader title="Community" subtitle="The builders driving DSUC Labs forward." />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                 {recentMembers.map((member, i) => (
+                    <Link to={`/members`} key={i} className="block group">
+                       <div className="p-4 border brutal-border hover:border-primary transition-colors bg-surface flex flex-col items-center text-center">
+                          <img 
+                             src={member.avatar || `https://api.dicebear.com/7.x/shapes/svg?seed=${member.id}`} 
+                             alt={member.name}
+                             className="w-16 h-16 rounded-full border-2 border-main-bg mb-3 object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+                          />
+                          <h4 className="font-bold text-sm truncate w-full">{member.name}</h4>
+                          <p className="text-[10px] font-mono text-text-muted truncate w-full mt-1">{member.role}</p>
+                       </div>
+                    </Link>
+                 ))}
+              </div>
+           </section>
         )}
 
         {/* Final CTA */}

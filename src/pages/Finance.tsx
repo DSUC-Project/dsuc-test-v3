@@ -1,12 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Check, X, ScanLine, ArrowRight, Zap, Upload } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { FinanceRequest, Member } from '../types';
 import { BANKS } from '../data/mockData';
-import { SectionHeader, SoftBrutalCard, ActionButton } from '@/components/ui/Primitives';
 
 export function Finance() {
   const [activeTab, setActiveTab] = useState<'submit' | 'pending' | 'history' | 'direct'>('submit');
@@ -19,10 +18,10 @@ export function Finance() {
     ? ['submit', 'direct', 'pending', 'history']
     : ['submit', 'direct', 'history'];
   const tabLabels: Record<string, string> = {
-    submit: 'Requests',
-    direct: 'Direct Transfer',
-    pending: 'Pending',
-    history: 'History',
+    submit: 'Yêu cầu',
+    direct: 'Chuyển khoản',
+    pending: 'Chờ duyệt',
+    history: 'Lịch sử',
   };
 
   // Fetch members on mount (needed for bank info lookup in ApprovalModal)
@@ -54,36 +53,39 @@ export function Finance() {
 
   if (!currentUser || !isOfficialMember) {
     return (
-      <div className="mx-auto max-w-5xl space-y-8 pt-10 px-4">
-        <SoftBrutalCard className="min-h-[500px] flex-col items-center justify-center space-y-6 text-center p-8 md:p-16 flex">
-          <div className="flex h-20 w-20 items-center justify-center border brutal-border bg-accent text-4xl">🔒</div>
-          <h2 className="font-display text-3xl font-bold uppercase tracking-tight text-text-main">Finance is for members only</h2>
-          <p className="max-w-md border brutal-border bg-main-bg px-4 py-3 text-sm font-mono font-bold uppercase tracking-widest text-text-main">
-            Please log in with a member account to access this module.
+      <div className="mx-auto max-w-5xl space-y-8 pt-10">
+        <div className="flex min-h-[500px] flex-col items-center justify-center space-y-6 border-4 border-brutal-black bg-white px-8 py-12 text-center shadow-neo">
+          <div className="flex h-20 w-20 items-center justify-center border-4 border-brutal-black bg-brutal-yellow text-4xl shadow-neo-sm">🔒</div>
+          <h2 className="font-display text-3xl font-black uppercase tracking-tight text-brutal-black">Finance chỉ dành cho member</h2>
+          <p className="max-w-md border-4 border-brutal-black bg-brutal-pink px-4 py-3 text-sm font-black uppercase tracking-widest text-brutal-black shadow-neo-sm">
+            Hãy đăng nhập bằng tài khoản DSUC member để truy cập module Finance.
           </p>
-          <div className="max-w-lg text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">
-            Community accounts do not have permission to view the ledger.
+          <div className="max-w-lg text-xs font-bold uppercase tracking-widest text-gray-500">
+            Tài khoản community không có quyền truy cập khu vực này.
           </div>
-        </SoftBrutalCard>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-16 space-y-12">
-      <div className="flex flex-col items-start justify-between gap-6 border-b brutal-border pb-8 md:flex-row md:items-end">
-        <SectionHeader title="FINANCE LEDGER" subtitle="Submit payment requests, direct transfers, and history." className="mb-0 border-none pb-0" />
-        <div className="flex flex-wrap gap-2 border brutal-border bg-surface p-2 w-full md:w-auto">
+    <div className="mx-auto max-w-6xl space-y-8 pb-20 pt-10 px-4 sm:px-6">
+      <div className="flex flex-col items-start justify-between gap-6 border-b-4 border-brutal-black pb-6 md:flex-row md:items-end">
+        <div>
+          <h2 className="mb-3 text-4xl font-display font-black uppercase tracking-tighter text-brutal-black decoration-brutal-yellow decoration-4 underline underline-offset-4">Finance</h2>
+          <p className="border-l-4 border-brutal-blue pl-4 text-sm font-bold text-brutal-black">Tạo yêu cầu thanh toán, chuyển khoản trực tiếp và theo dõi lịch sử giao dịch.</p>
+        </div>
+        <div className="flex flex-wrap gap-2 border-4 border-brutal-black bg-white p-2 shadow-neo-sm">
           {visibleTabs.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab as any)}
-              className={`flex items-center gap-2 border px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest transition-colors ${activeTab === tab ? 'border-brutal-border bg-primary text-main-bg' : 'border-transparent bg-transparent text-text-muted hover:border-brutal-border hover:bg-main-bg hover:text-text-main'}`}
+              className={`flex items-center gap-2 border-4 px-4 py-3 text-xs font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'border-brutal-black bg-brutal-yellow text-brutal-black shadow-neo-sm' : 'border-transparent bg-white text-gray-500 hover:border-brutal-black hover:bg-brutal-pink hover:text-brutal-black'}`}
             >
               {tab === 'direct' && <Zap size={14} />}
               {tabLabels[tab] || tab}
               {tab === 'pending' && financeRequests.length > 0 && (
-                <span className="ml-1 border border-brutal-border bg-error px-1.5 py-0.5 text-[10px] font-mono font-bold text-main-bg">{financeRequests.length}</span>
+                <span className="ml-1 border-2 border-brutal-black bg-brutal-blue px-1.5 py-0.5 text-[10px] font-black text-white shadow-neo-sm">{financeRequests.length}</span>
               )}
             </button>
           ))}
@@ -111,6 +113,7 @@ function SubmitRequestForm({ onSubmitted }: { onSubmitted: () => void }) {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Convert to base64 for preview and submission
       const reader = new FileReader();
       reader.onloadend = () => {
         setBillImage(reader.result as string);
@@ -140,6 +143,7 @@ function SubmitRequestForm({ onSubmitted }: { onSubmitted: () => void }) {
         requesterId: currentUser.id
       });
 
+      // Reset form
       setAmount('');
       setReason('');
       setDate('');
@@ -148,7 +152,7 @@ function SubmitRequestForm({ onSubmitted }: { onSubmitted: () => void }) {
 
       onSubmitted();
     } catch (err) {
-      alert('Cannot send request. Try again.');
+      alert('Không thể gửi yêu cầu thanh toán. Vui lòng thử lại.');
     }
   };
 
@@ -156,30 +160,31 @@ function SubmitRequestForm({ onSubmitted }: { onSubmitted: () => void }) {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="space-y-6">
         <div>
-          <div className="mb-3 inline-flex items-center gap-2 border brutal-border bg-primary px-3 py-2 text-[10px] font-mono font-bold uppercase tracking-widest text-main-bg">
+          <div className="mb-3 inline-flex items-center gap-2 border-4 border-brutal-black bg-brutal-blue px-3 py-2 text-[10px] font-black uppercase tracking-widest text-white shadow-neo-sm">
             <Zap size={14} />
-            Payment Request
+            Yêu cầu thanh toán
           </div>
-          <h3 className="font-display text-2xl font-bold uppercase tracking-tight text-text-main">Submit reimbursement request</h3>
-          <p className="mt-4 border-l-2 brutal-border pl-4 text-sm font-mono text-text-muted">Create a reimbursement request for club operations. A receipt is required.</p>
+          <h3 className="font-display text-3xl font-black uppercase tracking-tight text-brutal-black">Gửi yêu cầu thanh toán</h3>
+          <p className="mt-4 border-l-4 border-brutal-pink pl-4 text-sm font-bold text-brutal-black">Tạo request hoàn tiền cho chi phí hoạt động của câu lạc bộ. Hóa đơn là bắt buộc để lưu hồ sơ.</p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-6 border brutal-border bg-surface p-6">
+        <form onSubmit={handleSubmit} className="space-y-6 border-4 border-brutal-black bg-white p-6 shadow-neo">
           <div className="space-y-2">
-            <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">Amount (VND)</label>
-            <input value={amount} onChange={e => setAmount(e.target.value)} type="number" required className="w-full border brutal-border bg-main-bg p-4 font-mono text-xl font-bold text-text-main outline-none transition-colors focus:border-primary" placeholder="500000" />
+            <label className="text-[10px] font-black uppercase tracking-widest text-brutal-black">Amount (VND)</label>
+            <input value={amount} onChange={e => setAmount(e.target.value)} type="number" required className="w-full border-4 border-brutal-black bg-white p-4 font-mono text-xl font-bold text-brutal-black outline-none transition-colors focus:bg-brutal-yellow/20" placeholder="500000" />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">Target Date</label>
-            <input value={date} onChange={e => setDate(e.target.value)} type="date" required className="w-full border brutal-border bg-main-bg p-4 font-mono text-sm font-bold text-text-main outline-none transition-colors focus:border-primary" />
+            <label className="text-[10px] font-black uppercase tracking-widest text-brutal-black">Target Date</label>
+            <input value={date} onChange={e => setDate(e.target.value)} type="date" required className="w-full border-4 border-brutal-black bg-white p-4 font-mono text-sm font-bold text-brutal-black outline-none transition-colors focus:bg-brutal-yellow/20" />
           </div>
           <div className="space-y-2">
-            <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">Justification</label>
-            <textarea value={reason} onChange={e => setReason(e.target.value)} required rows={4} className="w-full border brutal-border bg-main-bg p-4 text-sm font-mono text-text-main outline-none transition-colors focus:border-primary resize-none" placeholder="Description of the expense..." />
+            <label className="text-[10px] font-black uppercase tracking-widest text-brutal-black">Justification</label>
+            <textarea value={reason} onChange={e => setReason(e.target.value)} required rows={4} className="w-full border-4 border-brutal-black bg-white p-4 text-sm font-bold text-brutal-black outline-none transition-colors focus:bg-brutal-yellow/20" placeholder="Mô tả lý do chi tiêu..." />
           </div>
 
+          {/* Bill/Receipt Upload */}
           <div className="space-y-2">
-            <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">Bill / Receipt</label>
-            <div className="relative border border-dashed brutal-border bg-main-bg transition-colors hover:bg-surface">
+            <label className="text-[10px] font-black uppercase tracking-widest text-brutal-black">Bill / Receipt</label>
+            <div className="relative border-4 border-dashed border-brutal-black bg-brutal-bg transition-colors hover:bg-brutal-yellow/20">
               <input
                 type="file"
                 accept="image/*"
@@ -189,35 +194,35 @@ function SubmitRequestForm({ onSubmitted }: { onSubmitted: () => void }) {
               />
               {billImage ? (
                 <div className="p-4">
-                  <img src={billImage} alt="Bill preview" className="mb-2 max-h-40 w-full border brutal-border object-contain bg-surface" />
-                  <div className="flex items-center justify-center gap-2 font-mono text-[10px] font-bold text-primary">
+                  <img src={billImage} alt="Bill preview" className="mb-2 max-h-40 w-full border-4 border-brutal-black object-contain bg-white" />
+                  <div className="flex items-center justify-center gap-2 font-mono text-xs font-bold text-brutal-blue">
                     <Check size={14} /> {billFile?.name}
                   </div>
                 </div>
               ) : (
                 <div className="p-8 text-center">
-                  <Upload size={32} className="mx-auto mb-2 text-text-muted" />
-                  <div className="mb-1 font-mono text-xs font-bold text-text-main">Click to upload bill</div>
-                  <div className="font-mono text-[10px] text-text-muted">PNG, JPG up to 10MB</div>
+                  <Upload size={32} className="mx-auto mb-2 text-brutal-blue" />
+                  <div className="mb-1 font-mono text-xs font-bold text-brutal-black">Click để tải hóa đơn</div>
+                  <div className="font-mono text-[10px] font-bold text-gray-500">PNG, JPG tối đa 10MB</div>
                 </div>
               )}
             </div>
           </div>
 
-          <ActionButton type="submit" variant="primary" className="w-full">
-            SUBMIT REQUEST
-          </ActionButton>
+          <button type="submit" className="w-full border-4 border-brutal-black bg-brutal-yellow py-4 text-sm font-black uppercase tracking-widest text-brutal-black transition-all hover:-translate-y-1 hover:bg-brutal-blue hover:text-white hover:shadow-neo">
+            Gửi yêu cầu
+          </button>
         </form>
       </div>
-      <div className="hidden h-full border brutal-border bg-accent p-8 lg:flex lg:flex-col lg:justify-between">
-        <div className="inline-flex w-fit items-center gap-2 border brutal-border bg-surface px-3 py-2 text-[10px] font-mono font-bold uppercase tracking-widest text-text-main">
+      <div className="hidden h-full border-4 border-brutal-black bg-brutal-yellow p-8 shadow-neo lg:flex lg:flex-col lg:justify-between">
+        <div className="inline-flex w-fit items-center gap-2 border-4 border-brutal-black bg-white px-3 py-2 text-[10px] font-black uppercase tracking-widest text-brutal-black shadow-neo-sm">
           <ScanLine size={14} />
-          Finance Channel
+          Kênh tài chính
         </div>
         <div>
-          <h4 className="font-display text-2xl font-bold uppercase tracking-tight text-text-main mb-4">Transparent expenses</h4>
-          <p className="border brutal-border bg-main-bg px-4 py-3 text-xs font-mono text-text-main">
-            All requests, approvals, and transaction history are aggregated here for unified review by the Executive team.
+          <h4 className="font-display text-3xl font-black uppercase tracking-tight text-brutal-black">Minh bạch từng khoản chi</h4>
+          <p className="mt-4 border-4 border-brutal-black bg-white px-4 py-3 text-sm font-bold text-brutal-black shadow-neo-sm">
+            Mọi request, phê duyệt và lịch sử thanh toán đều được gom tại đây để President và Vice-President quản lý tập trung.
           </p>
         </div>
       </div>
@@ -233,14 +238,17 @@ function DirectTransferTool() {
   const [billFile, setBillFile] = useState<File | null>(null);
   const [showQR, setShowQR] = useState(false);
 
+  // Filter members who have bank info
   const eligibleMembers = members.filter(
     (m) => (m.memberType !== 'community' && m.member_type !== 'community') && (m.bankInfo || m.bank_info)
   );
 
+  // Get normalized bank info - support both camelCase and snake_case
   const getBankInfo = (member: Member) => {
     const info = member.bankInfo || member.bank_info;
     if (!info) return null;
 
+    // Normalize to camelCase
     return {
       bankId: info.bankId || (info as any).bank_id,
       accountNo: info.accountNo || (info as any).account_no,
@@ -255,11 +263,12 @@ function DirectTransferTool() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Left: Member Selection */}
       <div className="space-y-6">
-        <h3 className="flex items-center gap-2 font-display text-2xl font-bold uppercase tracking-widest text-text-main">
+        <h3 className="flex items-center gap-2 font-display text-2xl font-black uppercase tracking-widest text-brutal-black">
           <Zap size={20} /> QUICK TRANSFER LINK
         </h3>
-        <p className="border-l-2 brutal-border pl-4 text-sm font-mono text-text-muted">Select a member to generate a quick transfer QR code and save the receipt.</p>
+        <p className="border-l-4 border-brutal-blue pl-4 text-sm font-bold text-brutal-black">Chọn member để tạo QR chuyển khoản nhanh và lưu lại ảnh chụp hóa đơn.</p>
 
         {!selectedMember ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2">
@@ -269,28 +278,28 @@ function DirectTransferTool() {
                 <button
                   key={member.id}
                   onClick={() => setSelectedMember(member)}
-                  className="flex flex-col gap-2 border brutal-border bg-surface p-4 text-left transition-colors hover:bg-main-bg"
+                  className="flex flex-col gap-2 border-4 border-brutal-black bg-white p-4 text-left shadow-neo-sm transition-all hover:-translate-y-1 hover:bg-brutal-yellow/20 hover:shadow-neo"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 overflow-hidden border brutal-border bg-accent">
+                    <div className="h-12 w-12 overflow-hidden border-4 border-brutal-black bg-brutal-yellow shadow-neo-sm">
                       <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <div className="font-display text-base font-bold text-text-main">{member.name}</div>
-                      <div className="text-[10px] font-mono uppercase tracking-widest text-text-muted">{member.role}</div>
+                      <div className="font-display text-lg font-black text-brutal-black">{member.name}</div>
+                      <div className="text-[10px] font-black uppercase tracking-widest text-gray-500">{member.role}</div>
                     </div>
                   </div>
                   {memberBankInfo && (
                     <div className="pl-14 space-y-1">
-                      <div className="text-[9px] font-mono font-bold text-primary">
+                      <div className="text-[9px] font-mono font-bold text-brutal-blue">
                         {BANKS.find(b => b.id === memberBankInfo.bankId)?.shortName || memberBankInfo.bankId}
                       </div>
                       {memberBankInfo.accountName && (
-                        <div className="text-[9px] font-mono text-text-muted">
+                        <div className="text-[9px] font-mono text-gray-500">
                           {memberBankInfo.accountName}
                         </div>
                       )}
-                      <div className="text-[9px] font-mono text-text-muted">
+                      <div className="text-[9px] font-mono text-gray-500">
                         {memberBankInfo.accountNo}
                       </div>
                     </div>
@@ -299,37 +308,38 @@ function DirectTransferTool() {
               );
             })}
             {eligibleMembers.length === 0 && (
-              <div className="col-span-2 border brutal-border bg-surface py-10 text-center text-xs font-mono font-bold uppercase tracking-widest text-text-muted">No members with bank data</div>
+              <div className="col-span-2 border-4 border-brutal-black bg-white py-10 text-center text-sm font-black uppercase tracking-widest text-gray-500 shadow-neo">Không tìm thấy member có dữ liệu ngân hàng</div>
             )}
           </div>
         ) : (
-          <SoftBrutalCard className="space-y-6 p-6">
-            <div className="flex items-center justify-between border-b brutal-border pb-4">
+          <div className="space-y-6 border-4 border-brutal-black bg-white p-6 shadow-neo">
+            <div className="flex items-center justify-between border-b-4 border-brutal-black pb-4">
               <div className="flex items-center gap-4">
-                <div className="h-10 w-10 overflow-hidden border brutal-border bg-accent">
+                <div className="h-12 w-12 overflow-hidden border-4 border-brutal-black bg-brutal-yellow shadow-neo-sm">
                   <img src={selectedMember.avatar} alt={selectedMember.name} className="w-full h-full object-cover" />
                 </div>
                 <div>
-                  <div className="font-display text-lg font-bold text-text-main">{selectedMember.name}</div>
-                      <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-primary">Recipient selected</div>
+                  <div className="font-display text-lg font-black text-brutal-black">{selectedMember.name}</div>
+                      <div className="text-[10px] font-black uppercase tracking-widest text-brutal-blue">Đã chọn người nhận</div>
                 </div>
               </div>
-              <button onClick={() => { setSelectedMember(null); setShowQR(false); }} className="border border-transparent p-2 text-text-muted transition-colors hover:border-brutal-border hover:bg-main-bg"><X size={16} /></button>
+              <button onClick={() => { setSelectedMember(null); setShowQR(false); }} className="border-2 border-transparent p-2 text-brutal-black transition-colors hover:border-brutal-black hover:bg-brutal-yellow"><X size={20} /></button>
             </div>
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">Amount</label>
-                <input value={amount} onChange={e => setAmount(e.target.value)} type="number" className="w-full border brutal-border bg-main-bg p-3 font-mono font-bold text-text-main outline-none transition-colors focus:border-primary" placeholder="0" />
+                <label className="text-[10px] font-black uppercase tracking-widest text-brutal-black">Amount</label>
+                <input value={amount} onChange={e => setAmount(e.target.value)} type="number" className="w-full border-4 border-brutal-black bg-white p-3 font-mono font-bold text-brutal-black outline-none transition-colors focus:bg-brutal-yellow/20" placeholder="0" />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">Message</label>
-                <input value={content} onChange={e => setContent(e.target.value)} type="text" className="w-full border brutal-border bg-main-bg p-3 font-mono text-text-main outline-none transition-colors focus:border-primary" placeholder="Payment for..." />
+                <label className="text-[10px] font-black uppercase tracking-widest text-brutal-black">Message</label>
+                <input value={content} onChange={e => setContent(e.target.value)} type="text" className="w-full border-4 border-brutal-black bg-white p-3 font-bold text-brutal-black outline-none transition-colors focus:bg-brutal-yellow/20" placeholder="Payment for..." />
               </div>
 
+              {/* Image Upload */}
               <div className="space-y-2">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">Proof of Bill</label>
-                <div className="relative border border-dashed brutal-border bg-main-bg p-4 text-center transition-colors hover:bg-surface">
+                <label className="text-[10px] font-black uppercase tracking-widest text-brutal-black">Proof of Bill</label>
+                <div className="relative border-4 border-dashed border-brutal-black bg-brutal-bg p-4 text-center transition-colors hover:bg-brutal-yellow/20">
                   <input
                     type="file"
                     accept="image/*"
@@ -337,50 +347,48 @@ function DirectTransferTool() {
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
                   {billFile ? (
-                    <div className="flex items-center justify-center gap-2 font-mono text-[10px] font-bold text-primary">
+                    <div className="flex items-center justify-center gap-2 font-mono text-xs font-bold text-brutal-blue">
                       <Check size={14} /> {billFile.name}
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center gap-2 font-mono text-[10px] font-bold text-text-muted">
-                      <Upload size={14} /> Upload Receipt
+                    <div className="flex items-center justify-center gap-2 font-mono text-xs font-bold text-gray-500">
+                      <Upload size={14} /> Tải ảnh hóa đơn
                     </div>
                   )}
                 </div>
               </div>
 
-              <ActionButton
-                variant="primary"
+              <button
                 onClick={() => setShowQR(true)}
                 disabled={!amount}
-                className="w-full"
+                className="w-full border-4 border-brutal-black bg-brutal-blue py-3 font-display text-sm font-black uppercase tracking-widest text-white transition-all hover:-translate-y-1 hover:bg-brutal-yellow hover:text-brutal-black hover:shadow-neo disabled:cursor-not-allowed disabled:opacity-50"
               >
-                GENERATE QR
-              </ActionButton>
+                Tạo mã QR
+              </button>
             </div>
-          </SoftBrutalCard>
+          </div>
         )}
       </div>
 
-      <div className="relative flex items-center justify-center border brutal-border bg-surface min-h-[360px]">
+      {/* Right: QR Display */}
+      <div className="relative flex items-center justify-center border-4 border-brutal-black bg-white shadow-neo min-h-[360px]">
         {showQR && selectedMember && bankInfo ? (
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex h-full w-full flex-col items-center justify-center bg-surface p-8 text-center">
-            <div className="bg-white p-4 border brutal-border mb-4">
-              <img src={qrUrl} alt="VietQR" className="max-w-[250px] mix-blend-multiply" />
-            </div>
-            <div className="border brutal-border bg-accent px-3 py-2 text-[10px] font-mono font-bold uppercase tracking-widest text-text-main">Scan to Pay {selectedMember.name}</div>
-            <div className="mt-4 font-mono text-[10px] font-bold text-text-muted">
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex h-full w-full flex-col items-center justify-center bg-white p-8 text-center">
+            <img src={qrUrl} alt="VietQR" className="max-w-[250px] mix-blend-multiply mb-4" />
+            <div className="border-2 border-brutal-black bg-brutal-yellow px-3 py-2 text-xs font-black uppercase tracking-widest text-brutal-black shadow-neo-sm">Scan to Pay {selectedMember.name}</div>
+            <div className="mt-3 font-mono text-[10px] font-bold text-gray-500">
               Bank: {BANKS.find(b => b.id === bankInfo.bankId)?.shortName || bankInfo.bankId}
             </div>
             {bankInfo.accountName && (
-              <div className="mt-1 font-mono text-[10px] text-text-muted">
+              <div className="mt-0.5 font-mono text-[9px] text-gray-500">
                 {bankInfo.accountName}
               </div>
             )}
           </motion.div>
         ) : (
-          <div className="text-center opacity-40">
-            <ScanLine size={80} className="mx-auto mb-4 text-text-main" />
-            <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-text-main">QR GENERATOR IDLE</p>
+          <div className="text-center opacity-60">
+            <ScanLine size={100} className="mx-auto mb-4 text-brutal-black" />
+            <p className="font-mono text-xs font-black uppercase tracking-widest text-brutal-black">QR generator idle</p>
           </div>
         )}
       </div>
@@ -392,38 +400,37 @@ function PendingRequestsList() {
   const { financeRequests, approveFinanceRequest, rejectFinanceRequest } = useStore();
   const [selectedReq, setSelectedReq] = useState<FinanceRequest | null>(null);
 
-  const pendingRequests = financeRequests.filter(r => r.status === 'pending');
-
-  if (pendingRequests.length === 0) {
+  if (financeRequests.length === 0) {
     return (
-      <div className="flex h-48 items-center justify-center border brutal-border bg-surface text-xs font-mono uppercase tracking-widest text-text-muted">
-        No pending requests
+      <div className="flex h-64 items-center justify-center border-4 border-brutal-black bg-white text-sm font-black uppercase tracking-widest text-gray-500 shadow-neo">
+        Không có yêu cầu chờ duyệt
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      {pendingRequests.map(req => (
-        <div key={req.id} className="group flex items-center justify-between border brutal-border bg-surface p-6 transition-colors hover:bg-main-bg">
+      {financeRequests.map(req => (
+        <div key={req.id} className="group flex items-center justify-between border-4 border-brutal-black bg-white p-6 shadow-neo-sm transition-all hover:-translate-y-1 hover:shadow-neo">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bg-accent px-2 py-1 text-sm font-mono font-bold text-text-main border brutal-border">{parseInt(req.amount).toLocaleString()} VND</span>
-              <span className="border brutal-border bg-main-bg px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest text-text-muted">{req.date}</span>
+            <div className="flex items-center gap-3 mb-1">
+              <span className="bg-brutal-yellow px-3 py-1 text-lg font-black text-brutal-black border-2 border-brutal-black shadow-neo-sm">{parseInt(req.amount).toLocaleString()} VND</span>
+              <span className="border-2 border-brutal-black bg-white px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-gray-500">{req.date}</span>
             </div>
-            <p className="font-display font-bold text-text-main">{req.reason}</p>
-            <p className="mt-1 text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">From: {req.requesterName}</p>
+            <p className="font-display font-black text-brutal-black transition-colors group-hover:text-brutal-blue">{req.reason}</p>
+            <p className="mt-1 text-[10px] font-black uppercase tracking-widest text-gray-500">Người gửi: {req.requesterName}</p>
           </div>
 
           <button
             onClick={() => setSelectedReq(req)}
-            className="border brutal-border bg-main-bg p-3 text-text-main transition-colors hover:bg-primary hover:text-main-bg"
+            className="border-4 border-brutal-black bg-white p-3 text-brutal-black shadow-neo-sm transition-all hover:-translate-y-1 hover:bg-brutal-blue hover:text-white"
           >
             <ArrowRight size={20} />
           </button>
         </div>
       ))}
 
+      {/* Approval Modal */}
       {selectedReq && (
         <ApprovalModal
           request={selectedReq}
@@ -440,8 +447,10 @@ function ApprovalModal({ request, onClose, onApprove, onReject }: { request: Fin
   const { members } = useStore();
   const [showQR, setShowQR] = useState(false);
 
+  // Find requester to get their bank info
   const requester = members.find(m => m.id === request.requesterId);
 
+  // Get normalized bank info - handle both camelCase and snake_case
   const rawBankInfo = requester ? (requester.bankInfo || (requester as any).bank_info) : null;
 
   const requesterBankInfo = rawBankInfo ? {
@@ -450,8 +459,9 @@ function ApprovalModal({ request, onClose, onApprove, onReject }: { request: Fin
     accountName: rawBankInfo.accountName || (rawBankInfo as any).account_name
   } : null;
 
+  // Default Club Account if requester has no bank info
   const DEFAULT_ACCOUNT_NO = "0356616096";
-  const DEFAULT_BANK_ID = "970422";
+  const DEFAULT_BANK_ID = "970422"; // MB Bank
   const DEFAULT_NAME = "DUT SUPERTEAM";
 
   const bankId = requesterBankInfo?.bankId || DEFAULT_BANK_ID;
@@ -463,61 +473,63 @@ function ApprovalModal({ request, onClose, onApprove, onReject }: { request: Fin
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" onClick={onClose}>
-      <div className="absolute inset-0 bg-main-bg/80 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
       <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="relative z-10 grid w-full max-w-2xl grid-cols-1 gap-8 border brutal-border bg-surface p-8 md:grid-cols-2 shadow-xl"
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        className="relative z-10 grid w-full max-w-2xl grid-cols-1 gap-8 border-4 border-brutal-black bg-white p-8 shadow-neo-xl md:grid-cols-2"
         onClick={(e) => e.stopPropagation()}
       >
+
+        {/* Left: Details */}
         <div>
-          <h3 className="mb-6 font-display text-xl font-bold uppercase tracking-wider text-text-main">Review Request</h3>
-          <div className="space-y-4 text-xs font-mono">
-            <div className="flex justify-between border-b brutal-border pb-2">
-              <span className="uppercase tracking-widest text-text-muted">Amount</span>
-              <span className="font-bold text-text-main">{parseInt(request.amount).toLocaleString()}</span>
+          <h3 className="mb-6 font-display text-2xl font-black uppercase tracking-wider text-brutal-black">Xét duyệt yêu cầu</h3>
+          <div className="space-y-4 text-xs font-bold">
+            <div className="flex justify-between border-b-4 border-brutal-black pb-2">
+              <span className="uppercase tracking-widest text-gray-500">Số tiền</span>
+              <span className="text-lg font-black text-brutal-black">{parseInt(request.amount).toLocaleString()}</span>
             </div>
-            <div className="flex justify-between border-b brutal-border pb-2">
-              <span className="uppercase tracking-widest text-text-muted">From</span>
-              <span className="text-text-main">{request.requesterName}</span>
+            <div className="flex justify-between border-b-4 border-brutal-black pb-2">
+              <span className="uppercase tracking-widest text-gray-500">Người gửi</span>
+              <span className="text-brutal-black">{request.requesterName}</span>
             </div>
-            <div className="flex justify-between border-b brutal-border pb-2">
-              <span className="uppercase tracking-widest text-text-muted">Bank</span>
-              <span className="text-primary">{bankName}</span>
+            <div className="flex justify-between border-b-4 border-brutal-black pb-2">
+              <span className="uppercase tracking-widest text-gray-500">Ngân hàng</span>
+              <span className="text-brutal-blue">{bankName}</span>
             </div>
-            <div className="flex justify-between border-b brutal-border pb-2">
-              <span className="uppercase tracking-widest text-text-muted">Account No</span>
-              <span className="text-text-main">{accountNo}</span>
+            <div className="flex justify-between border-b-4 border-brutal-black pb-2">
+              <span className="uppercase tracking-widest text-gray-500">Số tài khoản</span>
+              <span className="text-brutal-black">{accountNo}</span>
             </div>
             <div>
-              <span className="mb-2 block uppercase tracking-widest text-text-muted">Reason</span>
-              <p className="border brutal-border bg-main-bg p-3 text-[10px] text-text-main">{request.reason}</p>
+              <span className="mb-1 block uppercase tracking-widest text-gray-500">Lý do</span>
+              <p className="border-4 border-brutal-black bg-brutal-bg p-3 text-sm text-brutal-black">{request.reason}</p>
             </div>
           </div>
 
           {!showQR && (
             <div className="grid grid-cols-2 gap-4 mt-8">
-              <button onClick={onReject} className="border brutal-border bg-main-bg py-3 text-[10px] font-mono font-bold uppercase tracking-widest text-error transition-colors hover:bg-error hover:text-main-bg">Reject</button>
-              <button onClick={() => setShowQR(true)} className="border brutal-border bg-primary py-3 text-[10px] font-mono font-bold uppercase tracking-widest text-main-bg transition-colors hover:opacity-90">Transfer</button>
+              <button onClick={onReject} className="border-4 border-brutal-black bg-brutal-red py-3 text-sm font-black uppercase tracking-widest text-white transition-all hover:-translate-y-1 hover:shadow-neo">Reject</button>
+              <button onClick={() => setShowQR(true)} className="border-4 border-brutal-black bg-brutal-blue py-3 text-sm font-black uppercase tracking-widest text-white transition-all hover:-translate-y-1 hover:bg-brutal-yellow hover:text-brutal-black hover:shadow-neo">Transfer</button>
             </div>
           )}
         </div>
 
-        <div className="relative flex flex-col items-center justify-center overflow-hidden border brutal-border bg-main-bg p-4">
+        {/* Right: QR Area */}
+        <div className="relative flex flex-col items-center justify-center overflow-hidden border-4 border-brutal-black bg-brutal-yellow p-4">
           {showQR ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center w-full">
-              <div className="bg-white p-2 border brutal-border mb-4 inline-block">
-                 <img src={qrUrl} className="w-full mix-blend-multiply max-w-[200px]" alt="VietQR" />
-              </div>
-              <button onClick={onApprove} className="w-full border brutal-border bg-text-main py-3 text-[10px] font-mono font-bold uppercase tracking-widest text-main-bg transition-colors hover:bg-primary">Confirm & Approve</button>
+              <img src={qrUrl} className="w-full mb-4 mix-blend-multiply" alt="VietQR" />
+              <button onClick={onApprove} className="w-full border-4 border-brutal-black bg-brutal-black py-3 text-xs font-black uppercase tracking-widest text-white transition-all hover:-translate-y-1 hover:bg-brutal-blue hover:shadow-neo">Confirm transfer</button>
             </motion.div>
           ) : (
-            <div className="flex flex-col items-center text-center text-text-muted">
-              <ScanLine size={48} />
-              <p className="mt-4 text-[10px] font-mono font-bold uppercase tracking-widest">Awaiting transfer init</p>
+            <div className="flex flex-col items-center text-center text-brutal-black/40">
+              <ScanLine size={64} />
+              <p className="mt-4 text-xs font-black uppercase tracking-widest">Chờ xác nhận chuyển khoản</p>
             </div>
           )}
         </div>
+
       </motion.div>
     </div>,
     document.body
@@ -529,37 +541,35 @@ function HistoryList() {
 
   return (
     <div className="space-y-4">
-      <div className="mb-6 border brutal-border bg-accent p-4">
-        <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-main leading-relaxed">
-          <span className="font-display text-sm mr-2 block mb-1">Public ledger:</span> All approved or rejected transactions are stored here to ensure transparency.
+      <div className="mb-6 border-4 border-brutal-black bg-brutal-yellow p-4 shadow-neo-sm">
+        <p className="text-xs font-black uppercase tracking-widest text-brutal-black">
+          <span className="font-display">Public ledger:</span> tất cả giao dịch đã duyệt hoặc từ chối đều được lưu ở đây để đảm bảo minh bạch.
         </p>
       </div>
 
-      <div className="grid grid-cols-4 px-4 mb-2 text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted border-b brutal-border pb-2">
+      <div className="grid grid-cols-4 px-4 mb-2 text-[10px] font-black uppercase tracking-wider text-gray-500">
         <span>Status</span>
-        <span>Amount (VND)</span>
+        <span>Amount</span>
         <span>Reason</span>
         <span className="text-right">Date</span>
       </div>
-      <div className="flex flex-col gap-2">
-        {financeHistory.map(req => (
-          <div key={req.id} className="grid grid-cols-4 items-center border brutal-border bg-surface p-4 text-xs font-mono transition-colors hover:bg-main-bg">
-            <div>
-              {req.status === 'completed' ? (
-                <span className="flex items-center gap-1 font-bold uppercase tracking-widest text-success"><Check size={12} /> Paid</span>
-              ) : (
-                 <span className="flex items-center gap-1 font-bold uppercase tracking-widest text-error"><X size={12} /> Rejected</span>
-              )}
-            </div>
-            <div className="font-bold text-text-main">{parseInt(req.amount).toLocaleString()}</div>
-            <div className="truncate pr-2 text-text-muted">{req.reason}</div>
-            <div className="text-right text-[10px] text-text-muted">{req.date}</div>
+      {financeHistory.map(req => (
+        <div key={req.id} className="flex items-center justify-between border-4 border-brutal-black bg-white p-4 text-xs shadow-neo-sm transition-all hover:-translate-y-1 hover:shadow-neo">
+          <div className="w-1/4">
+            {req.status === 'completed' ? (
+              <span className="flex items-center gap-1 font-black uppercase tracking-widest text-brutal-green"><Check size={12} /> Paid</span>
+            ) : (
+              <span className="flex items-center gap-1 font-black uppercase tracking-widest text-brutal-red"><X size={12} /> Rejected</span>
+            )}
           </div>
-        ))}
-        {financeHistory.length === 0 && (
-          <div className="border brutal-border bg-surface py-10 text-center text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">No transaction history</div>
-        )}
-      </div>
+          <div className="w-1/4 font-black text-brutal-black">{parseInt(req.amount).toLocaleString()}</div>
+          <div className="w-1/4 truncate pr-2 font-bold text-gray-700">{req.reason}</div>
+          <div className="w-1/4 text-right font-bold text-gray-500">{req.date}</div>
+        </div>
+      ))}
+      {financeHistory.length === 0 && (
+        <div className="border-4 border-brutal-black bg-white py-10 text-center text-xs font-black uppercase tracking-widest text-gray-500 shadow-neo">Chưa có giao dịch lưu trữ</div>
+      )}
     </div>
   );
 }

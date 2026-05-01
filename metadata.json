@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "description": "",
+  "name": "DSUC Labs",
+  "description": "Integration of DSUC-Labs production logic with the dsuc-test-v3 UI prototype.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }

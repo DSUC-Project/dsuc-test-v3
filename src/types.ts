@@ -96,12 +96,12 @@ export type ResourceCategory =
 export interface Resource {
   id: string;
   name: string;
-  description?: string;
   type: "Drive" | "Doc" | "Link" | "Document" | "Video";
   url: string;
   size?: string;
   status?: PublishStatus;
   category: ResourceCategory;
+  description?: string;
 }
 
 export interface Bank {
@@ -133,8 +133,8 @@ export interface Project {
   status?: PublishStatus;
   link: string;
   repoLink?: string;
+  techStack?: string[];
   tech_stack?: string[];
-  techStack?: string[]; // for backwards compatibility
 }
 
 export interface AcademyOverview {

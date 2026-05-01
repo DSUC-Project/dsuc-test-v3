@@ -558,7 +558,16 @@ export function AcademyUnit() {
                         : 'Tiếp tục chuỗi bài đọc trước khi sang phần thực hành.'}
                     </p>
                   </div>
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center                  <div className="flex flex-col gap-6 border-b-4 border-brutal-black pb-8 sm:flex-row sm:items-end sm:justify-between mb-8">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border-4 border-brutal-black bg-white shadow-neo-sm">
+                    <ChevronRight className="h-6 w-6 text-brutal-black" strokeWidth={3} aria-hidden="true" />
+                  </div>
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+              <section className="bg-white border-4 border-brutal-black shadow-neo p-6 sm:p-8 lg:p-10 mb-8 max-h-[60vh] overflow-y-auto brutal-scrollbar">
+                <div className="flex flex-col gap-6 border-b-4 border-brutal-black pb-8 sm:flex-row sm:items-end sm:justify-between mb-8">
                   <div>
                     <div className="inline-block bg-brutal-pink text-brutal-black px-2 py-1 text-[10px] font-black uppercase tracking-widest border-2 border-brutal-black shadow-neo-sm mb-3">
                       Hướng dẫn thực hành
@@ -576,16 +585,21 @@ export function AcademyUnit() {
                 </div>
               </section>
 
-              <section className="bg-brutal-bg border-4 border-brutal-black overflow-visible shadow-neo flex flex-col mb-12 relative w-full h-[800px]">
+              <section className="bg-brutal-bg border-4 border-brutal-black overflow-visible shadow-neo flex flex-col mb-12 relative">
                 <div className="overflow-visible flex flex-col sm:flex-row sm:items-center justify-between border-b-4 border-brutal-black bg-white px-4 py-3 gap-4">
                    <div className="relative z-20 isolate flex flex-wrap items-end gap-3">
                      <LabTabButton
-                       label="Workspace"
+                       label="Mã nguồn"
                        active={activeWorkspaceTab === 'editor'}
                        onClick={() => setActiveWorkspaceTab('editor')}
                      />
                      <LabTabButton
-                       label="Solution"
+                       label="Kết quả"
+                       active={activeWorkspaceTab === 'results'}
+                       onClick={() => setActiveWorkspaceTab('results')}
+                     />
+                     <LabTabButton
+                       label="Đáp án"
                        active={activeWorkspaceTab === 'solution'}
                        onClick={() => setActiveWorkspaceTab('solution')}
                      />
@@ -631,7 +645,7 @@ export function AcademyUnit() {
                    </div>
                 </div>
 
-                <div className="flex items-center gap-2 bg-brutal-bg px-4 py-3 border-b-4 border-brutal-black text-[10px] font-black tracking-widest uppercase overflow-x-auto text-brutal-black flex-shrink-0">
+                <div className="flex items-center gap-2 bg-brutal-bg px-4 py-3 border-b-4 border-brutal-black text-[10px] font-black tracking-widest uppercase overflow-x-auto text-brutal-black">
                   {runnerSupported ? (
                      <span className="text-brutal-black border-2 border-brutal-black bg-brutal-green px-2 py-0.5 shadow-neo-sm-sm">● {runtimeLabel} Sẵn sàng</span>
                   ) : (
@@ -649,111 +663,108 @@ export function AcademyUnit() {
                   )}
                 </div>
 
-                <div className="flex-1 bg-white overflow-y-auto brutal-scrollbar">
+                <div className="flex-1 bg-white">
                   {activeWorkspaceTab === 'editor' && (
-                    <div className="flex flex-col h-full">
-                      <div className="flex-1 min-h-[400px]">
-                        <CodeEditorPane
-                          value={draftCode}
-                          onChange={setDraftCode}
-                          language={unit.language || 'text'}
-                          placeholder="Bắt đầu viết code ở đây..."
-                        />
-                      </div>
-                      <div className="border-t-4 border-brutal-black">
-                        <div className="p-6 text-brutal-black bg-white">
-                          {!runReport ? (
-                            <div className="flex flex-col items-center justify-center py-10 text-center border-4 border-dashed border-brutal-black bg-gray-50 h-[300px]">
-                              <div className="w-16 h-16 bg-white border-4 border-brutal-black shadow-neo-sm flex items-center justify-center mb-6">
-                                <TerminalSquare className="w-8 h-8 text-brutal-black" strokeWidth={2} />
-                              </div>
-                              <h3 className="font-display text-2xl font-black uppercase text-brutal-black mb-2">Chưa có kết quả</h3>
-                              <p className="text-sm font-bold text-gray-700 max-w-sm">Chạy code của bạn để xem kết quả kiểm tra với các ca kiểm thử công khai và ẩn.</p>
-                            </div>
-                          ) : (
-                            <div className="space-y-6">
-                              <div className="bg-white p-6 border-4 border-brutal-black shadow-neo-sm">
-                                <div className="flex items-center justify-between gap-4 mb-4 border-b-4 border-brutal-black pb-4">
-                                  <div className="text-sm font-black uppercase tracking-widest text-brutal-black flex items-center gap-2">
-                                    Kết quả chạy
-                                  </div>
-                                  <span className={`px-2 py-1 text-[10px] font-black uppercase tracking-widest border-2 border-brutal-black shadow-neo-sm-sm ${runReportIsFresh ? runReport.allPassed ? 'bg-brutal-green text-brutal-black' : 'bg-brutal-pink text-brutal-black' : 'bg-brutal-yellow text-brutal-black'}`}>
-                                    {runReportIsFresh ? runReport.allPassed ? 'Thành công toàn bộ' : 'Thất bại' : 'Cần chạy lại'}
-                                  </span>
-                                </div>
+                    <CodeEditorPane
+                      value={draftCode}
+                      onChange={setDraftCode}
+                      language={unit.language || 'text'}
+                      placeholder="Bắt đầu viết code ở đây..."
+                    />
+                  )}
 
-                                <p className="text-base font-bold text-gray-800 leading-relaxed mb-6">
-                                  {runReportIsFresh ? runReport.message : 'Bạn đã chỉnh sửa trình soạn thảo sau lần chạy gần nhất. Hãy chạy lại để kết quả phản ánh đoạn code mới nhất.'}
-                                </p>
-
-                                <div className="grid grid-cols-2 gap-4">
-                                  <div className="bg-gray-100 p-4 border-4 border-brutal-black shadow-neo-sm">
-                                      <div className="text-[10px] font-black text-gray-600 uppercase tracking-widest w-full border-b-2 border-brutal-black pb-1 mb-2">
-                                        Thành công
-                                      </div>
-                                      <div className={`font-display text-3xl font-black ${runReport.allPassed ? 'text-brutal-green' : 'text-brutal-black'}`}>
-                                        {runReport.passedCount} <span className="text-gray-500 text-xl">/ {runReport.totalCount}</span>
-                                      </div>
-                                  </div>
-                                  <div className="bg-gray-100 p-4 border-4 border-brutal-black shadow-neo-sm">
-                                      <div className="text-[10px] font-black text-gray-600 uppercase tracking-widest w-full border-b-2 border-brutal-black pb-1 mb-2">
-                                        Hàm gọi chính
-                                      </div>
-                                      <div className="font-mono text-sm font-bold text-brutal-blue mt-1.5 truncate">
-                                        {runReport.primaryFunction || 'Không xác định'}
-                                      </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="space-y-4">
-                                <div className="flex items-center gap-2">
-                                  <div className="w-6 h-2 bg-brutal-black" />
-                                  <div className="text-xs font-black tracking-widest uppercase text-brutal-black">
-                                    Chi tiết Test Cases
-                                  </div>
-                                </div>
-                                {(runReport.cases || []).length > 0 ? (
-                                  runReport.cases.map((caseItem, index) => (
-                                    <div
-                                      key={caseItem.id}
-                                      className={`p-5 border-4 border-brutal-black transition-transform hover:-translate-y-0.5 ${caseItem.passed ? 'bg-brutal-green/20' : 'bg-brutal-pink/20'}`}
-                                    >
-                                        <div className="flex items-center justify-between gap-4 mb-3 border-b-2 border-brutal-black pb-2">
-                                          <div className="text-[10px] font-black uppercase tracking-widest text-brutal-black flex items-center gap-2">
-                                              {caseItem.passed ? (
-                                                <div className="bg-brutal-green border-2 border-brutal-black p-0.5"><CheckCircle2 className="w-3 h-3 text-brutal-black" strokeWidth={3} /></div>
-                                              ) : (
-                                                <div className="bg-brutal-pink border-2 border-brutal-black p-0.5"><AlertTriangle className="w-3 h-3 text-brutal-black" strokeWidth={3} /></div>
-                                              )}
-                                              {caseItem.hidden ? `Test Ẩn ${index + 1}` : `Test Công Khai ${index + 1}`}
-                                          </div>
-                                        </div>
-                                        <div className="text-sm text-brutal-black font-bold leading-relaxed">
-                                          {caseItem.description}
-                                        </div>
-                                        {caseItem.error && (
-                                          <div className="mt-4">
-                                              <CodeSurface
-                                                code={caseItem.error}
-                                                language="text"
-                                                label="error"
-                                                maxHeightClass="max-h-[180px]"
-                                              />
-                                          </div>
-                                        )}
-                                    </div>
-                                  ))
-                                ) : (
-                                    <div className="p-4 border-4 border-dashed border-brutal-black bg-gray-50 text-sm font-bold text-gray-500 text-center">
-                                      Trình chạy không trả về kết quả cấu trúc cho bài lab này.
-                                    </div>
-                                )}
-                              </div>
-                            </div>
-                          )}
+                  {activeWorkspaceTab === 'results' && (
+                    <div className="p-6 text-brutal-black min-h-[600px] max-h-[600px] overflow-y-auto">
+                      {!runReport ? (
+                        <div className="flex flex-col items-center justify-center py-20 text-center border-4 border-dashed border-brutal-black bg-gray-50 h-full">
+                           <div className="w-16 h-16 bg-white border-4 border-brutal-black shadow-neo-sm flex items-center justify-center mb-6">
+                             <TerminalSquare className="w-8 h-8 text-brutal-black" strokeWidth={2} />
+                           </div>
+                           <h3 className="font-display text-2xl font-black uppercase text-brutal-black mb-2">Chưa có kết quả</h3>
+                           <p className="text-sm font-bold text-gray-700 max-w-sm">Chạy code của bạn để xem kết quả kiểm tra với các ca kiểm thử công khai và ẩn.</p>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="space-y-6">
+                           <div className="bg-white p-6 border-4 border-brutal-black shadow-neo-sm">
+                             <div className="flex items-center justify-between gap-4 mb-4 border-b-4 border-brutal-black pb-4">
+                               <div className="text-sm font-black uppercase tracking-widest text-brutal-black flex items-center gap-2">
+                                 Kết quả chạy
+                               </div>
+                               <span className={`px-2 py-1 text-[10px] font-black uppercase tracking-widest border-2 border-brutal-black shadow-neo-sm-sm ${runReportIsFresh ? runReport.allPassed ? 'bg-brutal-green text-brutal-black' : 'bg-brutal-pink text-brutal-black' : 'bg-brutal-yellow text-brutal-black'}`}>
+                                 {runReportIsFresh ? runReport.allPassed ? 'Thành công toàn bộ' : 'Thất bại' : 'Cần chạy lại'}
+                               </span>
+                             </div>
+
+                             <p className="text-base font-bold text-gray-800 leading-relaxed mb-6">
+                               {runReportIsFresh ? runReport.message : 'Bạn đã chỉnh sửa trình soạn thảo sau lần chạy gần nhất. Hãy chạy lại để kết quả phản ánh đoạn code mới nhất.'}
+                             </p>
+
+                             <div className="grid grid-cols-2 gap-4">
+                               <div className="bg-gray-100 p-4 border-4 border-brutal-black shadow-neo-sm">
+                                  <div className="text-[10px] font-black text-gray-600 uppercase tracking-widest w-full border-b-2 border-brutal-black pb-1 mb-2">
+                                    Thành công
+                                  </div>
+                                  <div className={`font-display text-3xl font-black ${runReport.allPassed ? 'text-brutal-green' : 'text-brutal-black'}`}>
+                                    {runReport.passedCount} <span className="text-gray-500 text-xl">/ {runReport.totalCount}</span>
+                                  </div>
+                               </div>
+                               <div className="bg-gray-100 p-4 border-4 border-brutal-black shadow-neo-sm">
+                                  <div className="text-[10px] font-black text-gray-600 uppercase tracking-widest w-full border-b-2 border-brutal-black pb-1 mb-2">
+                                    Hàm gọi chính
+                                  </div>
+                                  <div className="font-mono text-sm font-bold text-brutal-blue mt-1.5 truncate">
+                                    {runReport.primaryFunction || 'Không xác định'}
+                                  </div>
+                               </div>
+                             </div>
+                           </div>
+
+                           <div className="space-y-4">
+                             <div className="flex items-center gap-2">
+                               <div className="w-6 h-2 bg-brutal-black" />
+                               <div className="text-xs font-black tracking-widest uppercase text-brutal-black">
+                                 Chi tiết Test Cases
+                               </div>
+                             </div>
+                             {(runReport.cases || []).length > 0 ? (
+                               runReport.cases.map((caseItem, index) => (
+                                 <div
+                                   key={caseItem.id}
+                                   className={`p-5 border-4 border-brutal-black transition-transform hover:-translate-y-0.5 ${caseItem.passed ? 'bg-brutal-green/20' : 'bg-brutal-pink/20'}`}
+                                 >
+                                    <div className="flex items-center justify-between gap-4 mb-3 border-b-2 border-brutal-black pb-2">
+                                       <div className="text-[10px] font-black uppercase tracking-widest text-brutal-black flex items-center gap-2">
+                                          {caseItem.passed ? (
+                                             <div className="bg-brutal-green border-2 border-brutal-black p-0.5"><CheckCircle2 className="w-3 h-3 text-brutal-black" strokeWidth={3} /></div>
+                                          ) : (
+                                             <div className="bg-brutal-pink border-2 border-brutal-black p-0.5"><AlertTriangle className="w-3 h-3 text-brutal-black" strokeWidth={3} /></div>
+                                          )}
+                                          {caseItem.hidden ? `Test Ẩn ${index + 1}` : `Test Công Khai ${index + 1}`}
+                                       </div>
+                                    </div>
+                                    <div className="text-sm text-brutal-black font-bold leading-relaxed">
+                                      {caseItem.description}
+                                    </div>
+                                    {caseItem.error && (
+                                       <div className="mt-4">
+                                          <CodeSurface
+                                            code={caseItem.error}
+                                            language="text"
+                                            label="error"
+                                            maxHeightClass="max-h-[180px]"
+                                          />
+                                       </div>
+                                    )}
+                                 </div>
+                               ))
+                             ) : (
+                                <div className="p-4 border-4 border-dashed border-brutal-black bg-gray-50 text-sm font-bold text-gray-500 text-center">
+                                  Trình chạy không trả về kết quả cấu trúc cho bài lab này.
+                                </div>
+                             )}
+                           </div>
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -764,14 +775,14 @@ export function AcademyUnit() {
                             <div className="w-16 h-16 bg-white border-4 border-brutal-black shadow-neo-sm flex items-center justify-center mb-6">
                               <Lightbulb className="w-8 h-8 text-brutal-yellow fill-current" strokeWidth={2} />
                             </div>
-                            <h3 className="font-display font-black text-3xl uppercase text-brutal-pink mb-4">Reference Solution — Try on your own first!</h3>
-                            <p className="text-base font-bold text-gray-700 max-w-lg mx-auto mb-8 leading-relaxed">
-                               Don't look at the solution right away. Give yourself more time. Only use the solution when you truly get stuck or to compare different ways to build.
+                            <h3 className="font-display font-black text-2xl uppercase text-brutal-black mb-2">Đáp án tham khảo đã bị ẩn</h3>
+                            <p className="text-sm font-bold text-gray-700 max-w-md mx-auto mb-8 leading-relaxed">
+                               Hãy tự mình thử sức trước tiên. Giải pháp tham khảo chỉ dùng khi bạn muốn so sánh cách làm hoặc khi đã cố gắng nhưng vẫn bế tắc.
                             </p>
                             <button
                               type="button"
                               onClick={() => setSolutionUnlocked(true)}
-                              className="bg-brutal-black text-white text-xs font-black uppercase tracking-widest px-8 py-4 border-4 border-brutal-black hover:bg-brutal-yellow hover:text-brutal-black shadow-neo hover:-translate-y-1 transition-all"
+                              className="bg-brutal-black text-white text-xs font-black uppercase tracking-widest px-6 py-3 border-4 border-brutal-black hover:bg-brutal-yellow hover:text-brutal-black shadow-neo hover:-translate-y-1 transition-all"
                             >
                               Hiển thị đáp án
                             </button>

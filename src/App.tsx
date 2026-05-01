@@ -1,32 +1,32 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { PageShell } from './components/layout/PageShell';
 import { Home } from './pages/Home';
-import { AcademyHome } from './pages/academy/AcademyHome';
-import { AcademyPath } from './pages/academy/AcademyPath';
-import { AcademyCourse } from './pages/academy/AcademyCourse';
-import { AcademyUnit } from './pages/academy/AcademyUnit';
-import { Projects } from './pages/Projects';
-import { Events } from './pages/Events';
 import { Members } from './pages/Members';
-import { Resources } from './pages/Resources';
 import { MemberDetail } from './pages/MemberDetail';
-import { ProjectDetail } from './pages/ProjectDetail';
+import { MyProfile } from './pages/MyProfile';
+import { Events } from './pages/Events';
+import { Finance } from './pages/Finance';
 import { Work } from './pages/Work';
 import { Leaderboard } from './pages/Leaderboard';
 import { Meet } from './pages/Meet';
-import { Finance } from './pages/Finance';
+import { Resources } from './pages/Resources';
+import { Projects } from './pages/Projects';
+import { ProjectDetail } from './pages/ProjectDetail';
+import { AcademyHome } from './pages/AcademyHome';
+import { AcademyPath } from './pages/AcademyPath';
+import { AcademyCourse } from './pages/AcademyCourse';
+import { AcademyUnit } from './pages/AcademyUnit';
+import { AcademyTrack } from './pages/AcademyTrack';
+import { AcademyLesson } from './pages/AcademyLesson';
 import { Admin } from './pages/Admin';
 import { AcademyAdmin } from './pages/AcademyAdmin';
-import { MyProfile as Profile } from './pages/MyProfile';
-import { Dashboard } from './pages/Dashboard';
-import { AcademyTrack as CommunityTrack } from './pages/AcademyTrack';
-import { AcademyLesson as CommunityLesson } from './pages/AcademyLesson';
+import { useStore } from './store/useStore';
+
+// Google OAuth Client ID - set in environment variable
+const GOOGLE_CLIENT_ID = (import.meta as any).env.VITE_GOOGLE_CLIENT_ID || '';
 
 function LegacyCommunityTrackRedirect() {
   const { track = '' } = useParams<{ track: string }>();
@@ -39,46 +39,93 @@ function LegacyCommunityLessonRedirect() {
 }
 
 export default function App() {
+  const warmupBackend = useStore((state) => state.warmupBackend);
+  const fetchMembers = useStore((state) => state.fetchMembers);
+  const fetchFinanceHistory = useStore((state) => state.fetchFinanceHistory);
+  const fetchEvents = useStore((state) => state.fetchEvents);
+  const fetchProjects = useStore((state) => state.fetchProjects);
+  const fetchResources = useStore((state) => state.fetchResources);
+  const fetchBounties = useStore((state) => state.fetchBounties);
+  const fetchRepos = useStore((state) => state.fetchRepos);
+  const checkSession = useStore((state) => state.checkSession);
+  const currentUser = useStore((state) => state.currentUser);
+  
+  const membersCount = useStore((state) => state.members.length);
+  const financeHistoryCount = useStore((state) => state.financeHistory.length);
+  const eventsCount = useStore((state) => state.events.length);
+  const projectsCount = useStore((state) => state.projects.length);
+  const resourcesCount = useStore((state) => state.resources.length);
+  const bountiesCount = useStore((state) => state.bounties.length);
+  const reposCount = useStore((state) => state.repos.length);
+
+  const isOfficialMember = currentUser?.memberType === 'member';
+  const isAdmin =
+    isOfficialMember &&
+    ['President', 'Vice-President'].includes(currentUser?.role || '');
+
+  useEffect(() => {
+    console.log('[App] Initializing...');
+    warmupBackend();
+    checkSession();
+  }, [warmupBackend, checkSession]);
+
+  useEffect(() => {
+    if (membersCount === 0) fetchMembers();
+    if (financeHistoryCount === 0) fetchFinanceHistory();
+    if (eventsCount === 0) fetchEvents();
+    if (projectsCount === 0) fetchProjects();
+    if (resourcesCount === 0) fetchResources();
+    if (bountiesCount === 0) fetchBounties();
+    if (reposCount === 0) fetchRepos();
+  }, [
+    fetchMembers,
+    fetchFinanceHistory,
+    fetchEvents,
+    fetchProjects,
+    fetchResources,
+    fetchBounties,
+    fetchRepos,
+    membersCount,
+    financeHistoryCount,
+    eventsCount,
+    projectsCount,
+    resourcesCount,
+    bountiesCount,
+    reposCount,
+  ]);
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<PageShell />}>
-          <Route path="/" element={<Navigate to="/home" replace />} />
-          <Route path="/home" element={<Home />} />
-          
-          <Route path="/members" element={<Members />} />
-          <Route path="/member/:id" element={<MemberDetail />} />
-          
-          <Route path="/events" element={<Events />} />
-          
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/project/:id" element={<ProjectDetail />} />
-          
-          <Route path="/resources" element={<Resources />} />
-          <Route path="/work" element={<Work />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/meet" element={<Meet />} />
-          
-          <Route path="/finance" element={<Finance />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/academy-admin" element={<AcademyAdmin />} />
-          <Route path="/profile" element={<Profile />} />
-
-          {/* Academy Routes - Keep exactly according to spec */}
-          <Route path="/academy" element={<AcademyHome />} />
-          <Route path="/academy/path/:pathId" element={<AcademyPath />} />
-          <Route path="/academy/course/:courseId" element={<AcademyCourse />} />
-          
-          <Route path="/academy/track/:track" element={<LegacyCommunityTrackRedirect />} />
-          <Route path="/academy/learn/:track/:lesson" element={<LegacyCommunityLessonRedirect />} />
-
-          <Route path="/academy/community/:track" element={<CommunityTrack />} />
-          <Route path="/academy/community/:track/:lesson" element={<CommunityLesson />} />
-        </Route>
-
-        {/* The unit view doesn't use the standard page shell because it's a code workspace */}
-        <Route path="/academy/unit/:courseId/:unitId" element={<AcademyUnit />} />
-      </Routes>
-    </BrowserRouter>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<PageShell />}>
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/members" element={<Members />} />
+            <Route path="/member/:id" element={<MemberDetail />} />
+            <Route path="/profile" element={<MyProfile />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/project/:id" element={<ProjectDetail />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/finance" element={isOfficialMember ? <Finance /> : <Navigate to="/home" replace />} />
+            <Route path="/work" element={<Work />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/meet" element={<Meet />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/admin" element={isAdmin ? <Admin /> : <Navigate to="/home" replace />} />
+            <Route path="/academy-admin" element={isAdmin ? <AcademyAdmin /> : <Navigate to="/home" replace />} />
+            <Route path="/academy" element={<AcademyHome />} />
+            <Route path="/academy/path/:pathId" element={<AcademyPath />} />
+            <Route path="/academy/course/:courseId" element={<AcademyCourse />} />
+            <Route path="/academy/community/:track" element={<AcademyTrack />} />
+            <Route path="/academy/community/:track/:lesson" element={<AcademyLesson />} />
+            <Route path="/academy/track/:track" element={<LegacyCommunityTrackRedirect />} />
+            <Route path="/academy/learn/:track/:lesson" element={<LegacyCommunityLessonRedirect />} />
+          </Route>
+          {/* Unit runs without shell for fullscreen mode */}
+          <Route path="/academy/unit/:courseId/:unitId" element={<AcademyUnit />} />
+        </Routes>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }

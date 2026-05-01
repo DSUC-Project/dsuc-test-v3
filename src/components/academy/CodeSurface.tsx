@@ -1,45 +1,135 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from "react";
 
-type CodeLanguage = 'typescript' | 'rust' | 'text';
+type CodeLanguage = "typescript" | "rust" | "text";
 
 const TS_KEYWORDS = new Set([
-  'const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while', 'switch',
-  'case', 'break', 'continue', 'import', 'from', 'export', 'default', 'class', 'extends',
-  'new', 'async', 'await', 'try', 'catch', 'finally', 'throw', 'typeof', 'instanceof',
-  'true', 'false', 'null', 'undefined', 'interface', 'type', 'public', 'private', 'protected',
+  "const",
+  "let",
+  "var",
+  "function",
+  "return",
+  "if",
+  "else",
+  "for",
+  "while",
+  "switch",
+  "case",
+  "break",
+  "continue",
+  "import",
+  "from",
+  "export",
+  "default",
+  "class",
+  "extends",
+  "new",
+  "async",
+  "await",
+  "try",
+  "catch",
+  "finally",
+  "throw",
+  "typeof",
+  "instanceof",
+  "true",
+  "false",
+  "null",
+  "undefined",
+  "interface",
+  "type",
+  "public",
+  "private",
+  "protected",
 ]);
 
 const RUST_KEYWORDS = new Set([
-  'fn', 'let', 'mut', 'pub', 'impl', 'struct', 'enum', 'match', 'if', 'else', 'loop', 'for',
-  'while', 'return', 'use', 'mod', 'trait', 'where', 'Self', 'self', 'Ok', 'Err', 'Result',
-  'Some', 'None', 'true', 'false', 'as', 'in', 'move', 'crate',
+  "fn",
+  "let",
+  "mut",
+  "pub",
+  "impl",
+  "struct",
+  "enum",
+  "match",
+  "if",
+  "else",
+  "loop",
+  "for",
+  "while",
+  "return",
+  "use",
+  "mod",
+  "trait",
+  "where",
+  "Self",
+  "self",
+  "Ok",
+  "Err",
+  "Result",
+  "Some",
+  "None",
+  "true",
+  "false",
+  "as",
+  "in",
+  "move",
+  "crate",
 ]);
 
 const VS_METHOD_NAMES = new Set([
-  'map', 'filter', 'reduce', 'find', 'push', 'slice', 'split', 'trim', 'replace',
-  'from', 'fromEntries', 'entries', 'keys', 'values', 'includes', 'open', 'log',
-  'error', 'warn', 'then', 'catch', 'finally', 'test', 'exec', 'toString',
-  'extend_from_slice', 'to_le_bytes', 'as_bytes',
+  "map",
+  "filter",
+  "reduce",
+  "find",
+  "push",
+  "slice",
+  "split",
+  "trim",
+  "replace",
+  "from",
+  "fromEntries",
+  "entries",
+  "keys",
+  "values",
+  "includes",
+  "open",
+  "log",
+  "error",
+  "warn",
+  "then",
+  "catch",
+  "finally",
+  "test",
+  "exec",
+  "toString",
+  "extend_from_slice",
+  "to_le_bytes",
+  "as_bytes",
 ]);
 
 function normalizeLanguage(input?: string): CodeLanguage {
-  if (input === 'typescript' || input === 'ts' || input === 'tsx' || input === 'javascript') {
-    return 'typescript';
+  if (
+    input === "typescript" ||
+    input === "ts" ||
+    input === "tsx" ||
+    input === "javascript"
+  ) {
+    return "typescript";
   }
 
-  if (input === 'rust' || input === 'rs') {
-    return 'rust';
+  if (input === "rust" || input === "rs") {
+    return "rust";
   }
 
-  return 'text';
+  return "text";
 }
 
 function getKeywordSet(language: CodeLanguage) {
-  if (language === 'rust') {
+  if (language === "rust") {
     return RUST_KEYWORDS;
   }
 
-  if (language === 'typescript') {
+  if (language === "typescript") {
     return TS_KEYWORDS;
   }
 
@@ -48,13 +138,13 @@ function getKeywordSet(language: CodeLanguage) {
 
 function tokenizeLine(line: string, language: CodeLanguage) {
   const keywordSet = getKeywordSet(language);
-  const commentToken = language === 'rust' ? /\/\/.*/g : /\/\/.*/g;
+  const commentToken = language === "rust" ? /\/\/.*/g : /\/\/.*/g;
   const tokenPattern =
     /\/\/.*|"(?:\\.|[^"])*"|'(?:\\.|[^'])*'|`(?:\\.|[^`])*`|\b\d[\d_]*(?:\.\d+)?n?\b|[A-Za-z_][A-Za-z0-9_]*|[{}()[\].,;:+\-*/%=&|!<>?#]+|\s+|./g;
 
   const commentMatch = line.match(commentToken);
   const commentStart = commentMatch ? line.indexOf(commentMatch[0]) : -1;
-  const safeLine = String(line || '');
+  const safeLine = String(line || "");
   const pieces: Array<{ text: string; className: string }> = [];
 
   for (const match of safeLine.matchAll(tokenPattern)) {
@@ -62,56 +152,64 @@ function tokenizeLine(line: string, language: CodeLanguage) {
     const index = match.index ?? 0;
 
     if (commentStart >= 0 && index >= commentStart) {
-      pieces.push({ text, className: 'text-[#6A9955]' });
+      pieces.push({ text, className: "text-[#6A9955]" });
       continue;
     }
 
     if (/^\s+$/.test(text)) {
-      pieces.push({ text, className: '' });
+      pieces.push({ text, className: "" });
       continue;
     }
 
     if (/^"(?:\\.|[^"])*"$|^'(?:\\.|[^'])*'$|^`(?:\\.|[^`])*`$/.test(text)) {
-      pieces.push({ text, className: 'text-[#CE9178]' });
+      pieces.push({ text, className: "text-[#CE9178]" });
       continue;
     }
 
     if (/^\d/.test(text)) {
-      pieces.push({ text, className: 'text-[#B5CEA8]' });
+      pieces.push({ text, className: "text-[#B5CEA8]" });
       continue;
     }
 
     if (keywordSet.has(text)) {
-      pieces.push({ text, className: 'text-[#C586C0]' });
+      pieces.push({ text, className: "text-[#C586C0]" });
       continue;
     }
 
     if (/^[A-Z][A-Za-z0-9_]*$/.test(text)) {
-      pieces.push({ text, className: 'text-[#4EC9B0]' });
+      pieces.push({ text, className: "text-[#4EC9B0]" });
       continue;
     }
 
     if (VS_METHOD_NAMES.has(text)) {
-      pieces.push({ text, className: 'text-[#DCDCAA]' });
+      pieces.push({ text, className: "text-[#DCDCAA]" });
       continue;
     }
 
-    if (/^(console|window|Math|JSON|Object|Array|Promise|Number|String|Boolean|Date|SystemProgram|Transaction|PublicKey|Connection)$/.test(text)) {
-      pieces.push({ text, className: 'text-[#4FC1FF]' });
+    if (
+      /^(console|window|Math|JSON|Object|Array|Promise|Number|String|Boolean|Date|SystemProgram|Transaction|PublicKey|Connection)$/.test(
+        text,
+      )
+    ) {
+      pieces.push({ text, className: "text-[#4FC1FF]" });
       continue;
     }
 
-    if (/^(string|number|boolean|Vec|String|u8|u32|u64|i32|i64|Pubkey|Context|AccountInfo|Uint8Array|DataView|TextEncoder|TextDecoder)$/.test(text)) {
-      pieces.push({ text, className: 'text-[#4EC9B0]' });
+    if (
+      /^(string|number|boolean|Vec|String|u8|u32|u64|i32|i64|Pubkey|Context|AccountInfo|Uint8Array|DataView|TextEncoder|TextDecoder)$/.test(
+        text,
+      )
+    ) {
+      pieces.push({ text, className: "text-[#4EC9B0]" });
       continue;
     }
 
     if (/^[{}()[\].,;:+\-*/%=&|!<>?#]+$/.test(text)) {
-      pieces.push({ text, className: 'text-[#D4D4D4]' });
+      pieces.push({ text, className: "text-[#D4D4D4]" });
       continue;
     }
 
-    pieces.push({ text, className: 'text-[#D4D4D4]' });
+    pieces.push({ text, className: "text-[#D4D4D4]" });
   }
 
   return pieces;
@@ -124,7 +222,13 @@ function CodeLines({
   code: string;
   language: CodeLanguage;
 }) {
-  const lines = useMemo(() => String(code || '').replace(/\n$/, '').split('\n'), [code]);
+  const lines = useMemo(
+    () =>
+      String(code || "")
+        .replace(/\n$/, "")
+        .split("\n"),
+    [code],
+  );
 
   return (
     <>
@@ -138,7 +242,10 @@ function CodeLines({
                 <span className="text-[#D4D4D4]">&nbsp;</span>
               ) : (
                 tokens.map((token, tokenIndex) => (
-                  <span key={`token-${lineIndex}-${tokenIndex}`} className={token.className}>
+                  <span
+                    key={`token-${lineIndex}-${tokenIndex}`}
+                    className={token.className}
+                  >
                     {token.text}
                   </span>
                 ))
@@ -155,8 +262,8 @@ export function CodeSurface({
   code,
   language,
   label,
-  className = '',
-  maxHeightClass = 'max-h-[500px]',
+  className = "",
+  maxHeightClass = "max-h-[500px]",
 }: {
   code: string;
   language?: string;
@@ -165,10 +272,18 @@ export function CodeSurface({
   maxHeightClass?: string;
 }) {
   const normalizedLanguage = normalizeLanguage(language);
-  const linesCount = useMemo(() => String(code || '').replace(/\n$/, '').split('\n').length, [code]);
+  const linesCount = useMemo(
+    () =>
+      String(code || "")
+        .replace(/\n$/, "")
+        .split("\n").length,
+    [code],
+  );
 
   return (
-    <div className={`overflow-hidden border brutal-border bg-[#1e1e1e] brutal-shadow-sm flex flex-col ${className}`}>
+    <div
+      className={`overflow-hidden border brutal-border bg-[#1e1e1e] brutal-shadow-sm flex flex-col ${className}`}
+    >
       <div className="flex items-center gap-2 border-b brutal-border bg-[#252526] px-4 py-2 shrink-0">
         <div className="h-3 w-3 rounded-full bg-[#F14C4C]" />
         <div className="h-3 w-3 rounded-full bg-[#CCA700]" />
@@ -177,11 +292,13 @@ export function CodeSurface({
           {label || normalizedLanguage}
         </div>
       </div>
-      <div className={`relative flex-1 bg-[#1e1e1e] overflow-auto brutal-scrollbar ${maxHeightClass}`}>
+      <div
+        className={`relative flex-1 bg-[#1e1e1e] overflow-auto brutal-scrollbar ${maxHeightClass}`}
+      >
         <div className="absolute left-0 top-0 bottom-0 w-[48px] py-4 pr-4 text-right text-xs text-[#6E7681] select-none font-mono leading-[24px]">
-           {Array.from({ length: linesCount }).map((_, i) => (
-             <div key={i}>{i + 1}</div>
-           ))}
+          {Array.from({ length: linesCount }).map((_, i) => (
+            <div key={i}>{i + 1}</div>
+          ))}
         </div>
         <pre className="min-w-full m-0 p-0 pl-[48px] pr-4 py-4 font-mono text-[13px] leading-[24px] bg-transparent">
           <CodeLines code={code} language={normalizedLanguage} />
@@ -196,7 +313,7 @@ export function CodeEditorPane({
   onChange,
   language,
   placeholder,
-  className = '',
+  className = "",
 }: {
   value: string;
   onChange: (next: string) => void;
@@ -205,12 +322,19 @@ export function CodeEditorPane({
   className?: string;
 }) {
   const normalizedLanguage = normalizeLanguage(language);
-  const overlayRef = useRef<HTMLDivElement | null>(null);
   const gutterRef = useRef<HTMLDivElement | null>(null);
-  const linesCount = useMemo(() => String(value || placeholder || '').replace(/\n$/, '').split('\n').length, [value, placeholder]);
+  const linesCount = useMemo(
+    () =>
+      String(value || placeholder || "")
+        .replace(/\n$/, "")
+        .split("\n").length,
+    [value, placeholder],
+  );
 
   return (
-    <div className={`overflow-hidden border brutal-border bg-[#1e1e1e] brutal-shadow-sm flex-1 flex flex-col ${className}`}>
+    <div
+      className={`overflow-hidden border brutal-border bg-[#1e1e1e] brutal-shadow-sm flex-1 flex flex-col ${className}`}
+    >
       <div className="flex items-center gap-2 border-b brutal-border bg-[#252526] px-4 py-2 shrink-0">
         <div className="h-3 w-3 rounded-full bg-[#F14C4C]" />
         <div className="h-3 w-3 rounded-full bg-[#CCA700]" />
@@ -220,53 +344,37 @@ export function CodeEditorPane({
         </div>
       </div>
       <div className="relative flex-1 bg-[#1e1e1e] overflow-hidden">
-        
         {/* Scrollable container for both gutter and code */}
-        <div 
+        <div
           className="absolute inset-0 overflow-auto brutal-scrollbar"
           onScroll={(event) => {
-            const target = event.currentTarget;
-            if (overlayRef.current) overlayRef.current.scrollTop = target.scrollTop;
-            if (overlayRef.current) overlayRef.current.scrollLeft = target.scrollLeft;
-            if (gutterRef.current) gutterRef.current.scrollTop = target.scrollTop;
+            if (gutterRef.current)
+              gutterRef.current.scrollTop = event.currentTarget.scrollTop;
           }}
         >
           {/* Gutter */}
-          <div ref={gutterRef} className="absolute left-0 top-0 bottom-0 w-[48px] py-4 pr-3 text-right text-xs text-[#6E7681] select-none font-mono leading-[24px] pointer-events-none">
+          <div
+            ref={gutterRef}
+            className="absolute left-0 top-0 bottom-0 w-[48px] py-4 pr-3 text-right text-xs text-[#6E7681] select-none font-mono leading-[24px] pointer-events-none"
+          >
             {Array.from({ length: Math.max(1, linesCount) }).map((_, i) => (
               <div key={i}>{i + 1}</div>
             ))}
           </div>
 
-          <div
-            ref={overlayRef}
-            className="pointer-events-none absolute inset-0 overflow-hidden"
-          >
-            <pre className="min-h-full min-w-full m-0 p-0 pl-[48px] pr-4 py-4 font-mono text-[13px] leading-[24px] whitespace-pre-wrap break-words" style={{ tabSize: 4 }}>
-              {value ? (
-                <CodeLines code={value} language={normalizedLanguage} />
-              ) : (
-                <div className="min-h-[24px] text-[#6E7681]">{placeholder || ''}</div>
-              )}
-            </pre>
-          </div>
-          
           <textarea
             value={value}
             spellCheck={false}
             onChange={(event) => onChange(event.target.value)}
             className="absolute top-0 left-0 min-h-full min-w-full m-0 p-0 pl-[48px] pr-4 py-4 font-mono text-[13px] leading-[24px] resize-none bg-transparent outline-none whitespace-pre-wrap break-words block"
             style={{
-              color: 'transparent',
-              caretColor: '#D4D4D4',
-              WebkitTextFillColor: 'transparent',
-              overflow: 'hidden',
-              tabSize: 4
+              color: "#d4d4d4",
+              caretColor: "#d4d4d4",
+              tabSize: 4,
             }}
             placeholder={placeholder}
           />
         </div>
-
       </div>
     </div>
   );

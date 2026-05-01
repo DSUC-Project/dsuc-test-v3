@@ -40,50 +40,7 @@ export const BANKS: Bank[] = [
     { id: '546035', name: 'Ngân hàng số Ubank by VPBank', code: 'Ubank', bin: '546035', shortName: 'Ubank', logo: '' },
 ];
 
-export const MEMBERS: Member[] = [
-  {
-    id: "mem1",
-    name: "Alex Johnson",
-    email: "alex@solanaclub.dev",
-    role: "President",
-    memberType: "member",
-    profile_completed: true,
-    academyAccess: true,
-    streak: 42,
-    skills: ["Rust", "TypeScript", "Solana"],
-    socials: { github: "alexj" },
-    avatar: "https://i.pravatar.cc/150?u=mem1",
-    wallet_address: "5K...",
-    bankInfo: { bankId: "970436", accountNo: "123456789", accountName: "ALEX JOHNSON" }
-  },
-  {
-    id: "mem2",
-    name: "Sam Smith",
-    email: "sam@example.com",
-    role: "Member",
-    memberType: "community",
-    profile_completed: true,
-    academyAccess: false,
-    streak: 5,
-    skills: ["React", "CSS"],
-    socials: { github: "sams" },
-    avatar: "https://i.pravatar.cc/150?u=mem2",
-    wallet_address: "7A..."
-  },
-  {
-    id: "mem3",
-    name: "Mia Doe",
-    email: "mia@solanaclub.dev",
-    role: "Tech-Lead",
-    memberType: "member",
-    profile_completed: true,
-    academyAccess: true,
-    streak: 120,
-    skills: ["Smart Contracts", "Anchor"],
-    socials: { github: "miadoe" },
-    avatar: "https://i.pravatar.cc/150?u=mem3"
-  }
-];
+export const MEMBERS: Member[] = [];
 export const EVENTS: Event[] = [];
 export const PROJECTS: Project[] = [];
 export const BOUNTIES: Bounty[] = [];
