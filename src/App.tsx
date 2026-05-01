@@ -15,11 +15,18 @@ import { Projects } from './pages/Projects';
 import { Events } from './pages/Events';
 import { Members } from './pages/Members';
 import { Resources } from './pages/Resources';
-import { 
-  MemberDetail, ProjectDetail, 
-  Work, Leaderboard, Meet, Finance, Admin, AcademyAdmin, Profile,
-  CommunityTrack, CommunityLesson 
-} from './pages/Placeholders';
+import { MemberDetail } from './pages/MemberDetail';
+import { ProjectDetail } from './pages/ProjectDetail';
+import { Work } from './pages/Work';
+import { Leaderboard } from './pages/Leaderboard';
+import { Meet } from './pages/Meet';
+import { Finance } from './pages/Finance';
+import { Admin } from './pages/Admin';
+import { AcademyAdmin } from './pages/AcademyAdmin';
+import { MyProfile as Profile } from './pages/MyProfile';
+import { Dashboard } from './pages/Dashboard';
+import { AcademyTrack as CommunityTrack } from './pages/AcademyTrack';
+import { AcademyLesson as CommunityLesson } from './pages/AcademyLesson';
 
 function LegacyCommunityTrackRedirect() {
   const { track = '' } = useParams<{ track: string }>();

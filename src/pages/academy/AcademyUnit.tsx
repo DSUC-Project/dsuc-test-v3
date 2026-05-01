@@ -285,7 +285,6 @@ export function AcademyUnit() {
     );
     
     if (saved && !unitDone) {
-        setShowCompletionModal(true);
         try {
           const confetti = (await import('canvas-confetti')).default;
           confetti({
@@ -294,8 +293,6 @@ export function AcademyUnit() {
             origin: { y: 0.6 }
           });
         } catch(e) {}
-    } else if (!unitDone) {
-        setShowCompletionModal(true);
     }
   }
 
@@ -474,7 +471,7 @@ export function AcademyUnit() {
       ) : (
           <div className="flex-1 flex flex-col lg:flex-row pb-12 w-full overflow-hidden">
              {/* Left panel - Instructions */}
-            <div className="w-full lg:w-80 xl:w-96 shrink-0 border-r brutal-border flex flex-col bg-surface overflow-hidden">
+            <div className="w-full lg:w-[40%] xl:w-[45%] shrink-0 border-r brutal-border flex flex-col bg-surface overflow-hidden">
               <div className="h-10 border-b brutal-border flex items-center px-4 shrink-0">
                 <span className="font-mono text-xs uppercase text-text-muted">Instructions</span>
               </div>
@@ -534,8 +531,10 @@ export function AcademyUnit() {
               </div>
             </div>
 
-            {/* Center panel - Editor */}
-            <div className="flex-1 flex flex-col bg-[#0B0F17] min-w-0 min-h-[500px]">
+            {/* Center + Bottom panel - Editor & Results */}
+            <div className="flex-1 flex flex-col min-w-0">
+              {/* Editor Section */}
+              <div className="flex-1 flex flex-col bg-[#0B0F17] min-h-[300px]">
               {/* Editor toolbar */}
               <div className="h-10 border-b border-gray-800 flex items-center justify-between px-4 shrink-0">
                 <div className="flex items-center gap-3">
@@ -592,103 +591,115 @@ export function AcademyUnit() {
                 )}
                 
                 {activeWorkspaceTab === 'solution' && (
-                  <div className="h-full overflow-auto absolute inset-0 bg-[#0B0F17]">
-                    <div className="p-3 bg-gray-900/50 border-b border-gray-800">
+                  <div className="h-full overflow-auto absolute inset-0 bg-[#0B0F17] flex flex-col">
+                    <div className="p-3 bg-gray-900/50 border-b border-gray-800 shrink-0">
                       <p className="font-mono text-xs text-yellow-500/70 uppercase">Reference Solution — Try on your own first!</p>
                     </div>
-                    <div className="p-0 font-mono text-sm text-gray-300 h-full">
-                       <CodeSurface
-                           code={unit.solution || '// No solution provided'}
-                           language={unit.language || 'text'}
-                           label="solution"
-                       />
+                    <div className="flex-1 relative">
+                      {!solutionUnlocked ? (
+                         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 bg-[#0B0F17] z-10">
+                           <Lock className="w-12 h-12 text-gray-700 mb-4" />
+                           <h3 className="font-heading font-bold text-gray-300 text-lg mb-2 uppercase">Unlock Solution</h3>
+                           <p className="text-gray-500 text-sm text-center font-mono mb-6 max-w-sm">
+                             Viewing the solution will reveal the complete answer. Try to solve the challenge yourself first!
+                           </p>
+                           <button onClick={() => setSolutionUnlocked(true)} className="px-6 py-2 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white font-mono text-xs uppercase transition-colors brutal-border border">
+                             Reveal Solution
+                           </button>
+                         </div>
+                      ) : (
+                         <div className="p-0 font-mono text-sm text-gray-300 h-full">
+                           <CodeSurface
+                               code={unit.solution || '// No solution provided'}
+                               language={unit.language || 'text'}
+                               label="solution"
+                           />
+                         </div>
+                      )}
                     </div>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Right panel - Results */}
-            <div className="w-full lg:w-64 xl:w-72 shrink-0 border-l brutal-border flex flex-col bg-surface">
-              <div className="h-10 border-b brutal-border flex items-center px-4 shrink-0">
+            {/* Results Bottom Panel */}
+            <div className="h-48 shrink-0 border-t brutal-border flex flex-col bg-surface">
+              <div className="h-10 border-b brutal-border flex items-center justify-between px-4 shrink-0">
                 <span className="font-mono text-xs uppercase text-text-muted">Results</span>
+                <div className="flex items-center gap-4">
+                  {isCompleted ? (
+                    <div className="flex items-center gap-2 text-green-500">
+                      <CheckCircle className="w-4 h-4" />
+                      <span className="font-heading font-bold text-xs uppercase">Complete!</span>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleComplete}
+                      disabled={!canComplete}
+                      className={`px-4 py-1.5 font-heading font-bold uppercase text-[10px] transition-all brutal-border border
+                        ${canComplete
+                          ? 'bg-primary text-main-bg hover:opacity-90'
+                          : 'bg-transparent text-text-muted cursor-not-allowed opacity-50'}`}>
+                      {canComplete ? 'Complete Unit ✓' : 'Pass all checks first'}
+                    </button>
+                  )}
+                </div>
               </div>
               
-              <div className="flex-1 overflow-y-auto p-4">
-                {!hasRunOnce ? (
-                  <div className="text-center py-8">
-                    <p className="font-mono text-xs text-text-muted uppercase">Run your code to see results.</p>
-                  </div>
-                ) : isRunning ? (
-                  <div className="text-center py-8">
-                    <Loader2 className="w-6 h-6 animate-spin text-primary mx-auto mb-2" />
-                    <p className="font-mono text-xs text-text-muted uppercase">Running...</p>
-                  </div>
-                ) : (
-                  <>
-                    <div className={`p-4 border mb-4 text-center
+              <div className="flex-1 overflow-y-auto p-4 flex flex-col sm:flex-row gap-6">
+                <div className="w-full sm:w-1/3 shrink-0 flex flex-col justify-center items-center border-r border-transparent sm:border-border-main pr-0 sm:pr-6">
+                  {!hasRunOnce ? (
+                    <p className="font-mono text-xs text-text-muted uppercase text-center">Run code to see results.</p>
+                  ) : isRunning ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin text-primary mb-2" />
+                      <p className="font-mono text-xs text-text-muted uppercase">Running...</p>
+                    </>
+                  ) : (
+                    <div className={`p-3 border text-center w-full
                       ${allRequiredChecksPassed ? 'border-green-500/40 bg-green-500/5' : 'border-red-500/40 bg-red-500/5'}`}>
                       {allRequiredChecksPassed ? (
                         <>
-                          <CheckCircle className="w-6 h-6 text-green-500 mx-auto mb-2" />
-                          <p className="font-heading font-bold text-green-500">All checks passed!</p>
+                          <CheckCircle className="w-5 h-5 text-green-500 mx-auto mb-1" />
+                          <p className="font-heading font-bold text-green-500 text-xs">All checks passed!</p>
                         </>
                       ) : (
                         <>
-                          <XCircle className="w-6 h-6 text-red-500 mx-auto mb-2" />
-                          <p className="font-heading font-bold text-red-400">
+                          <XCircle className="w-5 h-5 text-red-500 mx-auto mb-1" />
+                          <p className="font-heading font-bold text-red-400 text-xs">
                             {passedCount}/{totalChecks} checks passed
                           </p>
                         </>
                       )}
                     </div>
-                    
-                    <div className="space-y-2">
+                  )}
+                </div>
+                
+                <div className="flex-1 overflow-y-auto">
+                  {!hasRunOnce ? null : isRunning ? null : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                        {unit.tests?.map((check, index) => {
                           const checkId = check.id || `test-${index}`;
                           const checkResult = checkResults[checkId] !== undefined ? checkResults[checkId] : (checkResults[index] !== undefined ? checkResults[index] : null);
                           return (
                           <div key={checkId}
-                            className={`flex items-center gap-2 p-2 text-xs
-                              ${checkResult === true ? 'text-green-500' :
-                                checkResult === false ? 'text-red-400' : 'text-text-muted'}`}>
-                            {checkResult === true ? <CheckCircle className="w-3.5 h-3.5" /> :
-                             checkResult === false ? <XCircle className="w-3.5 h-3.5" /> :
-                             <Circle className="w-3.5 h-3.5" />}
-                            <span className="font-mono line-clamp-1">
+                            className={`flex items-start gap-2 p-2 text-xs border
+                              ${checkResult === true ? 'text-green-500 border-green-500/20 bg-green-500/5' :
+                                checkResult === false ? 'text-red-400 border-red-500/20 bg-red-500/5' : 'text-text-muted border-border-main'}`}>
+                            {checkResult === true ? <CheckCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" /> :
+                             checkResult === false ? <XCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" /> :
+                             <Circle className="w-3.5 h-3.5 mt-0.5 shrink-0" />}
+                            <span className="font-mono line-clamp-2 leading-tight">
                               {!check.hidden ? check.description : 'Hidden test'}
                             </span>
                           </div>
                         )})}
                     </div>
-                  </>
-                )}
+                  )}
+                </div>
               </div>
-              
-              <div className="p-4 border-t brutal-border">
-                {isCompleted ? (
-                  <div className="flex items-center gap-2 text-green-500 justify-center py-2">
-                    <CheckCircle className="w-4 h-4" />
-                    <span className="font-heading font-bold text-sm">Complete!</span>
-                  </div>
-                ) : (
-                  <button
-                    onClick={handleComplete}
-                    disabled={!canComplete}
-                    className={`w-full py-3 font-heading font-bold uppercase text-sm transition-all brutal-border
-                      ${canComplete
-                        ? 'bg-primary text-main-bg brutal-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none'
-                        : 'bg-surface text-text-muted cursor-not-allowed opacity-50'}`}>
-                    {canComplete ? 'Complete Unit ✓' : 'Pass all checks first'}
-                  </button>
-                )}
-                
-                {isGuest && (
-                  <p className="text-[10px] text-text-muted text-center mt-2 font-mono">
-                    Sign in to save progress
-                  </p>
-                )}
-              </div>
+            </div>
+            
             </div>
           </div>
       )}
@@ -725,41 +736,6 @@ export function AcademyUnit() {
         </div>
       </div>
 
-      {showCompletionModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-surface brutal-border brutal-shadow-lg p-10 max-w-sm w-full mx-4 text-center flex flex-col items-center">
-            
-            <div className="text-5xl mb-4">🎉</div>
-            <h2 className="font-display font-bold text-3xl uppercase mb-2">Unit Complete!</h2>
-            <p className="text-text-muted mb-2">{unit.title}</p>
-            <div className="inline-flex items-center gap-2 px-4 py-2 border brutal-border bg-main-bg font-mono text-sm mb-8">
-              <Zap className="w-4 h-4 text-primary" />
-              +{unit.xp_reward} XP earned
-            </div>
-            
-            <div className="flex flex-col gap-3 w-full">
-              {nextUnit ? (
-                <Link to={`/academy/unit/${courseId}/${nextUnit.id}`} className="w-full">
-                  <ActionButton variant="primary" className="w-full">
-                    Next: {nextUnit.title} →
-                  </ActionButton>
-                </Link>
-              ) : (
-                <Link to={`/academy/course/${courseId}`} className="w-full">
-                  <ActionButton variant="primary" className="w-full">Course Complete! →</ActionButton>
-                </Link>
-              )}
-              <button onClick={() => setShowCompletionModal(false)}
-                className="font-mono text-xs text-text-muted uppercase hover:text-text-main transition-colors">
-                Stay on this unit
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
     </div>
   );
 }

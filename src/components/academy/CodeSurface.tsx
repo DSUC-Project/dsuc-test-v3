@@ -132,11 +132,8 @@ function CodeLines({
         const tokens = tokenizeLine(line, language);
 
         return (
-          <div key={`line-${lineIndex}`} className="flex min-h-[24px]">
-            <span className="w-10 shrink-0 pr-4 text-right text-xs text-[#6E7681] select-none">
-              {lineIndex + 1}
-            </span>
-            <span className="flex-1 whitespace-pre-wrap break-words">
+          <div key={`line-${lineIndex}`} className="min-h-[24px]">
+            <span className="whitespace-pre-wrap break-words">
               {tokens.length === 0 ? (
                 <span className="text-[#D4D4D4]">&nbsp;</span>
               ) : (
@@ -168,19 +165,25 @@ export function CodeSurface({
   maxHeightClass?: string;
 }) {
   const normalizedLanguage = normalizeLanguage(language);
+  const linesCount = useMemo(() => String(code || '').replace(/\n$/, '').split('\n').length, [code]);
 
   return (
-    <div className={`overflow-hidden border-4 border-brutal-black bg-[#1e1e1e] shadow-neo-sm ${className}`}>
-      <div className="flex items-center gap-2 border-b-4 border-brutal-black bg-[#252526] px-4 py-2">
-        <div className="h-3 w-3 rounded-full border border-black/40 bg-[#F14C4C]" />
-        <div className="h-3 w-3 rounded-full border border-black/40 bg-[#CCA700]" />
-        <div className="h-3 w-3 rounded-full border border-black/40 bg-[#3BA55D]" />
-        <div className="ml-auto text-[10px] font-black uppercase tracking-[0.2em] text-[#9DA5B4]">
+    <div className={`overflow-hidden border brutal-border bg-[#1e1e1e] brutal-shadow-sm flex flex-col ${className}`}>
+      <div className="flex items-center gap-2 border-b brutal-border bg-[#252526] px-4 py-2 shrink-0">
+        <div className="h-3 w-3 rounded-full bg-[#F14C4C]" />
+        <div className="h-3 w-3 rounded-full bg-[#CCA700]" />
+        <div className="h-3 w-3 rounded-full bg-[#3BA55D]" />
+        <div className="ml-auto text-[10px] font-bold uppercase tracking-widest text-[#9DA5B4]">
           {label || normalizedLanguage}
         </div>
       </div>
-      <div className={`overflow-auto brutal-scrollbar ${maxHeightClass}`}>
-        <pre className="min-w-full bg-[#1e1e1e] px-4 py-4 font-mono text-[13px] leading-6">
+      <div className={`relative flex-1 bg-[#1e1e1e] overflow-auto brutal-scrollbar ${maxHeightClass}`}>
+        <div className="absolute left-0 top-0 bottom-0 w-[48px] py-4 pr-4 text-right text-xs text-[#6E7681] select-none font-mono leading-[24px]">
+           {Array.from({ length: linesCount }).map((_, i) => (
+             <div key={i}>{i + 1}</div>
+           ))}
+        </div>
+        <pre className="min-w-full m-0 p-0 pl-[48px] pr-4 py-4 font-mono text-[13px] leading-[24px] bg-transparent">
           <CodeLines code={code} language={normalizedLanguage} />
         </pre>
       </div>
@@ -204,55 +207,66 @@ export function CodeEditorPane({
   const normalizedLanguage = normalizeLanguage(language);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const gutterRef = useRef<HTMLDivElement | null>(null);
+  const linesCount = useMemo(() => String(value || placeholder || '').replace(/\n$/, '').split('\n').length, [value, placeholder]);
 
   return (
-    <div className={`overflow-hidden border-4 border-brutal-black bg-[#1e1e1e] shadow-neo ${className}`}>
-      <div className="flex items-center gap-2 border-b-4 border-brutal-black bg-[#252526] px-4 py-2">
-        <div className="h-3 w-3 rounded-full border border-black/40 bg-[#F14C4C]" />
-        <div className="h-3 w-3 rounded-full border border-black/40 bg-[#CCA700]" />
-        <div className="h-3 w-3 rounded-full border border-black/40 bg-[#3BA55D]" />
-        <div className="ml-auto text-[10px] font-black uppercase tracking-[0.2em] text-[#9DA5B4]">
+    <div className={`overflow-hidden border brutal-border bg-[#1e1e1e] brutal-shadow-sm flex-1 flex flex-col ${className}`}>
+      <div className="flex items-center gap-2 border-b brutal-border bg-[#252526] px-4 py-2 shrink-0">
+        <div className="h-3 w-3 rounded-full bg-[#F14C4C]" />
+        <div className="h-3 w-3 rounded-full bg-[#CCA700]" />
+        <div className="h-3 w-3 rounded-full bg-[#3BA55D]" />
+        <div className="ml-auto text-[10px] font-bold uppercase tracking-widest text-[#9DA5B4]">
           {normalizedLanguage}
         </div>
       </div>
-      <div className="relative h-[620px] bg-[#1e1e1e]">
-        <div
-          ref={overlayRef}
-          className="pointer-events-none absolute inset-0 overflow-auto brutal-scrollbar"
-        >
-          <pre className="min-h-full min-w-full px-4 py-4 font-mono text-[13px] leading-6">
-            {value ? (
-              <CodeLines code={value} language={normalizedLanguage} />
-            ) : (
-              <div className="flex min-h-[24px]">
-                <span className="w-10 shrink-0 pr-4 text-right text-xs text-[#6E7681] select-none">1</span>
-                <span className="text-[#6E7681]">{placeholder || ''}</span>
-              </div>
-            )}
-          </pre>
-        </div>
-        <textarea
-          value={value}
-          spellCheck={false}
-          onChange={(event) => onChange(event.target.value)}
+      <div className="relative flex-1 bg-[#1e1e1e] overflow-hidden">
+        
+        {/* Scrollable container for both gutter and code */}
+        <div 
+          className="absolute inset-0 overflow-auto brutal-scrollbar"
           onScroll={(event) => {
             const target = event.currentTarget;
-            if (overlayRef.current) {
-              overlayRef.current.scrollTop = target.scrollTop;
-              overlayRef.current.scrollLeft = target.scrollLeft;
-            }
-            if (gutterRef.current) {
-              gutterRef.current.scrollTop = target.scrollTop;
-            }
+            if (overlayRef.current) overlayRef.current.scrollTop = target.scrollTop;
+            if (overlayRef.current) overlayRef.current.scrollLeft = target.scrollLeft;
+            if (gutterRef.current) gutterRef.current.scrollTop = target.scrollTop;
           }}
-          className="absolute inset-0 h-full w-full resize-none bg-transparent px-4 py-4 font-mono text-[13px] leading-6 outline-none"
-          style={{
-            color: 'transparent',
-            caretColor: '#D4D4D4',
-            WebkitTextFillColor: 'transparent',
-          }}
-          placeholder={placeholder}
-        />
+        >
+          {/* Gutter */}
+          <div ref={gutterRef} className="absolute left-0 top-0 bottom-0 w-[48px] py-4 pr-3 text-right text-xs text-[#6E7681] select-none font-mono leading-[24px] pointer-events-none">
+            {Array.from({ length: Math.max(1, linesCount) }).map((_, i) => (
+              <div key={i}>{i + 1}</div>
+            ))}
+          </div>
+
+          <div
+            ref={overlayRef}
+            className="pointer-events-none absolute inset-0 overflow-hidden"
+          >
+            <pre className="min-h-full min-w-full m-0 p-0 pl-[48px] pr-4 py-4 font-mono text-[13px] leading-[24px] whitespace-pre-wrap break-words" style={{ tabSize: 4 }}>
+              {value ? (
+                <CodeLines code={value} language={normalizedLanguage} />
+              ) : (
+                <div className="min-h-[24px] text-[#6E7681]">{placeholder || ''}</div>
+              )}
+            </pre>
+          </div>
+          
+          <textarea
+            value={value}
+            spellCheck={false}
+            onChange={(event) => onChange(event.target.value)}
+            className="absolute top-0 left-0 min-h-full min-w-full m-0 p-0 pl-[48px] pr-4 py-4 font-mono text-[13px] leading-[24px] resize-none bg-transparent outline-none whitespace-pre-wrap break-words block"
+            style={{
+              color: 'transparent',
+              caretColor: '#D4D4D4',
+              WebkitTextFillColor: 'transparent',
+              overflow: 'hidden',
+              tabSize: 4
+            }}
+            placeholder={placeholder}
+          />
+        </div>
+
       </div>
     </div>
   );

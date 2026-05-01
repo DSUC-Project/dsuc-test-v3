@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ActionButton, SoftBrutalCard, StatusBadge, SectionHeader } from '@/components/ui/Primitives';
 import { ContactModal } from '@/components/ui/ContactModal';
+import { useStore } from '@/store/useStore';
 
 function MarqueeStrip() {
   const text = "BUILD · LEARN · SHIP · SOLANA · WEB3 · CODE · COMMUNITY · DSUC LABS · ";
@@ -22,11 +23,15 @@ function MarqueeStrip() {
 
 export function Home() {
   const [contactOpen, setContactOpen] = React.useState(false);
+  const { members, projects, events, currentUser } = useStore();
+
+  const recentEvents = events.slice(0, 3);
+  const recentProjects = projects.slice(0, 3);
 
   return (
     <div className="w-full">
       <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
-      {/* 10. HERO SECTION */}
+      {/* HERO SECTION */}
       <section className="container mx-auto px-4 py-12 md:py-24 relative">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
@@ -69,62 +74,82 @@ export function Home() {
           </div>
 
           {/* RIGHT: 5-6 columns - Composed System View */}
-          <div className="lg:col-span-5 relative min-h-[500px] hidden md:block">
-            {/* Decorative BG Chips */}
-            <div className="absolute top-10 right-10 z-0 opacity-20 dark:opacity-30">
-               <pre className="font-mono text-xs">anchor build</pre>
+          <div className="lg:col-span-5 relative w-full h-[500px] hidden lg:block overflow-visible mt-12 lg:mt-0">
+             
+            {/* Main Window - Code Interface */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] z-10 flex flex-col bg-[#0B0F17] rounded-md shadow-2xl border border-gray-800 overflow-hidden text-gray-300">
+               {/* Terminal Bar */}
+               <div className="flex items-center gap-2 px-3 py-2 bg-gray-900 border-b border-gray-800">
+                  <div className="flex gap-1.5">
+                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+                     <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+                     <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
+                  </div>
+                  <div className="mx-auto flex items-center gap-2">
+                     <span className="font-mono text-[10px] uppercase text-gray-500">dsuc@system:~</span>
+                  </div>
+               </div>
+               
+               {/* Terminal Content */}
+               <div className="p-4 font-mono text-xs leading-relaxed space-y-3">
+                  <div className="flex gap-2">
+                     <span className="text-emerald-400">➜</span>
+                     <span className="text-blue-400">dsuc</span>
+                     <span className="text-gray-300">status --check</span>
+                  </div>
+                  <div className="pl-4 space-y-1 text-gray-400">
+                     <p>['SYSTEM'] ............ <span className="text-emerald-400 font-bold">ONLINE</span></p>
+                     <p>['DB_REGION'] ......... <span className="text-yellow-400">SGP_ASIA</span></p>
+                     <p>['USER_MODE'] ......... <span className="text-primary">{currentUser ? 'AUTH_VERIFIED' : 'GUEST_MODE'}</span></p>
+                  </div>
+
+                  <div className="flex gap-2 mt-4">
+                     <span className="text-emerald-400">➜</span>
+                     <span className="text-blue-400">dsuc</span>
+                     <span className="text-gray-300">metrics get all</span>
+                  </div>
+                  <div className="pl-4 space-y-1 text-gray-400">
+                     <p>['BUILDERS'] .......... <span className="text-white font-bold">{members.length || 0}</span></p>
+                     <p>['PROJECTS'] .......... <span className="text-white font-bold">{projects.length || 0}</span></p>
+                     <p>['EVENTS'] ............ <span className="text-white font-bold">{events.length || 0}</span></p>
+                  </div>
+                  <div className="pt-2 animate-pulse text-gray-500">_</div>
+               </div>
             </div>
+
+            {/* Float 1 - Learning Path */}
+            <motion.div 
+               animate={{ y: [0, -6, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+               className="absolute top-[5%] -left-8 z-20 w-56 bg-surface border brutal-border p-4 shadow-xl"
+            >
+               <div className="flex justify-between items-center mb-3">
+                 <p className="font-mono text-[10px] uppercase text-text-muted">Active Path</p>
+                 <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+               </div>
+               <h4 className="font-heading font-bold text-sm mb-3">Solana Core</h4>
+               <div className="w-full bg-main-bg border brutal-border h-2 mb-1">
+                 <div className="h-full bg-primary w-[35%]"></div>
+               </div>
+               <p className="font-mono text-[10px] text-right text-text-muted">35% COMPLETED</p>
+            </motion.div>
+
+            {/* Float 2 - Next Event */}
+            {events.length > 0 && (
+              <motion.div 
+                animate={{ y: [0, 6, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute bottom-[10%] -right-4 z-20 w-64 bg-surface border brutal-border p-4 shadow-xl"
+              >
+                <p className="font-mono text-[10px] uppercase text-text-muted mb-2 border-b brutal-border pb-1">Incoming Event</p>
+                <div className="pt-1">
+                  <h4 className="font-heading font-bold text-sm mb-1 truncate">{events[0].title}</h4>
+                  <p className="text-xs text-text-muted font-mono mb-2">{events[0].date} @ {events[0].time || 'TBA'}</p>
+                  <Link to="/events" className="text-[10px] font-bold uppercase tracking-wider text-primary hover:underline">
+                    RSVP NOW &rarr;
+                  </Link>
+                </div>
+              </motion.div>
+            )}
             
-            {/* Main System Card */}
-            <SoftBrutalCard className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-[28rem] z-10 flex flex-col shadow-xl">
-               <div className="flex justify-between items-center border-b brutal-border pb-4 mb-4">
-                  <h3 className="font-heading font-bold uppercase tracking-tight">System Status</h3>
-                  <StatusBadge status="ONLINE" className="text-emerald-500 border-emerald-500" />
-               </div>
-               <div className="flex-1 space-y-6 flex flex-col justify-center">
-                  <div>
-                    <p className="font-mono text-[10px] text-text-muted uppercase mb-1">Current Mode</p>
-                    <p className="font-bold border px-3 py-2 bg-main-bg">GUEST_VIEW</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="border p-2 bg-main-bg text-center">
-                      <p className="font-display font-bold text-2xl">45+</p>
-                      <p className="font-mono text-[9px] uppercase">Builders</p>
-                    </div>
-                    <div className="border p-2 bg-main-bg text-center">
-                      <p className="font-display font-bold text-2xl">12</p>
-                      <p className="font-mono text-[9px] uppercase">Projects</p>
-                    </div>
-                  </div>
-               </div>
-               <div className="mt-auto border-t brutal-border pt-4">
-                 <p className="font-mono text-[10px] text-text-muted truncate">SERVER: OK | DB: ASYNC_SYNC | REGION: SGP</p>
-               </div>
-            </SoftBrutalCard>
-
-            {/* Overlapping Mini Card 1 - Academy Preview */}
-            <motion.div 
-               animate={{ y: [0, -5, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-               className="absolute top-20 -left-6 z-20 w-48 bg-surface border brutal-border brutal-shadow-sm p-4 rotate-[-2deg]"
-            >
-               <p className="font-mono text-[10px] uppercase text-text-muted mb-2">Learning Path</p>
-               <h4 className="font-bold text-sm mb-2">Solana Core</h4>
-               <div className="h-1 bg-border-main w-full rounded-none overflow-hidden">
-                 <div className="h-full bg-primary w-1/4"></div>
-               </div>
-               <p className="font-mono text-[10px] text-right mt-1">25%</p>
-            </motion.div>
-
-            {/* Overlapping Mini Card 2 - Next Event */}
-            <motion.div 
-              animate={{ y: [0, 4, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute bottom-16 -right-6 z-20 w-52 bg-surface border brutal-border brutal-shadow-sm p-4 rotate-[1.5deg]"
-            >
-               <p className="font-mono text-[10px] uppercase text-text-muted mb-2">Next Event</p>
-               <h4 className="font-bold text-sm mb-1">Builder Session #4</h4>
-               <p className="text-xs text-text-muted mb-2">Tomorrow, 18:00 ICT</p>
-               <Link to="/events" className="text-[10px] font-bold uppercase underline">View Details &rarr;</Link>
-            </motion.div>
           </div>
         </div>
       </section>
@@ -136,10 +161,10 @@ export function Home() {
         <div className="container mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 brutal-border border-l border-r">
             {[ 
-              { label: 'Members', val: '45+' },
-              { label: 'Projects', val: '12' },
-              { label: 'Events', val: '80+' },
-              { label: 'Academy Units', val: '120' }
+              { label: 'Members', val: members.length || '0' },
+              { label: 'Projects', val: projects.length || '0' },
+              { label: 'Events', val: events.length || '0' },
+              { label: 'Academy Units', val: '120+' }
             ].map((stat, i) => (
               <div key={i} className="p-6 md:p-8 text-center flex flex-col items-center justify-center">
                 <p className="font-display font-bold text-4xl lg:text-5xl mb-2">{stat.val}</p>
@@ -153,28 +178,77 @@ export function Home() {
       {/* Content Columns Wrapper */}
       <div className="container mx-auto px-4 py-24 space-y-32">
         {/* Recent Events */}
-        <section>
-          <SectionHeader title="Recent Events" subtitle="Upcoming sessions and past recordings." />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1,2,3].map(i => (
-               <SoftBrutalCard key={i} className="flex flex-col group cursor-pointer hover:bg-main-bg">
-                 <div className="flex justify-between items-start mb-12">
-                   <div className="text-center border brutal-border bg-surface px-4 py-2 group-hover:bg-primary group-hover:text-main-bg transition-colors">
-                     <p className="font-mono text-[10px] uppercase">Oct</p>
-                     <p className="font-display font-bold text-2xl">{20 + i}</p>
-                   </div>
-                   <StatusBadge status="WORKSHOP" />
-                 </div>
-                 <h3 className="font-bold text-lg mb-2">Introduction to Anchor</h3>
-                 <p className="text-sm text-text-muted mb-6">Learn how to scaffold your first Solana program using the Anchor framework.</p>
-                 <div className="mt-auto pt-4 border-t brutal-border flex justify-between items-center text-xs font-mono uppercase">
-                   <span>18:00 ICT</span>
-                   <span className="font-bold group-hover:text-primary">RSVP &rarr;</span>
-                 </div>
-               </SoftBrutalCard>
-            ))}
-          </div>
-        </section>
+        {recentEvents.length > 0 && (
+          <section>
+            <SectionHeader title="Recent Events" subtitle="Upcoming sessions and past recordings." />
+            <div className="flex flex-col gap-2">
+              {recentEvents.map((evt, i) => {
+                const dateObj = evt.date ? new Date(evt.date) : new Date();
+                const month = dateObj.toLocaleString('en-US', { month: 'short' });
+                const day = dateObj.getDate();
+                
+                return (
+                  <Link key={i} to="/events" className="group block">
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 border brutal-border bg-surface hover:bg-main-bg transition-colors gap-4 shadow-sm">
+                      <div className="flex items-center gap-6">
+                        <div className="flex flex-col items-center justify-center min-w-[60px]">
+                          <span className="font-mono text-[10px] uppercase text-text-muted">{month}</span>
+                          <span className="font-display font-bold text-2xl text-text-main">{day}</span>
+                        </div>
+                        <div className="h-10 w-px bg-border-main hidden md:block"></div>
+                        <div>
+                          <div className="flex items-center gap-3 mb-1">
+                            <h3 className="font-bold text-lg">{evt.title}</h3>
+                            <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-mono uppercase border border-primary/20">{evt.type || 'EVENT'}</span>
+                          </div>
+                          <p className="text-xs font-mono text-text-muted limit-lines-1">
+                            {evt.time || '18:00'} • {evt.location || 'Discord / Offline'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="w-full md:w-auto text-right">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted group-hover:text-primary transition-colors flex items-center gap-1">
+                          Details &rarr;
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Recent Projects */}
+        {recentProjects.length > 0 && (
+          <section>
+            <SectionHeader title="Projects" subtitle="What our members are building." />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {recentProjects.map((proj, i) => (
+                <Link to={`/project/${proj.id}`} key={i} className="block h-full cursor-pointer">
+                  <div className="h-full flex flex-col p-5 bg-surface border brutal-border hover:border-primary transition-colors shadow-sm relative group overflow-hidden">
+                    <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-primary font-mono text-lg">↗</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-3">
+                       <h3 className="font-heading font-bold text-lg truncate pr-6">{proj.name}</h3>
+                       {proj.status === 'Published' && <span className="flex w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />}
+                    </div>
+                    <p className="text-sm text-text-muted mb-6 flex-1 line-clamp-3 leading-relaxed">{proj.description}</p>
+                    <div className="mt-auto pt-4 border-t brutal-border flex flex-wrap gap-1.5">
+                      {(proj.tech_stack || []).slice(0, 3).map(t => (
+                        <span key={t} className="px-2 py-1 bg-main-bg border brutal-border text-[10px] font-mono whitespace-nowrap">{t}</span>
+                      ))}
+                      {(proj.tech_stack?.length || 0) > 3 && (
+                        <span className="px-2 py-1 text-text-muted text-[10px] font-mono">+{proj.tech_stack!.length - 3}</span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Final CTA */}
         <section className="py-16 text-center max-w-2xl mx-auto">
@@ -182,7 +256,7 @@ export function Home() {
            <p className="text-text-muted mb-10">Join the platform, start learning, and build alongside other student developers.</p>
            <div className="flex flex-wrap justify-center gap-4">
               <Link to="/academy"><ActionButton variant="primary">Start Learning</ActionButton></Link>
-              <ActionButton variant="secondary">Login</ActionButton>
+              {!currentUser && <ActionButton variant="secondary" onClick={() => document.dispatchEvent(new Event('open-auth-modal'))}>Login</ActionButton>}
            </div>
         </section>
       </div>

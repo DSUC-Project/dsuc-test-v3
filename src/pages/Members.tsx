@@ -1,67 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Github, Twitter, Search } from 'lucide-react';
+import { Github, Twitter, Search, Send } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/Primitives';
-import { mockMembers } from '@/lib/mockData';
 import { useStore } from '@/store/useStore';
+import { Member } from '@/types';
 
 export function Members() {
   const navigate = useNavigate();
-  const [data, setData] = useState<any[]>(mockMembers as any[]);
+  const { members, fetchMembers } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Real fetch from store if available, fallback to mock
   useEffect(() => {
-    const fetchReal = async () => {
-      const storeMembers = useStore.getState().members;
-      if (storeMembers && storeMembers.length > 0) {
-        setData(storeMembers);
-      } else {
-        await useStore.getState().fetchMembers();
-        const updatedMembers = useStore.getState().members;
-        if (updatedMembers && updatedMembers.length > 0) {
-          setData(updatedMembers);
-        }
-      }
-    };
-    fetchReal().catch(() => {}); // ignore fail silently
-  }, []);
+    fetchMembers();
+  }, [fetchMembers]);
 
-  const filteredMembers = data.filter(member => {
+  const filteredMembers = members.filter(member => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return (
       member.name.toLowerCase().includes(query) ||
       member.skills.some(skill => skill.toLowerCase().includes(query)) ||
-      member.role.toLowerCase().includes(query)
+      (member.role && member.role.toLowerCase().includes(query))
     );
   });
 
-  const officialMembers = filteredMembers.filter(m => m.memberType === 'member');
+  const officialMembers = filteredMembers.filter(m => m.memberType !== 'community');
   const communityMembers = filteredMembers.filter(m => m.memberType === 'community');
 
-  const MemberCard = ({ member }: { member: typeof mockMembers[0] }) => (
+  const MemberCard = ({ member }: { member: Member }) => (
     <div 
       className="bg-surface brutal-border brutal-shadow p-6 text-center hover:bg-main-bg transition-colors cursor-pointer group"
       onClick={() => navigate(`/member/${member.id}`)}
     >
-      <img src={member.avatar} className="w-16 h-16 rounded-full mx-auto mb-3 brutal-border" alt={member.name} />
-      <h3 className="font-heading font-bold text-base group-hover:text-primary transition-colors">{member.name}</h3>
-      <p className="font-mono text-xs uppercase text-text-muted mb-3">{member.role}</p>
+      <img src={member.avatar || 'https://via.placeholder.com/150'} className="w-16 h-16 object-cover rounded-full mx-auto mb-3 brutal-border" alt={member.name} />
+      <h3 className="font-heading font-bold text-base group-hover:text-primary transition-colors line-clamp-1">{member.name}</h3>
+      <p className="font-mono text-xs uppercase text-text-muted mb-3 line-clamp-1">{member.role || (member.memberType === 'community' ? 'Cộng đồng' : 'Thành viên')}</p>
       <div className="flex flex-wrap gap-1 justify-center mb-4 min-h-[22px]">
         {member.skills.slice(0,3).map(s => (
-          <span key={s} className="px-2 py-0.5 border brutal-border font-mono text-[10px] uppercase">{s}</span>
+          <span key={s} className="px-2 py-0.5 border brutal-border font-mono text-[10px] uppercase line-clamp-1">{s}</span>
         ))}
       </div>
       <div className="flex justify-center gap-3">
-        {member.github && (
-          <a href={member.github} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>
+        {member.socials?.github && (
+          <a href={member.socials.github} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>
             <Github className="w-4 h-4 text-text-muted hover:text-primary transition-colors" />
           </a>
         )}
-        {member.twitter && (
-          <a href={member.twitter} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>
+        {member.socials?.twitter && (
+          <a href={member.socials.twitter} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>
             <Twitter className="w-4 h-4 text-text-muted hover:text-primary transition-colors" />
+          </a>
+        )}
+        {member.socials?.telegram && (
+          <a href={member.socials.telegram} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>
+            <Send className="w-4 h-4 text-text-muted hover:text-primary transition-colors" />
           </a>
         )}
       </div>
@@ -69,7 +61,7 @@ export function Members() {
   );
 
   return (
-    <div className="container mx-auto px-4 py-12 space-y-12">
+    <div className="container mx-auto px-4 py-8 md:py-16 space-y-12">
       <div className="flex flex-col md:flex-row md:items-end justify-between items-start gap-4">
         <SectionHeader title="Members" className="mb-0 border-none pb-0" />
         <div className="relative w-full md:w-64 shrink-0">
@@ -79,7 +71,7 @@ export function Members() {
             placeholder="Search by name or skill..." 
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full bg-surface brutal-border p-2 pl-9 font-mono text-xs focus:outline-none focus:border-primary transition-colors"
+            className="w-full bg-surface brutal-border p-3 pl-10 font-mono text-xs focus:outline-none focus:border-primary transition-colors"
           />
         </div>
       </div>
