@@ -7,11 +7,11 @@ import type {
   AcademyV2TestCase,
   AcademyV2UnitDetail,
   AcademyV2UnitSummary,
-} from '@/types';
+} from "@/types";
 
-type Difficulty = 'beginner' | 'intermediate' | 'advanced';
-type LessonType = 'content' | 'challenge' | 'quiz';
-type LessonSection = 'learn' | 'practice';
+type Difficulty = "beginner" | "intermediate" | "advanced";
+type LessonType = "content" | "challenge" | "quiz";
+type LessonSection = "learn" | "practice";
 
 type Reference = {
   _ref?: string;
@@ -64,7 +64,7 @@ type RawLesson = {
   _id: string;
   title: string;
   slug?: { current?: string };
-  type?: 'content' | 'challenge';
+  type?: "content" | "challenge";
   content?: string;
   code?: string;
   tests?: RawLessonTest[];
@@ -72,8 +72,8 @@ type RawLesson = {
   solution?: string;
   xpReward?: number;
   order?: number;
-  language?: 'typescript' | 'rust';
-  buildType?: 'standard' | 'buildable';
+  language?: "typescript" | "rust";
+  buildType?: "standard" | "buildable";
   deployable?: boolean;
   videoUrl?: string;
   widgets?: string[];
@@ -99,40 +99,42 @@ let cachedCatalog: BuiltCatalog | null = null;
 let loadingCatalog: Promise<BuiltCatalog> | null = null;
 
 function safeDifficulty(value: unknown): Difficulty {
-  return value === 'advanced' || value === 'intermediate' ? value : 'beginner';
+  return value === "advanced" || value === "intermediate" ? value : "beginner";
 }
 
 function unitSectionFromType(type: LessonType): LessonSection {
-  return type === 'content' ? 'learn' : 'practice';
+  return type === "content" ? "learn" : "practice";
 }
 
 function unitIdFromLesson(lesson: RawLesson) {
-  return String(lesson.slug?.current || lesson._id || '')
+  return String(lesson.slug?.current || lesson._id || "")
     .trim()
     .toLowerCase();
 }
 
 function courseIdFromCourse(course: RawCourse) {
-  return String(course.slug?.current || course._id || '')
+  return String(course.slug?.current || course._id || "")
     .trim()
     .toLowerCase();
 }
 
 function pathIdFromLearningPath(item: RawLearningPath) {
-  return String(item.slug?.current || item._id || '')
+  return String(item.slug?.current || item._id || "")
     .trim()
     .toLowerCase();
 }
 
-function normalizeInstructor(raw: RawInstructor | undefined): AcademyV2Instructor | null {
+function normalizeInstructor(
+  raw: RawInstructor | undefined,
+): AcademyV2Instructor | null {
   if (!raw) {
     return null;
   }
 
   return {
-    id: String(raw._id || '').trim(),
-    name: String(raw.name || '').trim(),
-    bio: String(raw.bio || '').trim(),
+    id: String(raw._id || "").trim(),
+    name: String(raw.name || "").trim(),
+    bio: String(raw.bio || "").trim(),
     socialLinks: {
       twitter: raw.socialLinks?.twitter,
       github: raw.socialLinks?.github,
@@ -140,12 +142,15 @@ function normalizeInstructor(raw: RawInstructor | undefined): AcademyV2Instructo
   };
 }
 
-function normalizeTestCase(item: RawLessonTest, index: number): AcademyV2TestCase {
+function normalizeTestCase(
+  item: RawLessonTest,
+  index: number,
+): AcademyV2TestCase {
   return {
     id: String(item.id || item._key || `test-${index + 1}`).trim(),
-    description: String(item.description || '').trim(),
-    input: String(item.input || '').trim(),
-    expectedOutput: String(item.expectedOutput || '').trim(),
+    description: String(item.description || "").trim(),
+    input: String(item.input || "").trim(),
+    expectedOutput: String(item.expectedOutput || "").trim(),
     hidden: item.hidden === true,
   };
 }
@@ -158,11 +163,11 @@ async function loadSeedData() {
     lessonsModule,
     instructorsModule,
   ] = await Promise.all([
-    import('@/content/academy-v2/seed/learningPath.json'),
-    import('@/content/academy-v2/seed/course.json'),
-    import('@/content/academy-v2/seed/modules.json'),
-    import('@/content/academy-v2/seed/lessons.json'),
-    import('@/content/academy-v2/seed/instructor.json'),
+    import("@/content/academy-v2/seed/learningPath.json"),
+    import("@/content/academy-v2/seed/course.json"),
+    import("@/content/academy-v2/seed/modules.json"),
+    import("@/content/academy-v2/seed/lessons.json"),
+    import("@/content/academy-v2/seed/instructor.json"),
   ]);
 
   return {
@@ -174,7 +179,9 @@ async function loadSeedData() {
   };
 }
 
-function buildCatalog(seed: Awaited<ReturnType<typeof loadSeedData>>): BuiltCatalog {
+function buildCatalog(
+  seed: Awaited<ReturnType<typeof loadSeedData>>,
+): BuiltCatalog {
   const { learningPaths, courses, modules, lessons, instructors } = seed;
   const courseMap = new Map(courses.map((item) => [item._id, item]));
   const moduleMap = new Map(modules.map((item) => [item._id, item]));
@@ -194,31 +201,41 @@ function buildCatalog(seed: Awaited<ReturnType<typeof loadSeedData>>): BuiltCata
           const course = courseItem as RawCourse;
           const courseId = courseIdFromCourse(course);
           const instructor = normalizeInstructor(
-            course.instructor?._ref ? instructorMap.get(course.instructor._ref) : undefined
+            course.instructor?._ref
+              ? instructorMap.get(course.instructor._ref)
+              : undefined,
           );
 
           const builtModules = (course.modules || [])
             .map((ref) => (ref._ref ? moduleMap.get(ref._ref) : null))
             .filter(Boolean)
-            .sort((left, right) => Number(left?.order || 0) - Number(right?.order || 0))
+            .sort(
+              (left, right) =>
+                Number(left?.order || 0) - Number(right?.order || 0),
+            )
             .map((moduleItem) => {
               const module = moduleItem as RawModule;
               const moduleUnits = (module.lessons || [])
                 .map((ref) => (ref._ref ? lessonMap.get(ref._ref) : null))
                 .filter(Boolean)
-                .sort((left, right) => Number(left?.order || 0) - Number(right?.order || 0))
+                .sort(
+                  (left, right) =>
+                    Number(left?.order || 0) - Number(right?.order || 0),
+                )
                 .map((lessonItem) => {
                   const lesson = lessonItem as RawLesson;
-                  const type = (lesson.type || 'content') as LessonType;
+                  const type = (lesson.type || "content") as LessonType;
                   const unitId = unitIdFromLesson(lesson);
                   const summary: AcademyV2UnitSummary = {
                     id: unitId,
                     source_id: lesson._id,
-                    title: String(lesson.title || '').trim(),
+                    title: String(lesson.title || "").trim(),
                     type,
                     section: unitSectionFromType(type),
                     order: Number(lesson.order || 0),
-                    xp_reward: Number(lesson.xpReward || course.xpPerLesson || 0),
+                    xp_reward: Number(
+                      lesson.xpReward || course.xpPerLesson || 0,
+                    ),
                     language: lesson.language,
                     build_type: lesson.buildType,
                     deployable: lesson.deployable === true,
@@ -226,23 +243,29 @@ function buildCatalog(seed: Awaited<ReturnType<typeof loadSeedData>>): BuiltCata
 
                   const detail: AcademyV2UnitDetail = {
                     ...summary,
-                    content_md: String(lesson.content || '').trim(),
-                    code: String(lesson.code || '').trim(),
+                    content_md: String(lesson.content || "").trim(),
+                    code: String(lesson.code || "").trim(),
                     tests: Array.isArray(lesson.tests)
-                      ? lesson.tests.map((item, index) => normalizeTestCase(item, index))
+                      ? lesson.tests.map((item, index) =>
+                          normalizeTestCase(item, index),
+                        )
                       : [],
                     hints: Array.isArray(lesson.hints)
-                      ? lesson.hints.map((item) => String(item || '').trim()).filter(Boolean)
+                      ? lesson.hints
+                          .map((item) => String(item || "").trim())
+                          .filter(Boolean)
                       : [],
-                    solution: String(lesson.solution || '').trim(),
-                    video_url: String(lesson.videoUrl || '').trim(),
+                    solution: String(lesson.solution || "").trim(),
+                    video_url: String(lesson.videoUrl || "").trim(),
                     widgets: Array.isArray(lesson.widgets)
-                      ? lesson.widgets.map((item) => String(item || '').trim()).filter(Boolean)
+                      ? lesson.widgets
+                          .map((item) => String(item || "").trim())
+                          .filter(Boolean)
                       : [],
                     course_id: courseId,
-                    course_title: String(course.title || '').trim(),
-                    module_id: String(module._id || '').trim(),
-                    module_title: String(module.title || '').trim(),
+                    course_title: String(course.title || "").trim(),
+                    module_id: String(module._id || "").trim(),
+                    module_title: String(module.title || "").trim(),
                   };
 
                   unitByCourseAndId.set(`${courseId}:${unitId}`, detail);
@@ -250,40 +273,46 @@ function buildCatalog(seed: Awaited<ReturnType<typeof loadSeedData>>): BuiltCata
                 });
 
               return {
-                id: String(module._id || '').trim(),
-                title: String(module.title || '').trim(),
-                description: String(module.description || '').trim(),
+                id: String(module._id || "").trim(),
+                title: String(module.title || "").trim(),
+                description: String(module.description || "").trim(),
                 order: Number(module.order || 0),
-                learn_units: moduleUnits.filter((unit) => unit.section === 'learn'),
-                practice_units: moduleUnits.filter((unit) => unit.section === 'practice'),
+                learn_units: moduleUnits.filter(
+                  (unit) => unit.section === "learn",
+                ),
+                practice_units: moduleUnits.filter(
+                  (unit) => unit.section === "practice",
+                ),
               } satisfies AcademyV2Module;
             });
 
           const moduleCount = builtModules.length;
           const learnUnitCount = builtModules.reduce(
             (sum, module) => sum + module.learn_units.length,
-            0
+            0,
           );
           const practiceUnitCount = builtModules.reduce(
             (sum, module) => sum + module.practice_units.length,
-            0
+            0,
           );
           const totalUnitCount = learnUnitCount + practiceUnitCount;
 
           const summary: AcademyV2CourseSummary = {
             id: courseId,
             source_id: course._id,
-            title: String(course.title || '').trim(),
-            description: String(course.description || '').trim(),
+            title: String(course.title || "").trim(),
+            description: String(course.description || "").trim(),
             difficulty: safeDifficulty(course.difficulty),
             duration_hours: Number(course.duration || 0),
             xp_reward: Number(course.xpReward || 0),
             xp_per_unit: Number(course.xpPerLesson || 0),
             tags: Array.isArray(course.tags)
-              ? course.tags.map((item) => String(item || '').trim()).filter(Boolean)
+              ? course.tags
+                  .map((item) => String(item || "").trim())
+                  .filter(Boolean)
               : [],
             track_level: Number(course.trackLevel || 0),
-            thumbnail: '/logo.png',
+            thumbnail: "/logo.png",
             module_count: moduleCount,
             learn_unit_count: learnUnitCount,
             practice_unit_count: practiceUnitCount,
@@ -295,29 +324,38 @@ function buildCatalog(seed: Awaited<ReturnType<typeof loadSeedData>>): BuiltCata
           courseById.set(courseId, {
             ...summary,
             path_id: pathId,
-            path_title: String(pathItem.title || '').trim(),
+            path_title: String(pathItem.title || "").trim(),
             modules: builtModules,
           });
 
           return summary;
         })
-        .sort((left, right) => Number(left.track_level || 0) - Number(right.track_level || 0));
+        .sort(
+          (left, right) =>
+            Number(left.track_level || 0) - Number(right.track_level || 0),
+        );
 
       return {
         id: pathId,
         source_id: pathItem._id,
-        title: String(pathItem.title || '').trim(),
-        tag: String(pathItem.tag || '').trim(),
-        description: String(pathItem.description || '').trim(),
+        title: String(pathItem.title || "").trim(),
+        tag: String(pathItem.tag || "").trim(),
+        description: String(pathItem.description || "").trim(),
         difficulty: safeDifficulty(pathItem.difficulty),
         order: Number(pathItem.order || 0),
         course_count: builtCourses.length,
-        learn_unit_count: builtCourses.reduce((sum, course) => sum + course.learn_unit_count, 0),
+        learn_unit_count: builtCourses.reduce(
+          (sum, course) => sum + course.learn_unit_count,
+          0,
+        ),
         practice_unit_count: builtCourses.reduce(
           (sum, course) => sum + course.practice_unit_count,
-          0
+          0,
         ),
-        total_unit_count: builtCourses.reduce((sum, course) => sum + course.total_unit_count, 0),
+        total_unit_count: builtCourses.reduce(
+          (sum, course) => sum + course.total_unit_count,
+          0,
+        ),
         courses: builtCourses,
       } satisfies AcademyV2Path;
     })
@@ -352,16 +390,22 @@ export async function getAcademyV2PathsLocal() {
 
 export async function getAcademyV2CourseLocal(courseId: string) {
   return (
-    (await getBuiltCatalog()).courseById.get(String(courseId || '').trim().toLowerCase()) || null
+    (await getBuiltCatalog()).courseById.get(
+      String(courseId || "")
+        .trim()
+        .toLowerCase(),
+    ) || null
   );
 }
 
 export async function getAcademyV2UnitLocal(courseId: string, unitId: string) {
   return (
     (await getBuiltCatalog()).unitByCourseAndId.get(
-      `${String(courseId || '').trim().toLowerCase()}:${String(unitId || '')
+      `${String(courseId || "")
         .trim()
-        .toLowerCase()}`
+        .toLowerCase()}:${String(unitId || "")
+        .trim()
+        .toLowerCase()}`,
     ) || null
   );
 }

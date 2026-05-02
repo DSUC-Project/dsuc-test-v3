@@ -1,53 +1,133 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { motion } from 'motion/react';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { motion } from "motion/react";
+import { ArrowRight } from "lucide-react";
 
 // PRIMITIVES
 
-export const PaperPanel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => {
+export const PaperPanel = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
   return (
-    <div ref={ref} className={cn("bg-surface border border-border-main rounded-xl p-6", className)} {...props} />
-  )
-});
-PaperPanel.displayName = 'PaperPanel';
-
-export const SoftBrutalCard = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => {
-  return (
-    <motion.div 
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.2 }}
-      ref={ref} 
-      className={cn("bg-surface border border-border-main shadow-sm rounded-xl p-6 overflow-hidden", className)} 
-      {...(props as any)} 
+    <div
+      ref={ref}
+      className={cn("bg-surface border border-border-main p-8 shadow-sm", className)}
+      {...props}
     />
-  )
+  );
 });
-SoftBrutalCard.displayName = 'SoftBrutalCard';
+PaperPanel.displayName = "PaperPanel";
+
+interface SoftBrutalCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  intent?: "default" | "primary" | "accent" | "success" | "danger" | "info" | "locked" | "warning";
+  interactive?: boolean;
+  withPattern?: boolean;
+}
+
+export const SoftBrutalCard = React.forwardRef<HTMLDivElement, SoftBrutalCardProps>(
+  ({ className, intent = "default", interactive = false, withPattern = false, children, ...props }, ref) => {
+    
+    const baseColors = {
+      default: "border-border-main hover:border-primary/50",
+      primary: "border-primary/30 hover:border-primary",
+      accent: "border-accent/30 hover:border-accent",
+      success: "border-emerald-500/30 hover:border-emerald-500",
+      danger: "border-red-500/30 hover:border-red-500",
+      info: "border-cyan-500/30 hover:border-cyan-500",
+      warning: "border-orange-500/30 hover:border-orange-500",
+      locked: "border-dashed border-border-main opacity-75 backdrop-grayscale",
+    };
+
+    const stripColors = {
+      default: "bg-transparent",
+      primary: "bg-primary",
+      accent: "bg-accent",
+      success: "bg-emerald-500",
+      danger: "bg-red-500",
+      info: "bg-cyan-500",
+      warning: "bg-orange-500",
+      locked: "bg-gray-400",
+    };
+
+    return (
+      <motion.div
+        ref={ref}
+        whileHover={interactive ? { y: -4, transition: { duration: 0.2, ease: "easeOut" } } : undefined}
+        className={cn(
+          "bg-surface border p-6 overflow-hidden relative group transition-all duration-200",
+          interactive ? "cursor-pointer hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary/20" : "shadow-sm",
+          baseColors[intent],
+          className
+        )}
+        {...(props as any)}
+      >
+        {/* Top Accent Strip */}
+        {intent !== "default" && (
+           <div className={cn("absolute top-0 left-0 w-full h-1", stripColors[intent])} />
+        )}
+        
+        {/* Optional Micro Pattern background */}
+        {withPattern && (
+          <div className="absolute inset-0 bg-[radial-gradient(var(--text-main)_1px,transparent_1px)] [background-size:16px_16px] opacity-[0.03] pointer-events-none group-hover:opacity-[0.06] transition-opacity duration-300" />
+        )}
+        
+        {/* Content */}
+        <div className="relative z-10 w-full h-full flex flex-col">
+          {children}
+        </div>
+      </motion.div>
+    );
+  }
+);
+SoftBrutalCard.displayName = "SoftBrutalCard";
 
 interface ActionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'success';
+  variant?: "primary" | "secondary" | "danger" | "success";
 }
-export const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(({ className, variant = 'primary', ...props }, ref) => {
-  const base = "px-4 py-2 font-bold uppercase tracking-wider text-sm transition-all border border-border-main rounded-xl active:scale-95";
+export const ActionButton = React.forwardRef<
+  HTMLButtonElement,
+  ActionButtonProps
+>(({ className, variant = "primary", ...props }, ref) => {
+  const base =
+    "px-6 py-2.5 font-bold uppercase tracking-widest text-xs transition-all border border-border-main active:translate-y-[2px]";
   let variants = {
-    primary: "bg-primary text-white shadow-sm hover:shadow-md hover:bg-primary/90",
-    secondary: "bg-surface text-text-main shadow-sm hover:bg-main-bg hover:shadow-md",
+    primary:
+      "bg-primary text-primary-foreground shadow-sm hover:shadow-md hover:bg-primary/90",
+    secondary:
+      "bg-surface text-text-main shadow-sm hover:bg-main-bg hover:shadow-md",
     danger: "bg-red-500 text-white shadow-sm hover:shadow-md hover:bg-red-600",
-    success: "bg-emerald-500 text-white shadow-sm hover:shadow-md hover:bg-emerald-600",
-  }
+    success:
+      "bg-emerald-500 text-white shadow-sm hover:shadow-md hover:bg-emerald-600",
+  };
   return (
-    <button ref={ref} className={cn(base, variants[variant], className)} {...props} />
-  )
+    <button
+      ref={ref}
+      className={cn(base, variants[variant], className)}
+      {...props}
+    />
+  );
 });
-ActionButton.displayName = 'ActionButton';
+ActionButton.displayName = "ActionButton";
 
-export const StatusBadge = ({ status, className }: { status: string, className?: string }) => {
+export const StatusBadge = ({
+  status,
+  className,
+}: {
+  status: string;
+  className?: string;
+}) => {
   return (
-    <span className={cn("inline-flex items-center px-3 py-1 rounded-full border border-border-main font-mono text-xs font-medium uppercase bg-surface text-text-muted", className)}>
+    <span
+      className={cn(
+        "inline-flex items-center px-2 py-0.5 border border-border-main font-mono text-[10px] font-bold uppercase tracking-widest bg-main-bg text-text-main shadow-sm",
+        className,
+      )}
+    >
       {status}
     </span>
-  )
-}
+  );
+};
 
 interface SectionHeaderProps {
   title: string;
@@ -57,15 +137,33 @@ interface SectionHeaderProps {
   className?: string;
 }
 
-export const SectionHeader = ({ title, showNumber = false, number, subtitle, className }: SectionHeaderProps) => (
-  <div className={cn("mb-8 border-b border-border-main pb-4 flex items-end gap-4", className)}>
+export const SectionHeader = ({
+  title,
+  showNumber = false,
+  number,
+  subtitle,
+  className,
+}: SectionHeaderProps) => (
+  <div
+    className={cn(
+      "mb-12 border-b-2 border-border-main pb-4 flex items-end gap-6",
+      className,
+    )}
+  >
     {showNumber && number && (
-      <span className="font-heading text-3xl text-text-muted/30">{number}</span>
+      <span className="font-heading text-4xl font-bold text-gray-200">
+        {number}
+      </span>
     )}
     <div>
-      <h2 className="font-heading text-2xl md:text-3xl font-bold uppercase tracking-tight">{title}</h2>
-      {subtitle && <p className="text-text-muted text-sm mt-1">{subtitle}</p>}
+      <h2 className="font-heading text-3xl md:text-5xl font-bold uppercase tracking-tighter text-text-main">
+        {title}
+      </h2>
+      {subtitle && (
+        <p className="text-gray-500 font-mono text-xs uppercase tracking-widest mt-3">
+          {subtitle}
+        </p>
+      )}
     </div>
   </div>
 );
-

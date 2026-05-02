@@ -1,7 +1,9 @@
-const ACADEMY_V2_PROGRESS_PREFIX = 'academy-v2-';
+const ACADEMY_V2_PROGRESS_PREFIX = "academy-v2-";
 
 function normalizeValue(value: string) {
-  return String(value || '').trim().toLowerCase();
+  return String(value || "")
+    .trim()
+    .toLowerCase();
 }
 
 export function academyV2ProgressTrack(courseId: string) {
@@ -24,16 +26,16 @@ export function academyV2ProgressKeyVariants(courseId: string, unitId: string) {
 export function isAcademyV2UnitCompleted(
   completedLessons: Record<string, boolean>,
   courseId: string,
-  unitId: string
+  unitId: string,
 ) {
   return academyV2ProgressKeyVariants(courseId, unitId).some(
-    (key) => completedLessons[key] === true
+    (key) => completedLessons[key] === true,
   );
 }
 
 export function countCompletedAcademyV2CourseUnits(
   completedLessons: Record<string, boolean>,
-  courseId: string
+  courseId: string,
 ) {
   const trackedUnitIds = new Set<string>();
   const prefixes = [

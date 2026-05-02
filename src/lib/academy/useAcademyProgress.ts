@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   loadProgress,
@@ -8,8 +8,8 @@ import {
   markQuizPassed,
   type ProgressIdentity,
   type ProgressState,
-} from './progress';
-import { academyV2ProgressTrack } from './v2Progress';
+} from "./progress";
+import { academyV2ProgressTrack } from "./v2Progress";
 
 function rowsToProgressState(rows: any[]): ProgressState {
   const completedLessons: Record<string, boolean> = {};
@@ -43,17 +43,21 @@ function rowsToProgressState(rows: any[]): ProgressState {
   };
 }
 
-function buildAuthHeaders(token: string | null, walletAddress: string | null, includeJson = false) {
+function buildAuthHeaders(
+  token: string | null,
+  walletAddress: string | null,
+  includeJson = false,
+) {
   const headers: Record<string, string> = {};
 
   if (includeJson) {
-    headers['Content-Type'] = 'application/json';
+    headers["Content-Type"] = "application/json";
   }
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   } else if (walletAddress) {
-    headers['x-wallet-address'] = walletAddress;
+    headers["x-wallet-address"] = walletAddress;
   }
 
   return headers;
@@ -65,8 +69,8 @@ type SaveOptions = {
 };
 
 function parseProgressKey(key: string) {
-  const value = String(key || '');
-  const separator = value.lastIndexOf(':');
+  const value = String(key || "");
+  const separator = value.lastIndexOf(":");
   if (separator <= 0 || separator >= value.length - 1) {
     return null;
   }
@@ -85,21 +89,27 @@ export function useAcademyProgressState(params: {
 }) {
   const { identity, currentUserId, authToken, walletAddress } = params;
   const isSignedInIdentity = Boolean(identity.userId || currentUserId);
-  const [state, setState] = useState<ProgressState>(() => loadProgress(identity));
+  const [state, setState] = useState<ProgressState>(() =>
+    loadProgress(identity),
+  );
 
-  const apiBase = (import.meta as any).env.VITE_API_BASE_URL || '';
+  const apiBase = (import.meta as any).env.VITE_API_BASE_URL || "";
   const storedAuthToken =
-    typeof window !== 'undefined' ? window.localStorage.getItem('auth_token') : null;
+    typeof window !== "undefined"
+      ? window.localStorage.getItem("auth_token")
+      : null;
   const effectiveAuthToken = authToken || storedAuthToken;
   const hasRemoteAuth = Boolean(effectiveAuthToken || walletAddress);
-  const [loading, setLoading] = useState(Boolean(currentUserId || hasRemoteAuth));
+  const [loading, setLoading] = useState(
+    Boolean(currentUserId || hasRemoteAuth),
+  );
   const authHeaders = useMemo(
     () => buildAuthHeaders(effectiveAuthToken, walletAddress),
-    [effectiveAuthToken, walletAddress]
+    [effectiveAuthToken, walletAddress],
   );
   const jsonHeaders = useMemo(
     () => buildAuthHeaders(effectiveAuthToken, walletAddress, true),
-    [effectiveAuthToken, walletAddress]
+    [effectiveAuthToken, walletAddress],
   );
 
   const syncMissingRows = useCallback(
@@ -141,9 +151,9 @@ export function useAcademyProgressState(params: {
 
         try {
           const response = await fetch(`${apiBase}/api/academy/progress`, {
-            method: 'POST',
+            method: "POST",
             headers: jsonHeaders,
-            credentials: 'include',
+            credentials: "include",
             body: JSON.stringify({
               track: parsed.track,
               lesson_id: parsed.lessonId,
@@ -164,7 +174,7 @@ export function useAcademyProgressState(params: {
 
       return synced;
     },
-    [apiBase, jsonHeaders]
+    [apiBase, jsonHeaders],
   );
 
   useEffect(() => {
@@ -184,7 +194,7 @@ export function useAcademyProgressState(params: {
       try {
         const response = await fetch(`${apiBase}/api/academy/progress`, {
           headers: authHeaders,
-          credentials: 'include',
+          credentials: "include",
         });
 
         if (!response.ok) {
@@ -192,7 +202,11 @@ export function useAcademyProgressState(params: {
         }
 
         const result = await response.json().catch(() => null);
-        if (!result?.success || !Array.isArray(result?.data?.rows) || cancelled) {
+        if (
+          !result?.success ||
+          !Array.isArray(result?.data?.rows) ||
+          cancelled
+        ) {
           return;
         }
 
@@ -230,7 +244,15 @@ export function useAcademyProgressState(params: {
     return () => {
       cancelled = true;
     };
-  }, [apiBase, authHeaders, currentUserId, hasRemoteAuth, identity, isSignedInIdentity, syncMissingRows]);
+  }, [
+    apiBase,
+    authHeaders,
+    currentUserId,
+    hasRemoteAuth,
+    identity,
+    isSignedInIdentity,
+    syncMissingRows,
+  ]);
 
   const persistUnitCompletion = useCallback(
     async (track: string, lessonId: string, options?: SaveOptions) => {
@@ -249,9 +271,9 @@ export function useAcademyProgressState(params: {
 
       try {
         const response = await fetch(`${apiBase}/api/academy/progress`, {
-          method: 'POST',
+          method: "POST",
           headers: jsonHeaders,
-          credentials: 'include',
+          credentials: "include",
           body: JSON.stringify({
             track: progressTrack,
             lesson_id: lessonId,
@@ -267,7 +289,7 @@ export function useAcademyProgressState(params: {
         return false;
       }
     },
-    [apiBase, currentUserId, identity, jsonHeaders, state]
+    [apiBase, currentUserId, identity, jsonHeaders, state],
   );
 
   return {

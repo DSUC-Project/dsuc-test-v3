@@ -14,7 +14,7 @@ export type ProgressIdentity = {
   walletAddress?: string | null;
 };
 
-const STORAGE_PREFIX = 'st-academy-progress-v2:';
+const STORAGE_PREFIX = "st-academy-progress-v2:";
 
 function identityKey(identity: ProgressIdentity) {
   if (identity.userId) {
@@ -25,7 +25,7 @@ function identityKey(identity: ProgressIdentity) {
     return `wallet:${identity.walletAddress}`;
   }
 
-  return 'guest';
+  return "guest";
 }
 
 export function progressKey(identity: ProgressIdentity) {
@@ -43,7 +43,7 @@ function emptyState(): ProgressState {
 }
 
 export function loadProgress(identity: ProgressIdentity): ProgressState {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return emptyState();
   }
 
@@ -67,14 +67,17 @@ export function loadProgress(identity: ProgressIdentity): ProgressState {
 }
 
 export function saveProgress(identity: ProgressIdentity, state: ProgressState) {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return;
   }
 
   window.localStorage.setItem(progressKey(identity), JSON.stringify(state));
 }
 
-function mergeChecklistSteps(left: boolean[] = [], right: boolean[] = []): boolean[] {
+function mergeChecklistSteps(
+  left: boolean[] = [],
+  right: boolean[] = [],
+): boolean[] {
   const max = Math.max(left.length, right.length);
   const merged: boolean[] = [];
 
@@ -85,8 +88,13 @@ function mergeChecklistSteps(left: boolean[] = [], right: boolean[] = []): boole
   return merged;
 }
 
-export function mergeProgressStates(local: ProgressState, remote: ProgressState): ProgressState {
-  const completedLessons: Record<string, boolean> = { ...local.completedLessons };
+export function mergeProgressStates(
+  local: ProgressState,
+  remote: ProgressState,
+): ProgressState {
+  const completedLessons: Record<string, boolean> = {
+    ...local.completedLessons,
+  };
   for (const [key, value] of Object.entries(remote.completedLessons || {})) {
     completedLessons[key] = Boolean(completedLessons[key]) || Boolean(value);
   }
@@ -103,14 +111,24 @@ export function mergeProgressStates(local: ProgressState, remote: ProgressState)
 
   const checklist: Record<string, boolean[]> = {};
   for (const key of checklistKeys) {
-    checklist[key] = mergeChecklistSteps(local.checklist?.[key], remote.checklist?.[key]);
+    checklist[key] = mergeChecklistSteps(
+      local.checklist?.[key],
+      remote.checklist?.[key],
+    );
   }
 
-  const inferredXp = Object.values(completedLessons).filter(Boolean).length * 100;
-  const xp = Math.max(Number(local.xp || 0), Number(remote.xp || 0), inferredXp);
+  const inferredXp =
+    Object.values(completedLessons).filter(Boolean).length * 100;
+  const xp = Math.max(
+    Number(local.xp || 0),
+    Number(remote.xp || 0),
+    inferredXp,
+  );
   const updatedAt =
     local.updatedAt && remote.updatedAt
-      ? (local.updatedAt > remote.updatedAt ? local.updatedAt : remote.updatedAt)
+      ? local.updatedAt > remote.updatedAt
+        ? local.updatedAt
+        : remote.updatedAt
       : local.updatedAt || remote.updatedAt || new Date().toISOString();
 
   return {
@@ -122,7 +140,11 @@ export function mergeProgressStates(local: ProgressState, remote: ProgressState)
   };
 }
 
-export function markLessonComplete(state: ProgressState, track: string, lessonId: string): ProgressState {
+export function markLessonComplete(
+  state: ProgressState,
+  track: string,
+  lessonId: string,
+): ProgressState {
   const key = `${track}:${lessonId}`;
   const alreadyCompleted = !!state.completedLessons[key];
 
@@ -134,7 +156,11 @@ export function markLessonComplete(state: ProgressState, track: string, lessonId
   };
 }
 
-export function markQuizPassed(state: ProgressState, track: string, lessonId: string): ProgressState {
+export function markQuizPassed(
+  state: ProgressState,
+  track: string,
+  lessonId: string,
+): ProgressState {
   const key = `${track}:${lessonId}`;
   return {
     ...state,
@@ -143,10 +169,18 @@ export function markQuizPassed(state: ProgressState, track: string, lessonId: st
   };
 }
 
-export function isQuizPassed(state: ProgressState, track: string, lessonId: string): boolean {
+export function isQuizPassed(
+  state: ProgressState,
+  track: string,
+  lessonId: string,
+): boolean {
   return !!state.quizPassed[`${track}:${lessonId}`];
 }
 
-export function isLessonCompleted(state: ProgressState, track: string, lessonId: string): boolean {
+export function isLessonCompleted(
+  state: ProgressState,
+  track: string,
+  lessonId: string,
+): boolean {
   return !!state.completedLessons[`${track}:${lessonId}`];
 }

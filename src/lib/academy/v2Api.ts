@@ -4,14 +4,14 @@ import type {
   AcademyV2Path,
   AcademyV2UnitDetail,
   AcademyV2UnitSummary,
-} from '@/types';
+} from "@/types";
 import {
   getAcademyV2CourseLocal,
   getAcademyV2PathsLocal,
   getAcademyV2UnitLocal,
-} from '@/lib/academy/v2LocalCatalog';
+} from "@/lib/academy/v2LocalCatalog";
 
-const ACADEMY_V2_CACHE_VERSION = '2026-04-29-v2';
+const ACADEMY_V2_CACHE_VERSION = "2026-04-29-v2";
 const CATALOG_TTL_MS = 1000 * 60 * 30;
 const COURSE_TTL_MS = 1000 * 60 * 30;
 const UNIT_TTL_MS = 1000 * 60 * 10;
@@ -32,11 +32,11 @@ type AcademyV2UnitResponse = {
 };
 
 function cacheKey(apiBase: string, suffix: string) {
-  return `academy-v2-cache:${apiBase || 'same-origin'}:${suffix}`;
+  return `academy-v2-cache:${apiBase || "same-origin"}:${suffix}`;
 }
 
 function readCache<T>(key: string, ttlMs: number): T | null {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return null;
   }
 
@@ -63,7 +63,7 @@ function readCache<T>(key: string, ttlMs: number): T | null {
 }
 
 function writeCache<T>(key: string, data: T) {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return;
   }
 
@@ -79,13 +79,16 @@ function writeCache<T>(key: string, data: T) {
   }
 }
 
-export function buildAcademyAuthHeaders(token: string | null, walletAddress: string | null) {
+export function buildAcademyAuthHeaders(
+  token: string | null,
+  walletAddress: string | null,
+) {
   const headers: Record<string, string> = {};
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   } else if (walletAddress) {
-    headers['x-wallet-address'] = walletAddress;
+    headers["x-wallet-address"] = walletAddress;
   }
 
   return headers;
@@ -94,12 +97,12 @@ export function buildAcademyAuthHeaders(token: string | null, walletAddress: str
 async function fetchCommunityTrackSummaries(
   apiBase: string,
   token: string | null,
-  walletAddress: string | null
+  walletAddress: string | null,
 ) {
   try {
     const response = await fetch(`${apiBase}/api/academy/catalog`, {
       headers: buildAcademyAuthHeaders(token, walletAddress),
-      credentials: 'include',
+      credentials: "include",
     });
     const result = await response.json().catch(() => null);
 
@@ -108,16 +111,16 @@ async function fetchCommunityTrackSummaries(
     }
 
     return (result.data as any[]).map((track) => ({
-      id: String(track.id || '').trim(),
-      title: String(track.title || '').trim(),
-      subtitle: String(track.subtitle || '').trim(),
-      description: String(track.description || '').trim(),
+      id: String(track.id || "").trim(),
+      title: String(track.title || "").trim(),
+      subtitle: String(track.subtitle || "").trim(),
+      description: String(track.description || "").trim(),
       sort_order: Number(track.sort_order || 0),
       lesson_count: Array.isArray(track.lessons) ? track.lessons.length : 0,
       total_minutes: Array.isArray(track.lessons)
         ? track.lessons.reduce(
             (sum: number, lesson: any) => sum + Number(lesson?.minutes || 0),
-            0
+            0,
           )
         : 0,
     }));
@@ -129,9 +132,9 @@ async function fetchCommunityTrackSummaries(
 export async function fetchAcademyV2Catalog(
   apiBase: string,
   token: string | null,
-  walletAddress: string | null
+  walletAddress: string | null,
 ) {
-  const key = cacheKey(apiBase, 'catalog');
+  const key = cacheKey(apiBase, "catalog");
   const cached = readCache<{
     curated_paths: AcademyV2Path[];
     community_tracks: AcademyV2CommunityTrack[];
@@ -157,7 +160,7 @@ export async function fetchAcademyV2Course(
   apiBase: string,
   courseId: string,
   token: string | null,
-  walletAddress: string | null
+  walletAddress: string | null,
 ) {
   const key = cacheKey(apiBase, `course:${courseId}`);
   const cached = readCache<AcademyV2CourseDetail>(key, COURSE_TTL_MS);
@@ -167,7 +170,7 @@ export async function fetchAcademyV2Course(
 
   const course = await getAcademyV2CourseLocal(courseId);
   if (!course) {
-    throw new Error('Failed to load academy course.');
+    throw new Error("Failed to load academy course.");
   }
   writeCache(key, course);
   return course;
@@ -178,7 +181,7 @@ export async function fetchAcademyV2Unit(
   courseId: string,
   unitId: string,
   token: string | null,
-  walletAddress: string | null
+  walletAddress: string | null,
 ) {
   const key = cacheKey(apiBase, `unit:${courseId}:${unitId}`);
   const cached = readCache<AcademyV2UnitResponse>(key, UNIT_TTL_MS);
@@ -192,7 +195,7 @@ export async function fetchAcademyV2Unit(
     getAcademyV2UnitLocal(courseId, unitId),
   ]);
   if (!course || !unit) {
-    throw new Error('Failed to load academy unit.');
+    throw new Error("Failed to load academy unit.");
   }
 
   const orderedUnits = course.modules
@@ -204,7 +207,9 @@ export async function fetchAcademyV2Unit(
     unit,
     previous_unit: unitIndex > 0 ? orderedUnits[unitIndex - 1] : null,
     next_unit:
-      unitIndex >= 0 && unitIndex + 1 < orderedUnits.length ? orderedUnits[unitIndex + 1] : null,
+      unitIndex >= 0 && unitIndex + 1 < orderedUnits.length
+        ? orderedUnits[unitIndex + 1]
+        : null,
     unit_index: Math.max(0, unitIndex),
     total_units: orderedUnits.length,
   };

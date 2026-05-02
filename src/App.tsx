@@ -1,44 +1,54 @@
+import React, { useEffect } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useParams,
+} from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { PageShell } from "./components/layout/PageShell";
+import { Home } from "./pages/Home";
+import { Members } from "./pages/Members";
+import { MemberDetail } from "./pages/MemberDetail";
+import { MyProfile } from "./pages/MyProfile";
+import { Events } from "./pages/Events";
+import { Finance } from "./pages/Finance";
+import { Work } from "./pages/Work";
+import { Leaderboard } from "./pages/Leaderboard";
+import { Meet } from "./pages/Meet";
+import { Resources } from "./pages/Resources";
+import { Projects } from "./pages/Projects";
+import { ProjectDetail } from "./pages/ProjectDetail";
+import { AcademyHome } from "./pages/AcademyHome";
+import { AcademyPath } from "./pages/AcademyPath";
+import { AcademyCourse } from "./pages/AcademyCourse";
+import { AcademyUnit } from "./pages/AcademyUnit";
+import { AcademyTrack } from "./pages/AcademyTrack";
+import { AcademyLesson } from "./pages/AcademyLesson";
+import { Admin } from "./pages/Admin";
+import { AcademyAdmin } from "./pages/AcademyAdmin";
+import { useStore } from "./store/useStore";
 
-import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { PageShell } from './components/layout/PageShell';
-import { Home } from './pages/Home';
-import { Members } from './pages/Members';
-import { MemberDetail } from './pages/MemberDetail';
-import { MyProfile } from './pages/MyProfile';
-import { Events } from './pages/Events';
-import { Finance } from './pages/Finance';
-import { Work } from './pages/Work';
-import { Leaderboard } from './pages/Leaderboard';
-import { Meet } from './pages/Meet';
-import { Resources } from './pages/Resources';
-import { Projects } from './pages/Projects';
-import { ProjectDetail } from './pages/ProjectDetail';
-import { AcademyHome } from './pages/AcademyHome';
-import { AcademyPath } from './pages/AcademyPath';
-import { AcademyCourse } from './pages/AcademyCourse';
-import { AcademyUnit } from './pages/AcademyUnit';
-import { AcademyTrack } from './pages/AcademyTrack';
-import { AcademyLesson } from './pages/AcademyLesson';
-import { Admin } from './pages/Admin';
-import { AcademyAdmin } from './pages/AcademyAdmin';
-import { useStore } from './store/useStore';
+import { ScrollToTop } from "./components/layout/ScrollToTop";
 
 // Google OAuth Client ID - set in environment variable
-const GOOGLE_CLIENT_ID = (import.meta as any).env.VITE_GOOGLE_CLIENT_ID || '';
+const GOOGLE_CLIENT_ID = (import.meta as any).env.VITE_GOOGLE_CLIENT_ID || "";
 
 function LegacyCommunityTrackRedirect() {
-  const { track = '' } = useParams<{ track: string }>();
+  const { track = "" } = useParams<{ track: string }>();
   return <Navigate to={`/academy/community/${track}`} replace />;
 }
 
 function LegacyCommunityLessonRedirect() {
-  const { track = '', lesson = '' } = useParams<{ track: string; lesson: string }>();
+  const { track = "", lesson = "" } = useParams<{
+    track: string;
+    lesson: string;
+  }>();
   return <Navigate to={`/academy/community/${track}/${lesson}`} replace />;
 }
 
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   const warmupBackend = useStore((state) => state.warmupBackend);
@@ -51,7 +61,7 @@ export default function App() {
   const fetchRepos = useStore((state) => state.fetchRepos);
   const checkSession = useStore((state) => state.checkSession);
   const currentUser = useStore((state) => state.currentUser);
-  
+
   const membersCount = useStore((state) => state.members.length);
   const financeHistoryCount = useStore((state) => state.financeHistory.length);
   const eventsCount = useStore((state) => state.events.length);
@@ -60,13 +70,13 @@ export default function App() {
   const bountiesCount = useStore((state) => state.bounties.length);
   const reposCount = useStore((state) => state.repos.length);
 
-  const isOfficialMember = currentUser?.memberType === 'member';
+  const isOfficialMember = currentUser?.memberType === "member";
   const isAdmin =
     isOfficialMember &&
-    ['President', 'Vice-President'].includes(currentUser?.role || '');
+    ["President", "Vice-President"].includes(currentUser?.role || "");
 
   useEffect(() => {
-    console.log('[App] Initializing...');
+    console.log("[App] Initializing...");
     warmupBackend();
     checkSession();
   }, [warmupBackend, checkSession]);
@@ -99,7 +109,14 @@ export default function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <BrowserRouter>
-        <Toaster position="bottom-right" toastOptions={{ className: 'border border-border-main shadow-sm', style: { borderRadius: '0' } }} />
+        <ScrollToTop />
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            className: "border border-border-main shadow-sm",
+            style: { borderRadius: "0" },
+          }}
+        />
         <Routes>
           <Route element={<PageShell />}>
             <Route path="/" element={<Navigate to="/home" replace />} />
@@ -110,23 +127,54 @@ export default function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/project/:id" element={<ProjectDetail />} />
             <Route path="/events" element={<Events />} />
-            <Route path="/finance" element={isOfficialMember ? <Finance /> : <Navigate to="/home" replace />} />
+            <Route
+              path="/finance"
+              element={
+                isOfficialMember ? <Finance /> : <Navigate to="/home" replace />
+              }
+            />
             <Route path="/work" element={<Work />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/meet" element={<Meet />} />
             <Route path="/resources" element={<Resources />} />
-            <Route path="/admin" element={isAdmin ? <Admin /> : <Navigate to="/home" replace />} />
-            <Route path="/academy-admin" element={isAdmin ? <AcademyAdmin /> : <Navigate to="/home" replace />} />
+            <Route
+              path="/admin"
+              element={isAdmin ? <Admin /> : <Navigate to="/home" replace />}
+            />
+            <Route
+              path="/academy-admin"
+              element={
+                isAdmin ? <AcademyAdmin /> : <Navigate to="/home" replace />
+              }
+            />
             <Route path="/academy" element={<AcademyHome />} />
             <Route path="/academy/path/:pathId" element={<AcademyPath />} />
-            <Route path="/academy/course/:courseId" element={<AcademyCourse />} />
-            <Route path="/academy/community/:track" element={<AcademyTrack />} />
-            <Route path="/academy/community/:track/:lesson" element={<AcademyLesson />} />
-            <Route path="/academy/track/:track" element={<LegacyCommunityTrackRedirect />} />
-            <Route path="/academy/learn/:track/:lesson" element={<LegacyCommunityLessonRedirect />} />
+            <Route
+              path="/academy/course/:courseId"
+              element={<AcademyCourse />}
+            />
+            <Route
+              path="/academy/community/:track"
+              element={<AcademyTrack />}
+            />
+            <Route
+              path="/academy/community/:track/:lesson"
+              element={<AcademyLesson />}
+            />
+            <Route
+              path="/academy/track/:track"
+              element={<LegacyCommunityTrackRedirect />}
+            />
+            <Route
+              path="/academy/learn/:track/:lesson"
+              element={<LegacyCommunityLessonRedirect />}
+            />
           </Route>
           {/* Unit runs without shell for fullscreen mode */}
-          <Route path="/academy/unit/:courseId/:unitId" element={<AcademyUnit />} />
+          <Route
+            path="/academy/unit/:courseId/:unitId"
+            element={<AcademyUnit />}
+          />
         </Routes>
       </BrowserRouter>
     </GoogleOAuthProvider>

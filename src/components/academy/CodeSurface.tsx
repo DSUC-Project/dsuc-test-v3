@@ -282,9 +282,9 @@ export function CodeSurface({
 
   return (
     <div
-      className={`overflow-hidden border brutal-border bg-[#1e1e1e] brutal-shadow-sm flex flex-col ${className}`}
+      className={`overflow-hidden rounded-xl border border-[#333] bg-[#1e1e1e] shadow-sm flex flex-col ${className}`}
     >
-      <div className="flex items-center gap-2 border-b brutal-border bg-[#252526] px-4 py-2 shrink-0">
+      <div className="flex items-center gap-2 border-b border-[#333] bg-[#252526] px-4 py-2 shrink-0">
         <div className="h-3 w-3 rounded-full bg-[#F14C4C]" />
         <div className="h-3 w-3 rounded-full bg-[#CCA700]" />
         <div className="h-3 w-3 rounded-full bg-[#3BA55D]" />
@@ -293,7 +293,7 @@ export function CodeSurface({
         </div>
       </div>
       <div
-        className={`relative flex-1 bg-[#1e1e1e] overflow-auto brutal-scrollbar ${maxHeightClass}`}
+        className={`relative flex-1 bg-[#1e1e1e] overflow-auto  ${maxHeightClass}`}
       >
         <div className="absolute left-0 top-0 bottom-0 w-[48px] py-4 pr-4 text-right text-xs text-[#6E7681] select-none font-mono leading-[24px]">
           {Array.from({ length: linesCount }).map((_, i) => (
@@ -333,9 +333,9 @@ export function CodeEditorPane({
 
   return (
     <div
-      className={`overflow-hidden border brutal-border bg-[#1e1e1e] brutal-shadow-sm flex-1 flex flex-col ${className}`}
+      className={`overflow-hidden rounded-xl border border-[#333] bg-[#1e1e1e] shadow-sm flex-1 flex flex-col ${className}`}
     >
-      <div className="flex items-center gap-2 border-b brutal-border bg-[#252526] px-4 py-2 shrink-0">
+      <div className="flex items-center gap-2 border-b border-[#333] bg-[#252526] px-4 py-2 shrink-0">
         <div className="h-3 w-3 rounded-full bg-[#F14C4C]" />
         <div className="h-3 w-3 rounded-full bg-[#CCA700]" />
         <div className="h-3 w-3 rounded-full bg-[#3BA55D]" />
@@ -344,18 +344,11 @@ export function CodeEditorPane({
         </div>
       </div>
       <div className="relative flex-1 bg-[#1e1e1e] overflow-hidden">
-        {/* Scrollable container for both gutter and code */}
-        <div
-          className="absolute inset-0 overflow-auto brutal-scrollbar"
-          onScroll={(event) => {
-            if (gutterRef.current)
-              gutterRef.current.scrollTop = event.currentTarget.scrollTop;
-          }}
-        >
+        <div className="absolute inset-0 flex">
           {/* Gutter */}
           <div
             ref={gutterRef}
-            className="absolute left-0 top-0 bottom-0 w-[48px] py-4 pr-3 text-right text-xs text-[#6E7681] select-none font-mono leading-[24px] pointer-events-none"
+            className="w-[48px] py-4 pr-3 text-right text-xs text-[#6E7681] select-none font-mono leading-[24px] pointer-events-none overflow-hidden shrink-0 bg-transparent"
           >
             {Array.from({ length: Math.max(1, linesCount) }).map((_, i) => (
               <div key={i}>{i + 1}</div>
@@ -366,13 +359,18 @@ export function CodeEditorPane({
             value={value}
             spellCheck={false}
             onChange={(event) => onChange(event.target.value)}
-            className="absolute top-0 left-0 min-h-full min-w-full m-0 p-0 pl-[48px] pr-4 py-4 font-mono text-[13px] leading-[24px] resize-none bg-transparent outline-none whitespace-pre-wrap break-words block"
+            onScroll={(event) => {
+              if (gutterRef.current)
+                gutterRef.current.scrollTop = event.currentTarget.scrollTop;
+            }}
+            className="flex-1 m-0 p-0 pr-4 py-4 font-mono text-[13px] leading-[24px] resize-none bg-transparent outline-none whitespace-pre break-normal overflow-auto "
             style={{
               color: "#d4d4d4",
               caretColor: "#d4d4d4",
               tabSize: 4,
             }}
             placeholder={placeholder}
+            wrap="off"
           />
         </div>
       </div>

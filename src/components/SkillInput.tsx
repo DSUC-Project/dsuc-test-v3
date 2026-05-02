@@ -1,33 +1,33 @@
-import React, { useState } from 'react';
-import { Plus, X } from 'lucide-react';
-import { clsx } from 'clsx';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState } from "react";
+import { Plus, X } from "lucide-react";
+import { clsx } from "clsx";
+import { motion, AnimatePresence } from "motion/react";
 
 export function SkillInput({
   skills,
   onChange,
-  maxSkills = 5
+  maxSkills = 5,
 }: {
   skills: string[];
   onChange: (skills: string[]) => void;
   maxSkills?: number;
 }) {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const handleAdd = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!inputValue.trim()) return;
     if (skills.length >= maxSkills) return;
-    
+
     const newSkill = inputValue.trim().toUpperCase();
     if (!skills.includes(newSkill)) {
       onChange([...skills, newSkill]);
     }
-    setInputValue('');
+    setInputValue("");
   };
 
   const handleRemove = (skillToRemove: string) => {
-    onChange(skills.filter(s => s !== skillToRemove));
+    onChange(skills.filter((s) => s !== skillToRemove));
   };
 
   return (
@@ -40,7 +40,7 @@ export function SkillInput({
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              className="group flex items-center gap-2 bg-main-bg border brutal-border px-3 py-1.5 brutal-shadow-sm hover:translate-y-[1px] hover:translate-x-[1px] hover:brutal-shadow-none transition-all"
+              className="group flex items-center gap-2 bg-main-bg border border-border-main px-3 py-1.5 shadow-sm hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-md-none transition-all"
             >
               <span className="font-mono text-xs font-bold uppercase text-text-main">
                 {skill}
@@ -65,13 +65,13 @@ export function SkillInput({
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder={`Add a skill (max ${maxSkills})`}
-            className="flex-1 bg-surface border brutal-border px-4 py-2 font-mono text-sm placeholder:text-text-muted outline-none focus:border-primary transition-colors"
+            className="flex-1 bg-surface border border-border-main px-4 py-2 font-mono text-sm placeholder:text-text-muted outline-none focus:border-primary transition-colors"
             maxLength={20}
           />
           <button
             type="submit"
             disabled={!inputValue.trim()}
-            className="bg-primary text-main-bg border brutal-border px-4 py-2 brutal-shadow-sm hover:brutal-shadow-none hover:translate-y-[1px] hover:translate-x-[1px] transition-all disabled:opacity-50 flex items-center justify-center font-bold"
+            className="bg-primary text-main-bg border border-border-main px-4 py-2 shadow-sm hover:shadow-md-none hover:translate-y-[1px] hover:translate-x-[1px] transition-all disabled:opacity-50 flex items-center justify-center font-bold"
           >
             <Plus size={20} />
           </button>

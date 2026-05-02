@@ -1,6 +1,6 @@
-import toast from 'react-hot-toast';
-import React, { useEffect, useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
+import toast from "react-hot-toast";
+import React, { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import {
   CheckCircle2,
   Plus,
@@ -9,7 +9,7 @@ import {
   Trash2,
   Users,
   XCircle,
-} from 'lucide-react';
+} from "lucide-react";
 
 import {
   AdminApiKey,
@@ -22,21 +22,22 @@ import {
   PublishStatus,
   Repo,
   Resource,
-} from '../types';
-import { useStore } from '../store/useStore';
+} from "../types";
+import { useStore } from "../store/useStore";
+import { SoftBrutalCard } from "@/components/ui/Primitives";
 
 type EditableUser = {
   id: string;
   name: string;
   email: string;
   wallet_address: string;
-  member_type: 'member' | 'community';
+  member_type: "member" | "community";
   role: string;
   academy_access: boolean;
   is_active: boolean;
 };
 
-type ContentEntity = 'events' | 'projects' | 'resources' | 'bounties' | 'repos';
+type ContentEntity = "events" | "projects" | "resources" | "bounties" | "repos";
 
 type AdminContentData = {
   events: Event[];
@@ -48,9 +49,24 @@ type AdminContentData = {
   finance_history: any[];
 };
 
-const ROLE_OPTIONS = ['President', 'Vice-President', 'Tech-Lead', 'Media-Lead', 'Member'];
-const PUBLISH_STATUS_OPTIONS: PublishStatus[] = ['Draft', 'Published', 'Archived'];
-const BOUNTY_STATUS_OPTIONS: Bounty['status'][] = ['Open', 'In Progress', 'Completed', 'Closed'];
+const ROLE_OPTIONS = [
+  "President",
+  "Vice-President",
+  "Tech-Lead",
+  "Media-Lead",
+  "Member",
+];
+const PUBLISH_STATUS_OPTIONS: PublishStatus[] = [
+  "Draft",
+  "Published",
+  "Archived",
+];
+const BOUNTY_STATUS_OPTIONS: Bounty["status"][] = [
+  "Open",
+  "In Progress",
+  "Completed",
+  "Closed",
+];
 
 const EMPTY_CONTENT_DATA: AdminContentData = {
   events: [],
@@ -64,42 +80,42 @@ const EMPTY_CONTENT_DATA: AdminContentData = {
 
 function buildAuthHeaders(token: string | null, walletAddress: string | null) {
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   };
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   } else if (walletAddress) {
-    headers['x-wallet-address'] = walletAddress;
+    headers["x-wallet-address"] = walletAddress;
   }
 
   return headers;
 }
 
 function formatLessonLabel(activity: AcademyActivity) {
-  return `${String(activity.track || '').toUpperCase()} / ${activity.lesson_id}`;
+  return `${String(activity.track || "").toUpperCase()} / ${activity.lesson_id}`;
 }
 
 function formatRequesterName(row: any) {
-  return row.requester_name || row.requesterName || 'Unknown';
+  return row.requester_name || row.requesterName || "Unknown";
 }
 
 function formatAmount(value: string | number | undefined) {
   const numeric = Number(value || 0);
   if (Number.isNaN(numeric)) {
-    return String(value || '0');
+    return String(value || "0");
   }
 
-  return numeric.toLocaleString('vi-VN');
+  return numeric.toLocaleString("vi-VN");
 }
 
 function parseScopes(text: string): string[] {
-  const values = String(text || '')
+  const values = String(text || "")
     .split(/[,\n]/)
     .map((item) => item.trim())
     .filter(Boolean);
 
-  return values.length > 0 ? values : ['*'];
+  return values.length > 0 ? values : ["*"];
 }
 
 export function Admin() {
@@ -108,8 +124,11 @@ export function Admin() {
   const [academyOverview, setAcademyOverview] = useState<AcademyOverview[]>([]);
   const [academyHistory, setAcademyHistory] = useState<AcademyActivity[]>([]);
   const [agentKeys, setAgentKeys] = useState<AdminApiKey[]>([]);
-  const [contentData, setContentData] = useState<AdminContentData>(EMPTY_CONTENT_DATA);
-  const [contentDrafts, setContentDrafts] = useState<Record<string, string>>({});
+  const [contentData, setContentData] =
+    useState<AdminContentData>(EMPTY_CONTENT_DATA);
+  const [contentDrafts, setContentDrafts] = useState<Record<string, string>>(
+    {},
+  );
   const [drafts, setDrafts] = useState<Record<string, EditableUser>>({});
   const [agentKeyDrafts, setAgentKeyDrafts] = useState<
     Record<string, { name: string; scopesText: string; is_active: boolean }>
@@ -121,24 +140,24 @@ export function Admin() {
   const [financeActionId, setFinanceActionId] = useState<string | null>(null);
   const [agentKeySaving, setAgentKeySaving] = useState(false);
   const [agentKeyActionId, setAgentKeyActionId] = useState<string | null>(null);
-  const [newAgentKeyName, setNewAgentKeyName] = useState('');
-  const [newAgentKeyScopes, setNewAgentKeyScopes] = useState('*');
-  const [lastCreatedAgentKey, setLastCreatedAgentKey] = useState('');
-  const [rotatedAgentKey, setRotatedAgentKey] = useState('');
+  const [newAgentKeyName, setNewAgentKeyName] = useState("");
+  const [newAgentKeyScopes, setNewAgentKeyScopes] = useState("*");
+  const [lastCreatedAgentKey, setLastCreatedAgentKey] = useState("");
+  const [rotatedAgentKey, setRotatedAgentKey] = useState("");
   const [createForm, setCreateForm] = useState<EditableUser>({
-    id: '',
-    name: '',
-    email: '',
-    wallet_address: '',
-    member_type: 'community',
-    role: 'Community',
+    id: "",
+    name: "",
+    email: "",
+    wallet_address: "",
+    member_type: "community",
+    role: "Community",
     academy_access: true,
     is_active: true,
   });
 
   const headers = useMemo(
     () => buildAuthHeaders(authToken, walletAddress),
-    [authToken, walletAddress]
+    [authToken, walletAddress],
   );
 
   const academyMap = useMemo(() => {
@@ -146,13 +165,13 @@ export function Admin() {
   }, [academyOverview]);
 
   const memberCount = users.filter(
-    (user) => (user.memberType || user.member_type) !== 'community'
+    (user) => (user.memberType || user.member_type) !== "community",
   ).length;
   const communityCount = users.filter(
-    (user) => (user.memberType || user.member_type) === 'community'
+    (user) => (user.memberType || user.member_type) === "community",
   ).length;
   const pendingFinance = contentData.finance_requests.filter(
-    (row) => row.status === 'pending'
+    (row) => row.status === "pending",
   );
 
   const applyUsers = (nextUsers: Member[]) => {
@@ -164,19 +183,20 @@ export function Admin() {
           {
             id: user.id,
             name: user.name,
-            email: user.email || '',
-            wallet_address: user.wallet_address || '',
+            email: user.email || "",
+            wallet_address: user.wallet_address || "",
             member_type:
-              user.memberType === 'community' || user.member_type === 'community'
-                ? 'community'
-                : 'member',
+              user.memberType === "community" ||
+              user.member_type === "community"
+                ? "community"
+                : "member",
             role: user.role,
             academy_access:
               user.academyAccess !== false && user.academy_access !== false,
             is_active: user.is_active !== false,
           },
-        ])
-      )
+        ]),
+      ),
     );
   };
 
@@ -191,22 +211,22 @@ export function Admin() {
     const nextDrafts: Record<string, string> = {};
     const attachStatusDrafts = (entity: ContentEntity, items: any[]) => {
       items.forEach((item) => {
-        nextDrafts[`${entity}:${item.id}`] = item.status || '';
+        nextDrafts[`${entity}:${item.id}`] = item.status || "";
       });
     };
 
-    attachStatusDrafts('events', merged.events);
-    attachStatusDrafts('projects', merged.projects);
-    attachStatusDrafts('resources', merged.resources);
-    attachStatusDrafts('bounties', merged.bounties);
-    attachStatusDrafts('repos', merged.repos);
+    attachStatusDrafts("events", merged.events);
+    attachStatusDrafts("projects", merged.projects);
+    attachStatusDrafts("resources", merged.resources);
+    attachStatusDrafts("bounties", merged.bounties);
+    attachStatusDrafts("repos", merged.repos);
     setContentDrafts(nextDrafts);
   };
 
   const applyAgentKeys = (rows: AdminApiKey[]) => {
     const normalized = [...rows].sort((a, b) => {
-      const left = String(a.created_at || '');
-      const right = String(b.created_at || '');
+      const left = String(a.created_at || "");
+      const right = String(b.created_at || "");
       return left < right ? 1 : left > right ? -1 : 0;
     });
 
@@ -216,41 +236,42 @@ export function Admin() {
         normalized.map((row) => [
           row.id,
           {
-            name: row.name || '',
-            scopesText: (row.scopes || ['*']).join(', '),
+            name: row.name || "",
+            scopesText: (row.scopes || ["*"]).join(", "),
             is_active: row.is_active !== false,
           },
-        ])
-      )
+        ]),
+      ),
     );
   };
 
   const refresh = async () => {
     setLoading(true);
     try {
-      const base = (import.meta as any).env.VITE_API_BASE_URL || '';
-      const [usersRes, academyRes, historyRes, contentRes, agentKeysRes] = await Promise.all([
-        fetch(`${base}/api/members/admin/list`, {
-          headers,
-          credentials: 'include',
-        }),
-        fetch(`${base}/api/academy/admin/overview`, {
-          headers,
-          credentials: 'include',
-        }),
-        fetch(`${base}/api/academy/admin/history`, {
-          headers,
-          credentials: 'include',
-        }),
-        fetch(`${base}/api/admin/overview`, {
-          headers,
-          credentials: 'include',
-        }),
-        fetch(`${base}/api/admin/agent-keys`, {
-          headers,
-          credentials: 'include',
-        }),
-      ]);
+      const base = (import.meta as any).env.VITE_API_BASE_URL || "";
+      const [usersRes, academyRes, historyRes, contentRes, agentKeysRes] =
+        await Promise.all([
+          fetch(`${base}/api/members/admin/list`, {
+            headers,
+            credentials: "include",
+          }),
+          fetch(`${base}/api/academy/admin/overview`, {
+            headers,
+            credentials: "include",
+          }),
+          fetch(`${base}/api/academy/admin/history`, {
+            headers,
+            credentials: "include",
+          }),
+          fetch(`${base}/api/admin/overview`, {
+            headers,
+            credentials: "include",
+          }),
+          fetch(`${base}/api/admin/agent-keys`, {
+            headers,
+            credentials: "include",
+          }),
+        ]);
 
       const usersResult = await usersRes.json();
       const academyResult = await academyRes.json();
@@ -280,9 +301,9 @@ export function Admin() {
         ...prev[id],
         ...patch,
         role:
-          (patch.member_type || prev[id]?.member_type) === 'community'
-            ? 'Community'
-            : patch.role || prev[id]?.role || 'Member',
+          (patch.member_type || prev[id]?.member_type) === "community"
+            ? "Community"
+            : patch.role || prev[id]?.role || "Member",
       },
     }));
   };
@@ -295,22 +316,22 @@ export function Admin() {
 
     setSavingId(id);
     try {
-      const base = (import.meta as any).env.VITE_API_BASE_URL || '';
+      const base = (import.meta as any).env.VITE_API_BASE_URL || "";
       const res = await fetch(`${base}/api/members/admin/users/${id}`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers,
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(draft),
       });
 
       if (!res.ok) {
         const error = await res.json().catch(() => ({}));
-        throw new Error(error?.message || 'Failed to update user');
+        throw new Error(error?.message || "Failed to update user");
       }
 
       await refresh();
     } catch (error: any) {
-      toast(error.message || 'Failed to update user');
+      toast(error.message || "Failed to update user");
     } finally {
       setSavingId(null);
     }
@@ -319,68 +340,77 @@ export function Admin() {
   const createUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const base = (import.meta as any).env.VITE_API_BASE_URL || '';
+      const base = (import.meta as any).env.VITE_API_BASE_URL || "";
       const payload = {
         ...createForm,
-        role: createForm.member_type === 'community' ? 'Community' : createForm.role,
+        role:
+          createForm.member_type === "community"
+            ? "Community"
+            : createForm.role,
       };
 
       const res = await fetch(`${base}/api/members/admin/users`, {
-        method: 'POST',
+        method: "POST",
         headers,
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
         const error = await res.json().catch(() => ({}));
-        throw new Error(error?.message || 'Failed to create user');
+        throw new Error(error?.message || "Failed to create user");
       }
 
       setCreateForm({
-        id: '',
-        name: '',
-        email: '',
-        wallet_address: '',
-        member_type: 'community',
-        role: 'Community',
+        id: "",
+        name: "",
+        email: "",
+        wallet_address: "",
+        member_type: "community",
+        role: "Community",
         academy_access: true,
         is_active: true,
       });
       await refresh();
     } catch (error: any) {
-      toast(error.message || 'Failed to create user');
+      toast(error.message || "Failed to create user");
     }
   };
 
   const deleteUser = async (id: string, name: string) => {
-    if (!window.confirm(`Delete user "${name}"? This action cannot be undone.`)) {
+    if (
+      !window.confirm(`Delete user "${name}"? This action cannot be undone.`)
+    ) {
       return;
     }
 
     setDeletingKey(`user:${id}`);
     try {
-      const base = (import.meta as any).env.VITE_API_BASE_URL || '';
+      const base = (import.meta as any).env.VITE_API_BASE_URL || "";
       const res = await fetch(`${base}/api/members/admin/users/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers,
-        credentials: 'include',
+        credentials: "include",
       });
 
       if (!res.ok) {
         const error = await res.json().catch(() => ({}));
-        throw new Error(error?.message || 'Failed to delete user');
+        throw new Error(error?.message || "Failed to delete user");
       }
 
       await refresh();
     } catch (error: any) {
-      toast(error.message || 'Failed to delete user');
+      toast(error.message || "Failed to delete user");
     } finally {
       setDeletingKey(null);
     }
   };
 
-  const updateContentDraft = (entity: ContentEntity, id: string, status: string) => {
+  const updateContentDraft = (
+    entity: ContentEntity,
+    id: string,
+    status: string,
+  ) => {
     setContentDrafts((prev) => ({
       ...prev,
       [`${entity}:${id}`]: status,
@@ -395,62 +425,73 @@ export function Admin() {
 
     setStatusSavingKey(`${entity}:${id}`);
     try {
-      const base = (import.meta as any).env.VITE_API_BASE_URL || '';
-      const res = await fetch(`${base}/api/admin/content/${entity}/${id}/status`, {
-        method: 'PATCH',
-        headers,
-        credentials: 'include',
-        body: JSON.stringify({ status }),
-      });
+      const base = (import.meta as any).env.VITE_API_BASE_URL || "";
+      const res = await fetch(
+        `${base}/api/admin/content/${entity}/${id}/status`,
+        {
+          method: "PATCH",
+          headers,
+          credentials: "include",
+          body: JSON.stringify({ status }),
+        },
+      );
 
       if (!res.ok) {
         const error = await res.json().catch(() => ({}));
-        throw new Error(error?.message || 'Failed to update status');
+        throw new Error(error?.message || "Failed to update status");
       }
 
       await refresh();
     } catch (error: any) {
-      toast(error.message || 'Failed to update status');
+      toast(error.message || "Failed to update status");
     } finally {
       setStatusSavingKey(null);
     }
   };
 
-  const deleteContent = async (entity: ContentEntity, id: string, label: string) => {
-    if (!window.confirm(`Delete "${label}" from ${entity}? This action cannot be undone.`)) {
+  const deleteContent = async (
+    entity: ContentEntity,
+    id: string,
+    label: string,
+  ) => {
+    if (
+      !window.confirm(
+        `Delete "${label}" from ${entity}? This action cannot be undone.`,
+      )
+    ) {
       return;
     }
 
     setDeletingKey(`content:${entity}:${id}`);
     try {
-      const base = (import.meta as any).env.VITE_API_BASE_URL || '';
+      const base = (import.meta as any).env.VITE_API_BASE_URL || "";
       const res = await fetch(`${base}/api/admin/content/${entity}/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers,
-        credentials: 'include',
+        credentials: "include",
       });
 
       if (!res.ok) {
         const error = await res.json().catch(() => ({}));
-        throw new Error(error?.message || 'Failed to delete content');
+        throw new Error(error?.message || "Failed to delete content");
       }
 
       await refresh();
     } catch (error: any) {
-      toast(error.message || 'Failed to delete content');
+      toast(error.message || "Failed to delete content");
     } finally {
       setDeletingKey(null);
     }
   };
 
-  const runFinanceAction = async (id: string, action: 'approve' | 'reject') => {
+  const runFinanceAction = async (id: string, action: "approve" | "reject") => {
     setFinanceActionId(`${action}:${id}`);
     try {
-      const base = (import.meta as any).env.VITE_API_BASE_URL || '';
+      const base = (import.meta as any).env.VITE_API_BASE_URL || "";
       const res = await fetch(`${base}/api/finance/${action}/${id}`, {
-        method: 'POST',
+        method: "POST",
         headers,
-        credentials: 'include',
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -460,7 +501,7 @@ export function Admin() {
 
       await refresh();
     } catch (error: any) {
-      toast(error.message || 'Finance action failed');
+      toast(error.message || "Finance action failed");
     } finally {
       setFinanceActionId(null);
     }
@@ -468,7 +509,7 @@ export function Admin() {
 
   const updateAgentKeyDraft = (
     id: string,
-    patch: Partial<{ name: string; scopesText: string; is_active: boolean }>
+    patch: Partial<{ name: string; scopesText: string; is_active: boolean }>,
   ) => {
     setAgentKeyDrafts((prev) => ({
       ...prev,
@@ -482,19 +523,19 @@ export function Admin() {
   const createAgentKey = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newAgentKeyName.trim()) {
-      toast('Key name is required');
+      toast("Key name is required");
       return;
     }
 
     setAgentKeySaving(true);
-    setLastCreatedAgentKey('');
-    setRotatedAgentKey('');
+    setLastCreatedAgentKey("");
+    setRotatedAgentKey("");
     try {
-      const base = (import.meta as any).env.VITE_API_BASE_URL || '';
+      const base = (import.meta as any).env.VITE_API_BASE_URL || "";
       const res = await fetch(`${base}/api/admin/agent-keys`, {
-        method: 'POST',
+        method: "POST",
         headers,
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           name: newAgentKeyName.trim(),
           scopes: parseScopes(newAgentKeyScopes),
@@ -503,15 +544,15 @@ export function Admin() {
       const result = await res.json().catch(() => ({}));
 
       if (!res.ok || !result?.success) {
-        throw new Error(result?.message || 'Failed to create agent key');
+        throw new Error(result?.message || "Failed to create agent key");
       }
 
-      setLastCreatedAgentKey(result?.key || '');
-      setNewAgentKeyName('');
-      setNewAgentKeyScopes('*');
+      setLastCreatedAgentKey(result?.key || "");
+      setNewAgentKeyName("");
+      setNewAgentKeyScopes("*");
       await refresh();
     } catch (error: any) {
-      toast(error.message || 'Failed to create agent key');
+      toast(error.message || "Failed to create agent key");
     } finally {
       setAgentKeySaving(false);
     }
@@ -524,13 +565,13 @@ export function Admin() {
     }
 
     setAgentKeyActionId(`save:${id}`);
-    setRotatedAgentKey('');
+    setRotatedAgentKey("");
     try {
-      const base = (import.meta as any).env.VITE_API_BASE_URL || '';
+      const base = (import.meta as any).env.VITE_API_BASE_URL || "";
       const res = await fetch(`${base}/api/admin/agent-keys/${id}`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers,
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           name: draft.name.trim(),
           scopes: parseScopes(draft.scopesText),
@@ -540,42 +581,46 @@ export function Admin() {
       const result = await res.json().catch(() => ({}));
 
       if (!res.ok || !result?.success) {
-        throw new Error(result?.message || 'Failed to update agent key');
+        throw new Error(result?.message || "Failed to update agent key");
       }
 
       await refresh();
     } catch (error: any) {
-      toast(error.message || 'Failed to update agent key');
+      toast(error.message || "Failed to update agent key");
     } finally {
       setAgentKeyActionId(null);
     }
   };
 
   const rotateAgentKey = async (id: string) => {
-    if (!window.confirm('Rotate this key now? Old key will stop working immediately.')) {
+    if (
+      !window.confirm(
+        "Rotate this key now? Old key will stop working immediately.",
+      )
+    ) {
       return;
     }
 
     setAgentKeyActionId(`rotate:${id}`);
-    setRotatedAgentKey('');
+    setRotatedAgentKey("");
     try {
-      const base = (import.meta as any).env.VITE_API_BASE_URL || '';
+      const base = (import.meta as any).env.VITE_API_BASE_URL || "";
       const res = await fetch(`${base}/api/admin/agent-keys/${id}`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers,
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({ rotate: true }),
       });
       const result = await res.json().catch(() => ({}));
 
       if (!res.ok || !result?.success) {
-        throw new Error(result?.message || 'Failed to rotate agent key');
+        throw new Error(result?.message || "Failed to rotate agent key");
       }
 
-      setRotatedAgentKey(result?.key || '');
+      setRotatedAgentKey(result?.key || "");
       await refresh();
     } catch (error: any) {
-      toast(error.message || 'Failed to rotate agent key');
+      toast(error.message || "Failed to rotate agent key");
     } finally {
       setAgentKeyActionId(null);
     }
@@ -587,23 +632,23 @@ export function Admin() {
     }
 
     setAgentKeyActionId(`delete:${id}`);
-    setRotatedAgentKey('');
+    setRotatedAgentKey("");
     try {
-      const base = (import.meta as any).env.VITE_API_BASE_URL || '';
+      const base = (import.meta as any).env.VITE_API_BASE_URL || "";
       const res = await fetch(`${base}/api/admin/agent-keys/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers,
-        credentials: 'include',
+        credentials: "include",
       });
       const result = await res.json().catch(() => ({}));
 
       if (!res.ok || result?.success === false) {
-        throw new Error(result?.message || 'Failed to delete agent key');
+        throw new Error(result?.message || "Failed to delete agent key");
       }
 
       await refresh();
     } catch (error: any) {
-      toast(error.message || 'Failed to delete agent key');
+      toast(error.message || "Failed to delete agent key");
     } finally {
       setAgentKeyActionId(null);
     }
@@ -616,9 +661,9 @@ export function Admin() {
 
     try {
       await navigator.clipboard.writeText(value);
-      toast('Copied to clipboard');
+      toast("Copied to clipboard");
     } catch {
-      toast.error('Copy failed. Please copy manually.');
+      toast.error("Copy failed. Please copy manually.");
     }
   };
 
@@ -628,14 +673,17 @@ export function Admin() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 border-b border-cyber-blue/20 pb-6">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 -blue/20 pb-6">
         <div>
           <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-cyber-blue mb-2">
             Executive Admin
           </div>
-          <h1 className="text-4xl font-display font-bold text-white">Control Plane</h1>
+          <h1 className="text-4xl font-display font-bold text-white">
+            Control Plane
+          </h1>
           <p className="text-white/60 mt-2">
-            Manage members, content status, finance processing, and academy learning history.
+            Manage members, content status, finance processing, and academy
+            learning history.
           </p>
         </div>
         <button
@@ -647,9 +695,23 @@ export function Admin() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatCard icon={ShieldCheck} label="Official Members" value={String(memberCount)} />
-        <StatCard icon={Users} label="Community" value={String(communityCount)} />
-        <StatCard icon={RefreshCw} label="Academy Learners" value={String(academyOverview.filter((item) => item.academy_access).length)} />
+        <StatCard
+          icon={ShieldCheck}
+          label="Official Members"
+          value={String(memberCount)}
+        />
+        <StatCard
+          icon={Users}
+          label="Community"
+          value={String(communityCount)}
+        />
+        <StatCard
+          icon={RefreshCw}
+          label="Academy Learners"
+          value={String(
+            academyOverview.filter((item) => item.academy_access).length,
+          )}
+        />
       </div>
 
       <motion.form
@@ -664,20 +726,29 @@ export function Admin() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <input
             value={createForm.name}
-            onChange={(e) => setCreateForm((prev) => ({ ...prev, name: e.target.value }))}
+            onChange={(e) =>
+              setCreateForm((prev) => ({ ...prev, name: e.target.value }))
+            }
             placeholder="Name"
             required
             className="bg-black/30 border border-white/10 p-3 text-white outline-none"
           />
           <input
             value={createForm.email}
-            onChange={(e) => setCreateForm((prev) => ({ ...prev, email: e.target.value }))}
+            onChange={(e) =>
+              setCreateForm((prev) => ({ ...prev, email: e.target.value }))
+            }
             placeholder="Email"
             className="bg-black/30 border border-white/10 p-3 text-white outline-none"
           />
           <input
             value={createForm.wallet_address}
-            onChange={(e) => setCreateForm((prev) => ({ ...prev, wallet_address: e.target.value }))}
+            onChange={(e) =>
+              setCreateForm((prev) => ({
+                ...prev,
+                wallet_address: e.target.value,
+              }))
+            }
             placeholder="Wallet address (optional)"
             className="bg-black/30 border border-white/10 p-3 text-white outline-none"
           />
@@ -686,8 +757,8 @@ export function Admin() {
             onChange={(e) =>
               setCreateForm((prev) => ({
                 ...prev,
-                member_type: e.target.value as 'member' | 'community',
-                role: e.target.value === 'community' ? 'Community' : 'Member',
+                member_type: e.target.value as "member" | "community",
+                role: e.target.value === "community" ? "Community" : "Member",
               }))
             }
             className="bg-black/30 border border-white/10 p-3 text-white outline-none"
@@ -697,11 +768,13 @@ export function Admin() {
           </select>
           <select
             value={createForm.role}
-            onChange={(e) => setCreateForm((prev) => ({ ...prev, role: e.target.value }))}
-            disabled={createForm.member_type === 'community'}
+            onChange={(e) =>
+              setCreateForm((prev) => ({ ...prev, role: e.target.value }))
+            }
+            disabled={createForm.member_type === "community"}
             className="bg-black/30 border border-white/10 p-3 text-white outline-none disabled:opacity-50"
           >
-            {createForm.member_type === 'community' ? (
+            {createForm.member_type === "community" ? (
               <option value="Community">Community</option>
             ) : (
               ROLE_OPTIONS.map((role) => (
@@ -722,7 +795,9 @@ export function Admin() {
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-display font-bold text-white uppercase">Users</h2>
+          <h2 className="text-xl font-display font-bold text-white uppercase">
+            Users
+          </h2>
           <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/40">
             President / Vice-President Only
           </span>
@@ -737,30 +812,36 @@ export function Admin() {
             return (
               <div
                 key={user.id}
-                className="cyber-card p-5 bg-surface/50 border border-white/10 space-y-4"
+                className="cyber-card p-5 bg-surface/50 /10 space-y-4"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
                   <input
-                    value={draft?.name || ''}
-                    onChange={(e) => updateDraft(user.id, { name: e.target.value })}
+                    value={draft?.name || ""}
+                    onChange={(e) =>
+                      updateDraft(user.id, { name: e.target.value })
+                    }
                     className="bg-black/30 border border-white/10 p-3 text-white outline-none"
                   />
                   <input
-                    value={draft?.email || ''}
-                    onChange={(e) => updateDraft(user.id, { email: e.target.value })}
+                    value={draft?.email || ""}
+                    onChange={(e) =>
+                      updateDraft(user.id, { email: e.target.value })
+                    }
                     className="bg-black/30 border border-white/10 p-3 text-white outline-none"
                   />
                   <input
-                    value={draft?.wallet_address || ''}
-                    onChange={(e) => updateDraft(user.id, { wallet_address: e.target.value })}
+                    value={draft?.wallet_address || ""}
+                    onChange={(e) =>
+                      updateDraft(user.id, { wallet_address: e.target.value })
+                    }
                     placeholder="Wallet"
                     className="bg-black/30 border border-white/10 p-3 text-white outline-none"
                   />
                   <select
-                    value={draft?.member_type || 'member'}
+                    value={draft?.member_type || "member"}
                     onChange={(e) =>
                       updateDraft(user.id, {
-                        member_type: e.target.value as 'member' | 'community',
+                        member_type: e.target.value as "member" | "community",
                       })
                     }
                     className="bg-black/30 border border-white/10 p-3 text-white outline-none"
@@ -769,12 +850,14 @@ export function Admin() {
                     <option value="community">Community</option>
                   </select>
                   <select
-                    value={draft?.role || 'Member'}
-                    onChange={(e) => updateDraft(user.id, { role: e.target.value })}
-                    disabled={draft?.member_type === 'community'}
+                    value={draft?.role || "Member"}
+                    onChange={(e) =>
+                      updateDraft(user.id, { role: e.target.value })
+                    }
+                    disabled={draft?.member_type === "community"}
                     className="bg-black/30 border border-white/10 p-3 text-white outline-none disabled:opacity-50"
                   >
-                    {draft?.member_type === 'community' ? (
+                    {draft?.member_type === "community" ? (
                       <option value="Community">Community</option>
                     ) : (
                       ROLE_OPTIONS.map((role) => (
@@ -787,17 +870,27 @@ export function Admin() {
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       onClick={() => void saveUser(user.id)}
-                      disabled={savingId === user.id || deletingKey === `user:${user.id}`}
+                      disabled={
+                        savingId === user.id ||
+                        deletingKey === `user:${user.id}`
+                      }
                       className="bg-cyber-blue text-white hover:bg-white hover:text-black font-display font-bold py-3 cyber-button uppercase tracking-widest disabled:opacity-60"
                     >
-                      {savingId === user.id ? 'Saving...' : 'Save'}
+                      {savingId === user.id ? "Saving..." : "Save"}
                     </button>
                     <button
-                      onClick={() => void deleteUser(user.id, draft?.name || user.name)}
-                      disabled={deletingKey === `user:${user.id}` || currentUser.id === user.id}
+                      onClick={() =>
+                        void deleteUser(user.id, draft?.name || user.name)
+                      }
+                      disabled={
+                        deletingKey === `user:${user.id}` ||
+                        currentUser.id === user.id
+                      }
                       className="bg-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500 hover:text-white font-display font-bold py-3 uppercase tracking-widest disabled:opacity-40"
                     >
-                      {deletingKey === `user:${user.id}` ? 'Deleting...' : 'Delete'}
+                      {deletingKey === `user:${user.id}`
+                        ? "Deleting..."
+                        : "Delete"}
                     </button>
                   </div>
                 </div>
@@ -808,7 +901,9 @@ export function Admin() {
                       type="checkbox"
                       checked={draft?.academy_access ?? true}
                       onChange={(e) =>
-                        updateDraft(user.id, { academy_access: e.target.checked })
+                        updateDraft(user.id, {
+                          academy_access: e.target.checked,
+                        })
                       }
                     />
                     Academy Access
@@ -829,10 +924,10 @@ export function Admin() {
                   <span>Lessons: {overview?.completed_lessons || 0}</span>
                   <span>Quizzes: {overview?.quiz_passed || 0}</span>
                   <span>
-                    Last Activity:{' '}
+                    Last Activity:{" "}
                     {overview?.last_activity
                       ? new Date(overview.last_activity).toLocaleString()
-                      : 'No progress yet'}
+                      : "No progress yet"}
                   </span>
                 </div>
               </div>
@@ -843,7 +938,9 @@ export function Admin() {
 
       <section className="space-y-6">
         <div>
-          <h2 className="text-xl font-display font-bold text-white uppercase">Content Status</h2>
+          <h2 className="text-xl font-display font-bold text-white uppercase">
+            Content Status
+          </h2>
           <p className="text-white/40 font-mono text-xs mt-1">
             Draft / publish / archive every public surface without touching SQL.
           </p>
@@ -918,7 +1015,9 @@ export function Admin() {
 
       <section className="space-y-4">
         <div>
-          <h2 className="text-xl font-display font-bold text-white uppercase">Finance Queue</h2>
+          <h2 className="text-xl font-display font-bold text-white uppercase">
+            Finance Queue
+          </h2>
           <p className="text-white/40 font-mono text-xs mt-1">
             Pending requests can still be approved or rejected from here.
           </p>
@@ -926,14 +1025,14 @@ export function Admin() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {pendingFinance.length === 0 ? (
-            <div className="cyber-card p-5 bg-surface/50 border border-white/10 text-white/40 font-mono text-sm">
+            <div className="cyber-card p-5 bg-surface/50 /10 text-white/40 font-mono text-sm">
               No pending finance requests.
             </div>
           ) : (
             pendingFinance.map((row) => (
               <div
                 key={row.id}
-                className="cyber-card p-5 bg-surface/50 border border-white/10 space-y-4"
+                className="cyber-card p-5 bg-surface/50 /10 space-y-4"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -941,28 +1040,34 @@ export function Admin() {
                       {formatRequesterName(row)}
                     </div>
                     <div className="text-[11px] font-mono text-white/40">
-                      {row.date || row.created_at || 'No date'}
+                      {row.date || row.created_at || "No date"}
                     </div>
                   </div>
                   <div className="text-cyber-yellow font-display font-bold">
                     {formatAmount(row.amount)} VND
                   </div>
                 </div>
-                <p className="text-sm text-white/70">{row.reason || 'No reason provided'}</p>
+                <p className="text-sm text-white/70">
+                  {row.reason || "No reason provided"}
+                </p>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => void runFinanceAction(row.id, 'approve')}
+                    onClick={() => void runFinanceAction(row.id, "approve")}
                     disabled={financeActionId === `approve:${row.id}`}
                     className="bg-green-500/20 border border-green-500/30 text-green-300 px-4 py-2 font-display font-bold uppercase text-xs disabled:opacity-60"
                   >
-                    {financeActionId === `approve:${row.id}` ? 'Processing...' : 'Approve'}
+                    {financeActionId === `approve:${row.id}`
+                      ? "Processing..."
+                      : "Approve"}
                   </button>
                   <button
-                    onClick={() => void runFinanceAction(row.id, 'reject')}
+                    onClick={() => void runFinanceAction(row.id, "reject")}
                     disabled={financeActionId === `reject:${row.id}`}
                     className="bg-red-500/20 border border-red-500/30 text-red-300 px-4 py-2 font-display font-bold uppercase text-xs disabled:opacity-60"
                   >
-                    {financeActionId === `reject:${row.id}` ? 'Processing...' : 'Reject'}
+                    {financeActionId === `reject:${row.id}`
+                      ? "Processing..."
+                      : "Reject"}
                   </button>
                 </div>
               </div>
@@ -973,14 +1078,20 @@ export function Admin() {
 
       <section className="space-y-4">
         <div>
-          <h2 className="text-xl font-display font-bold text-white uppercase">Agent API Keys</h2>
+          <h2 className="text-xl font-display font-bold text-white uppercase">
+            Agent API Keys
+          </h2>
           <p className="text-white/40 font-mono text-xs mt-1">
-            Create keys for automation agents. Use header x-dsuc-agent-key or Authorization: Agent {'<key>'}.
+            Create keys for automation agents. Use header x-dsuc-agent-key or
+            Authorization: Agent {"<key>"}.
           </p>
         </div>
 
-        <div className="cyber-card p-5 bg-surface/50 border border-white/10 space-y-4">
-          <form onSubmit={createAgentKey} className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr),220px] gap-3">
+        <div className="cyber-card p-5 bg-surface/50 /10 space-y-4">
+          <form
+            onSubmit={createAgentKey}
+            className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr),220px] gap-3"
+          >
             <input
               value={newAgentKeyName}
               onChange={(e) => setNewAgentKeyName(e.target.value)}
@@ -999,16 +1110,18 @@ export function Admin() {
               disabled={agentKeySaving}
               className="bg-cyber-yellow text-black hover:bg-white font-display font-bold py-3 cyber-button uppercase tracking-widest disabled:opacity-60"
             >
-              {agentKeySaving ? 'Creating...' : 'Create Key'}
+              {agentKeySaving ? "Creating..." : "Create Key"}
             </button>
           </form>
 
           {lastCreatedAgentKey && (
-            <div className="border border-cyber-yellow/40 bg-cyber-yellow/10 p-4 space-y-2">
+            <div className="-yellow/40 bg-cyber-yellow/10 p-4 space-y-2">
               <div className="text-xs font-mono uppercase tracking-[0.2em] text-cyber-yellow">
                 New key (shown once)
               </div>
-              <div className="text-sm font-mono text-white break-all">{lastCreatedAgentKey}</div>
+              <div className="text-sm font-mono text-white break-all">
+                {lastCreatedAgentKey}
+              </div>
               <button
                 onClick={() => void copyText(lastCreatedAgentKey)}
                 className="bg-black/30 border border-cyber-yellow/40 text-cyber-yellow px-3 py-2 text-xs font-display font-bold uppercase tracking-widest hover:bg-cyber-yellow hover:text-black"
@@ -1019,11 +1132,13 @@ export function Admin() {
           )}
 
           {rotatedAgentKey && (
-            <div className="border border-cyber-blue/40 bg-cyber-blue/10 p-4 space-y-2">
+            <div className="-blue/40 bg-cyber-blue/10 p-4 space-y-2">
               <div className="text-xs font-mono uppercase tracking-[0.2em] text-cyber-blue">
                 Rotated key (shown once)
               </div>
-              <div className="text-sm font-mono text-white break-all">{rotatedAgentKey}</div>
+              <div className="text-sm font-mono text-white break-all">
+                {rotatedAgentKey}
+              </div>
               <button
                 onClick={() => void copyText(rotatedAgentKey)}
                 className="bg-black/30 border border-cyber-blue/40 text-cyber-blue px-3 py-2 text-xs font-display font-bold uppercase tracking-widest hover:bg-cyber-blue hover:text-black"
@@ -1035,7 +1150,9 @@ export function Admin() {
 
           <div className="space-y-3">
             {agentKeys.length === 0 ? (
-              <div className="text-white/40 font-mono text-sm">No agent keys yet.</div>
+              <div className="text-white/40 font-mono text-sm">
+                No agent keys yet.
+              </div>
             ) : (
               agentKeys.map((keyRow) => {
                 const draft = agentKeyDrafts[keyRow.id];
@@ -1045,17 +1162,21 @@ export function Admin() {
                 return (
                   <div
                     key={keyRow.id}
-                    className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr),120px,360px] gap-3 items-center border border-white/10 bg-black/20 p-3"
+                    className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr),120px,360px] gap-3 items-center /10 bg-black/20 p-3"
                   >
                     <input
-                      value={draft?.name || ''}
-                      onChange={(e) => updateAgentKeyDraft(keyRow.id, { name: e.target.value })}
+                      value={draft?.name || ""}
+                      onChange={(e) =>
+                        updateAgentKeyDraft(keyRow.id, { name: e.target.value })
+                      }
                       className="bg-black/30 border border-white/10 p-3 text-white outline-none"
                     />
                     <input
-                      value={draft?.scopesText || ''}
+                      value={draft?.scopesText || ""}
                       onChange={(e) =>
-                        updateAgentKeyDraft(keyRow.id, { scopesText: e.target.value })
+                        updateAgentKeyDraft(keyRow.id, {
+                          scopesText: e.target.value,
+                        })
                       }
                       className="bg-black/30 border border-white/10 p-3 text-white outline-none font-mono text-sm"
                     />
@@ -1064,7 +1185,9 @@ export function Admin() {
                         type="checkbox"
                         checked={draft?.is_active !== false}
                         onChange={(e) =>
-                          updateAgentKeyDraft(keyRow.id, { is_active: e.target.checked })
+                          updateAgentKeyDraft(keyRow.id, {
+                            is_active: e.target.checked,
+                          })
                         }
                       />
                       Active
@@ -1075,28 +1198,30 @@ export function Admin() {
                         disabled={busySave || busyRotate || busyDelete}
                         className="bg-cyber-blue text-white hover:bg-white hover:text-black font-display font-bold py-2 uppercase tracking-widest text-xs disabled:opacity-60"
                       >
-                        {busySave ? 'Saving...' : 'Save'}
+                        {busySave ? "Saving..." : "Save"}
                       </button>
                       <button
                         onClick={() => void rotateAgentKey(keyRow.id)}
                         disabled={busySave || busyRotate || busyDelete}
                         className="bg-cyber-yellow/20 border border-cyber-yellow/30 text-cyber-yellow hover:bg-cyber-yellow hover:text-black font-display font-bold py-2 uppercase tracking-widest text-xs disabled:opacity-60"
                       >
-                        {busyRotate ? 'Rotating...' : 'Rotate'}
+                        {busyRotate ? "Rotating..." : "Rotate"}
                       </button>
                       <button
-                        onClick={() => void deleteAgentKey(keyRow.id, keyRow.name)}
+                        onClick={() =>
+                          void deleteAgentKey(keyRow.id, keyRow.name)
+                        }
                         disabled={busySave || busyRotate || busyDelete}
                         className="bg-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500 hover:text-white font-display font-bold py-2 uppercase tracking-widest text-xs disabled:opacity-60"
                       >
-                        {busyDelete ? 'Deleting...' : 'Delete'}
+                        {busyDelete ? "Deleting..." : "Delete"}
                       </button>
                     </div>
                     <div className="lg:col-span-4 text-[11px] font-mono text-white/45">
-                      ID: {keyRow.id} • Last used:{' '}
+                      ID: {keyRow.id} • Last used:{" "}
                       {keyRow.last_used_at
                         ? new Date(keyRow.last_used_at).toLocaleString()
-                        : 'never'}
+                        : "never"}
                     </div>
                   </div>
                 );
@@ -1108,21 +1233,23 @@ export function Admin() {
 
       <section className="space-y-4">
         <div>
-          <h2 className="text-xl font-display font-bold text-white uppercase">Academy History</h2>
+          <h2 className="text-xl font-display font-bold text-white uppercase">
+            Academy History
+          </h2>
           <p className="text-white/40 font-mono text-xs mt-1">
             Track who studied what, when they started, and what they completed.
           </p>
         </div>
 
-        <div className="cyber-card bg-surface/50 border border-white/10 overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 px-5 py-3 border-b border-white/10 text-[10px] font-mono uppercase tracking-[0.25em] text-white/40">
+        <div className="cyber-card bg-surface/50 /10 overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 px-5 py-3 /10 text-[10px] font-mono uppercase tracking-[0.25em] text-white/40">
             <div>User</div>
             <div>Lesson</div>
             <div>Action</div>
             <div>Snapshot</div>
             <div>Recorded At</div>
           </div>
-          <div className="divide-y divide-white/10">
+          <div className="/10">
             {academyHistory.length === 0 ? (
               <div className="px-5 py-6 text-white/40 font-mono text-sm">
                 No academy history yet.
@@ -1142,18 +1269,24 @@ export function Admin() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-white/80">{formatLessonLabel(activity)}</div>
+                    <div className="text-white/80">
+                      {formatLessonLabel(activity)}
+                    </div>
                     <div className="text-[11px] font-mono text-white/40 uppercase">
                       {activity.track} / {activity.lesson_id}
                     </div>
                   </div>
                   <div className="text-cyber-blue font-mono uppercase text-xs">
-                    {activity.action.replaceAll('_', ' ')}
+                    {activity.action.replaceAll("_", " ")}
                   </div>
                   <div className="text-[11px] font-mono text-white/60">
                     <div>XP: {activity.xp_snapshot}</div>
-                    <div>Lesson: {activity.lesson_completed ? 'done' : 'not yet'}</div>
-                    <div>Quiz: {activity.quiz_passed ? 'passed' : 'pending'}</div>
+                    <div>
+                      Lesson: {activity.lesson_completed ? "done" : "not yet"}
+                    </div>
+                    <div>
+                      Quiz: {activity.quiz_passed ? "passed" : "pending"}
+                    </div>
                   </div>
                   <div className="text-[11px] font-mono text-white/60">
                     {new Date(activity.recorded_at).toLocaleString()}
@@ -1194,9 +1327,11 @@ function StatusSection<T extends { id: string; status?: string }>({
   onDelete: (entity: ContentEntity, id: string, label: string) => Promise<void>;
 }) {
   return (
-    <div className="cyber-card p-5 bg-surface/50 border border-white/10 space-y-4">
+    <div className="cyber-card p-5 bg-surface/50 /10 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-display font-bold text-white uppercase">{title}</h3>
+        <h3 className="text-lg font-display font-bold text-white uppercase">
+          {title}
+        </h3>
         <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/40">
           {items.length} items
         </span>
@@ -1208,23 +1343,28 @@ function StatusSection<T extends { id: string; status?: string }>({
         <div className="space-y-3">
           {items.map((item) => {
             const draftKey = `${entity}:${item.id}`;
-            const draftStatus = drafts[draftKey] || item.status || statusOptions[0];
+            const draftStatus =
+              drafts[draftKey] || item.status || statusOptions[0];
 
             return (
               <div
                 key={item.id}
-                className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),220px,240px] gap-3 items-center border border-white/10 bg-black/20 px-4 py-3"
+                className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr),220px,240px] gap-3 items-center /10 bg-black/20 px-4 py-3"
               >
                 <div className="min-w-0">
                   <div className="text-white font-display font-bold truncate">
                     {getTitle(item)}
                   </div>
-                  <div className="text-[11px] font-mono text-white/40">ID: {item.id}</div>
+                  <div className="text-[11px] font-mono text-white/40">
+                    ID: {item.id}
+                  </div>
                 </div>
 
                 <select
                   value={draftStatus}
-                  onChange={(e) => onDraftChange(entity, item.id, e.target.value)}
+                  onChange={(e) =>
+                    onDraftChange(entity, item.id, e.target.value)
+                  }
                   className="bg-black/30 border border-white/10 p-3 text-white outline-none"
                 >
                   {statusOptions.map((status) => (
@@ -1237,17 +1377,24 @@ function StatusSection<T extends { id: string; status?: string }>({
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => void onSave(entity, item.id)}
-                    disabled={savingKey === draftKey || deletingKey === `content:${entity}:${item.id}`}
+                    disabled={
+                      savingKey === draftKey ||
+                      deletingKey === `content:${entity}:${item.id}`
+                    }
                     className="bg-cyber-blue text-white hover:bg-white hover:text-black font-display font-bold py-3 cyber-button uppercase tracking-widest disabled:opacity-60"
                   >
-                    {savingKey === draftKey ? 'Saving...' : 'Save'}
+                    {savingKey === draftKey ? "Saving..." : "Save"}
                   </button>
                   <button
-                    onClick={() => void onDelete(entity, item.id, getTitle(item))}
+                    onClick={() =>
+                      void onDelete(entity, item.id, getTitle(item))
+                    }
                     disabled={deletingKey === `content:${entity}:${item.id}`}
                     className="bg-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500 hover:text-white font-display font-bold py-3 uppercase tracking-widest disabled:opacity-40"
                   >
-                    {deletingKey === `content:${entity}:${item.id}` ? 'Deleting...' : 'Delete'}
+                    {deletingKey === `content:${entity}:${item.id}`
+                      ? "Deleting..."
+                      : "Delete"}
                   </button>
                 </div>
               </div>
@@ -1264,19 +1411,21 @@ function StatCard({
   label,
   value,
 }: {
-  icon: React.ComponentType<{ size?: number }>;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
   label: string;
   value: string;
 }) {
   return (
-    <div className="cyber-card p-5 bg-surface/50 border border-cyber-blue/20">
-      <div className="flex items-center gap-3 mb-4 text-cyber-blue">
+    <SoftBrutalCard intent="primary" className="p-5 flex flex-col justify-between">
+      <div className="flex items-center gap-3 mb-4 text-primary">
         <Icon size={18} />
-        <span className="text-xs font-mono uppercase tracking-[0.25em]">
+        <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
           {label}
         </span>
       </div>
-      <div className="text-3xl font-display font-bold text-white">{value}</div>
-    </div>
+      <div className="font-display font-bold text-3xl text-text-main">
+        {value}
+      </div>
+    </SoftBrutalCard>
   );
 }

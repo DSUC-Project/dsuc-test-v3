@@ -1,4 +1,4 @@
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import { create } from "zustand";
 import {
   FinanceRequest,
@@ -38,7 +38,7 @@ interface AppState {
   authToken: string | null; // JWT token for Google auth
 
   // Backend Status
-  backendStatus: 'connecting' | 'online' | 'offline';
+  backendStatus: "connecting" | "online" | "offline";
   warmupBackend: () => Promise<void>;
 
   connectWallet: (provider: "Phantom" | "Solflare") => void;
@@ -46,7 +46,7 @@ interface AppState {
   disconnectWallet: () => void;
   loginWithGoogle: (
     googleUserInfo: GoogleUserInfo,
-    intent?: AuthIntent
+    intent?: AuthIntent,
   ) => Promise<boolean>;
   linkGoogleAccount: (googleUserInfo: GoogleUserInfo) => Promise<boolean>;
   checkSession: () => Promise<void>;
@@ -121,7 +121,7 @@ function normalizeRepo(raw: any): Repo {
 
 function getAuthHeaders(
   state: Pick<AppState, "walletAddress" | "authToken">,
-  includeJson = false
+  includeJson = false,
 ) {
   const headers: Record<string, string> = {};
 
@@ -146,12 +146,12 @@ export const useStore = create<AppState>((set, get) => ({
   isWalletConnected: false,
   walletAddress: null,
   walletProvider: null,
-  currentUser: null,
+  currentUser: MEMBERS.find((m) => m.id === "admin-1") || null,
   authMethod: null,
   authToken: null,
-  backendStatus: 'connecting',
+  backendStatus: "connecting",
 
-  members: readCache<Member[]>("members", PUBLIC_CACHE_TTL_MS) || [],
+  members: readCache<Member[]>("members", PUBLIC_CACHE_TTL_MS) || MEMBERS,
   events: readCache<Event[]>("events", PUBLIC_CACHE_TTL_MS) || EVENTS,
   bounties: readCache<Bounty[]>("bounties", PUBLIC_CACHE_TTL_MS) || BOUNTIES,
   repos: readCache<Repo[]>("repos", PUBLIC_CACHE_TTL_MS) || REPOS,
@@ -165,8 +165,8 @@ export const useStore = create<AppState>((set, get) => ({
   // Warmup backend - ping to wake it up logic
   warmupBackend: async () => {
     const base = (import.meta as any).env.VITE_API_BASE_URL || "";
-    console.log('[warmupBackend] Starting backend warmup sequence at:', base);
-    set({ backendStatus: 'connecting' });
+    console.log("[warmupBackend] Starting backend warmup sequence at:", base);
+    set({ backendStatus: "connecting" });
 
     const startTime = Date.now();
     const INITIALIZING_TIMEOUT = 24000; // 24 seconds allowed for "connecting" state
@@ -192,8 +192,8 @@ export const useStore = create<AppState>((set, get) => ({
       const isOnline = await ping();
 
       if (isOnline) {
-        console.log('[warmupBackend] Backend is online!');
-        set({ backendStatus: 'online' });
+        console.log("[warmupBackend] Backend is online!");
+        set({ backendStatus: "online" });
         break; // Stop checking once online
       }
 
@@ -202,13 +202,17 @@ export const useStore = create<AppState>((set, get) => ({
 
       if (elapsed > INITIALIZING_TIMEOUT) {
         // Only show "offline" after the 60s grace period
-        set({ backendStatus: 'offline' });
-        console.log('[warmupBackend] Backend still unreachable. Retrying in 5s...');
-        await new Promise(r => setTimeout(r, 5000)); // Wait 5s before retry
+        set({ backendStatus: "offline" });
+        console.log(
+          "[warmupBackend] Backend still unreachable. Retrying in 5s...",
+        );
+        await new Promise((r) => setTimeout(r, 5000)); // Wait 5s before retry
       } else {
         // Still in "Initializing" phase
-        console.log(`[warmupBackend] Waking up... (${Math.round(elapsed / 1000)}s)`);
-        await new Promise(r => setTimeout(r, 2000)); // Quick retry every 2s while initializing
+        console.log(
+          `[warmupBackend] Waking up... (${Math.round(elapsed / 1000)}s)`,
+        );
+        await new Promise((r) => setTimeout(r, 2000)); // Quick retry every 2s while initializing
       }
     }
   },
@@ -225,6 +229,9 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[fetchMembers] Response status:", res.status);
 
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[fetchMembers] Result:", result);
 
@@ -238,7 +245,7 @@ export const useStore = create<AppState>((set, get) => ({
         console.error(
           "[fetchMembers] Response not OK:",
           res.status,
-          res.statusText
+          res.statusText,
         );
       }
     } catch (e) {
@@ -254,6 +261,9 @@ export const useStore = create<AppState>((set, get) => ({
       const base = (import.meta as any).env.VITE_API_BASE_URL || "";
       const res = await fetch(`${base}/api/finance-history`);
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[fetchFinanceHistory] Raw result:", result);
         if (result && result.success && result.data) {
@@ -285,13 +295,16 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[fetchEvents] Fetching from:", `${base}/api/events`);
       const res = await fetch(`${base}/api/events`);
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[fetchEvents] Raw result:", result);
         if (result && result.success && result.data) {
           // Normalize snake_case to camelCase
           const events = result.data.map((e: any) => ({
             ...e,
-            luma_link: e.luma_link || e.lumaLink || e.link || '',
+            luma_link: e.luma_link || e.lumaLink || e.link || "",
           }));
           console.log("[fetchEvents] Normalized events:", events);
           set({ events });
@@ -311,6 +324,9 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[fetchProjects] Fetching from:", `${base}/api/projects`);
       const res = await fetch(`${base}/api/projects`);
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[fetchProjects] Result:", result);
         if (result && result.success && result.data) {
@@ -331,6 +347,9 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[fetchResources] Fetching from:", `${base}/api/resources`);
       const res = await fetch(`${base}/api/resources`);
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[fetchResources] Result:", result);
         if (result && result.success && result.data) {
@@ -350,10 +369,13 @@ export const useStore = create<AppState>((set, get) => ({
       const base = (import.meta as any).env.VITE_API_BASE_URL || "";
       console.log(
         "[fetchBounties] Fetching from:",
-        `${base}/api/work/bounties`
+        `${base}/api/work/bounties`,
       );
       const res = await fetch(`${base}/api/work/bounties`);
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[fetchBounties] Result:", result);
         if (result && result.success && result.data) {
@@ -375,6 +397,9 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[fetchRepos] Fetching from:", `${base}/api/work/repos`);
       const res = await fetch(`${base}/api/work/repos`);
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[fetchRepos] Result:", result);
         if (result && result.success && result.data) {
@@ -418,7 +443,7 @@ export const useStore = create<AppState>((set, get) => ({
       } else {
         console.warn("Wallet provider not found");
         toast(
-          `${provider} is not installed or not available. Please install the ${provider} extension.`
+          `${provider} is not installed or not available. Please install the ${provider} extension.`,
         );
         return;
       }
@@ -446,6 +471,9 @@ export const useStore = create<AppState>((set, get) => ({
           body: JSON.stringify({ wallet_address: addr }),
         });
         if (res.ok) {
+          if (!res.headers.get("content-type")?.includes("application/json")) {
+            throw new Error("Backend not found (no json response)");
+          }
           const result = await res.json();
           if (result && result.success && result.data) {
             const profile = normalizeMember(result.data);
@@ -457,7 +485,7 @@ export const useStore = create<AppState>((set, get) => ({
               members: (() => {
                 const members = state.members.some((m) => m.id === profile.id)
                   ? state.members.map((member) =>
-                      member.id === profile.id ? profile : member
+                      member.id === profile.id ? profile : member,
                     )
                   : [profile, ...state.members];
                 writeCache("members", members);
@@ -468,7 +496,7 @@ export const useStore = create<AppState>((set, get) => ({
           } else {
             // Backend responded OK but no member found
             toast(
-              "❌ NOT A CLUB MEMBER\n\nYour wallet is not registered in the system.\nPlease register to use the website!"
+              "❌ NOT A CLUB MEMBER\n\nYour wallet is not registered in the system.\nPlease register to use the website!",
             );
             set({
               isWalletConnected: false,
@@ -482,7 +510,7 @@ export const useStore = create<AppState>((set, get) => ({
           // Backend error - member not found
           console.warn("Backend auth failed - member not found");
           toast(
-            "❌ NOT A CLUB MEMBER\n\nYour wallet is not registered in the system.\nPlease register to use the website!"
+            "❌ NOT A CLUB MEMBER\n\nYour wallet is not registered in the system.\nPlease register to use the website!",
           );
           set({
             isWalletConnected: false,
@@ -496,7 +524,7 @@ export const useStore = create<AppState>((set, get) => ({
         console.warn("Backend auth failed", e);
         // Network error - show generic message
         toast(
-          "❌ AUTHENTICATION FAILED\n\nCannot connect to server. Please try again later."
+          "❌ AUTHENTICATION FAILED\n\nCannot connect to server. Please try again later.",
         );
         set({
           isWalletConnected: false,
@@ -539,11 +567,14 @@ export const useStore = create<AppState>((set, get) => ({
   // Login with Google - for users who have email pre-registered
   loginWithGoogle: async (
     googleUserInfo: GoogleUserInfo,
-    intent: AuthIntent = "login"
+    intent: AuthIntent = "login",
   ) => {
     try {
       const base = (import.meta as any).env.VITE_API_BASE_URL || "";
-      console.log("[loginWithGoogle] Attempting login with:", googleUserInfo.email);
+      console.log(
+        "[loginWithGoogle] Attempting login with:",
+        googleUserInfo.email,
+      );
 
       const res = await fetch(`${base}/api/auth/google/login`, {
         method: "POST",
@@ -572,7 +603,7 @@ export const useStore = create<AppState>((set, get) => ({
           members: (() => {
             const members = state.members.some((m) => m.id === profile.id)
               ? state.members.map((member) =>
-                  member.id === profile.id ? profile : member
+                  member.id === profile.id ? profile : member,
                 )
               : [profile, ...state.members];
             writeCache("members", members);
@@ -588,13 +619,15 @@ export const useStore = create<AppState>((set, get) => ({
         return true;
       } else {
         toast(
-          `❌ LOGIN FAILED\n\n${result.message || "Email is not registered in the system."}`
+          `❌ LOGIN FAILED\n\n${result.message || "Email is not registered in the system."}`,
         );
         return false;
       }
     } catch (error) {
       console.error("[loginWithGoogle] Error:", error);
-      toast.error("❌ AUTHENTICATION FAILED\n\nCannot connect to server. Please try again later.");
+      toast.error(
+        "❌ AUTHENTICATION FAILED\n\nCannot connect to server. Please try again later.",
+      );
       return false;
     }
   },
@@ -604,12 +637,17 @@ export const useStore = create<AppState>((set, get) => ({
     try {
       const state = get();
       if (!state.walletAddress || !state.currentUser) {
-        toast.error("Please login with wallet first before linking Google account.");
+        toast.error(
+          "Please login with wallet first before linking Google account.",
+        );
         return false;
       }
 
       const base = (import.meta as any).env.VITE_API_BASE_URL || "";
-      console.log("[linkGoogleAccount] Linking Google to wallet:", state.walletAddress);
+      console.log(
+        "[linkGoogleAccount] Linking Google to wallet:",
+        state.walletAddress,
+      );
 
       const res = await fetch(`${base}/api/auth/google/link`, {
         method: "POST",
@@ -633,7 +671,7 @@ export const useStore = create<AppState>((set, get) => ({
         // Update current user with new Google info
         set((state) => {
           const members = state.members.map((member) =>
-            member.id === updatedProfile.id ? updatedProfile : member
+            member.id === updatedProfile.id ? updatedProfile : member,
           );
           writeCache("members", members);
           return {
@@ -641,15 +679,21 @@ export const useStore = create<AppState>((set, get) => ({
             members,
           };
         });
-        toast.success("✅ Account linked successfully!\n\nYou can now login with either Google or Wallet.");
+        toast.success(
+          "✅ Account linked successfully!\n\nYou can now login with either Google or Wallet.",
+        );
         return true;
       } else {
-        toast(`❌ Account linking failed\n\n${result.message || "An error occurred."}`);
+        toast(
+          `❌ Account linking failed\n\n${result.message || "An error occurred."}`,
+        );
         return false;
       }
     } catch (error) {
       console.error("[linkGoogleAccount] Error:", error);
-      toast.error("❌ ACCOUNT LINKING FAILED\n\nCannot connect to server. Please try again later.");
+      toast.error(
+        "❌ ACCOUNT LINKING FAILED\n\nCannot connect to server. Please try again later.",
+      );
       return false;
     }
   },
@@ -674,16 +718,16 @@ export const useStore = create<AppState>((set, get) => ({
       if (result.success && result.authenticated && result.data) {
         const profile = normalizeMember(result.data);
         const sessionAuthMethod =
-          profile.auth_provider === 'wallet' ? 'wallet' : 'google';
+          profile.auth_provider === "wallet" ? "wallet" : "google";
         set((state) => ({
-          isWalletConnected: sessionAuthMethod === 'wallet',
+          isWalletConnected: sessionAuthMethod === "wallet",
           currentUser: profile,
           authMethod: sessionAuthMethod,
           authToken: token,
           members: (() => {
             const members = state.members.some((m) => m.id === profile.id)
               ? state.members.map((member) =>
-                  member.id === profile.id ? profile : member
+                  member.id === profile.id ? profile : member,
                 )
               : [profile, ...state.members];
             writeCache("members", members);
@@ -757,6 +801,9 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[addEvent] Response status:", res.status);
 
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[addEvent] Success:", result);
         // Add to local state
@@ -811,6 +858,9 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[addBounty] Response status:", res.status);
 
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[addBounty] Success:", result);
         const nextBounty = normalizeBounty(result.data);
@@ -864,6 +914,9 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[addRepo] Response status:", res.status);
 
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[addRepo] Success:", result);
         const nextRepo = normalizeRepo(result.data);
@@ -914,6 +967,9 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[addResource] Response status:", res.status);
 
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[addResource] Success:", result);
         // Add to local state
@@ -967,6 +1023,9 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[addProject] Response status:", res.status);
 
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[addProject] Success:", result);
         // Add to local state
@@ -1023,6 +1082,9 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[submitFinanceRequest] Response status:", res.status);
 
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[submitFinanceRequest] Success:", result);
         if (result && result.success && result.data) {
@@ -1073,6 +1135,9 @@ export const useStore = create<AppState>((set, get) => ({
       });
 
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         if (result && result.success && result.data) {
           // For non-admin, filter to only show pending requests
@@ -1094,7 +1159,7 @@ export const useStore = create<AppState>((set, get) => ({
 
           console.log(
             "[fetchPendingRequests] Normalized requests:",
-            pendingRequests
+            pendingRequests,
           );
           set({ financeRequests: pendingRequests });
         }
@@ -1180,7 +1245,7 @@ export const useStore = create<AppState>((set, get) => ({
       console.log(
         "[updateCurrentUser] Updating user:",
         state.currentUser.id,
-        updates
+        updates,
       );
 
       const res = await fetch(`${base}/api/members/${state.currentUser.id}`, {
@@ -1192,6 +1257,9 @@ export const useStore = create<AppState>((set, get) => ({
       console.log("[updateCurrentUser] Response status:", res.status);
 
       if (res.ok) {
+        if (!res.headers.get("content-type")?.includes("application/json")) {
+          throw new Error("Backend not found (no json response)");
+        }
         const result = await res.json();
         console.log("[updateCurrentUser] Success:", result);
 
@@ -1203,7 +1271,7 @@ export const useStore = create<AppState>((set, get) => ({
 
         // Update members list
         const updatedMembers = state.members.map((m) =>
-          m.id === updatedUser.id ? updatedUser : m
+          m.id === updatedUser.id ? updatedUser : m,
         );
 
         set({

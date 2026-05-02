@@ -4,8 +4,8 @@ export interface Member {
   role: string;
   avatar: string;
   skills: string[];
-  memberType?: 'member' | 'community';
-  member_type?: 'member' | 'community';
+  memberType?: "member" | "community";
+  member_type?: "member" | "community";
   academyAccess?: boolean;
   academy_access?: boolean;
   is_active?: boolean;
@@ -29,7 +29,7 @@ export interface Member {
   // Google auth fields
   email?: string;
   google_id?: string;
-  auth_provider?: 'wallet' | 'google' | 'both';
+  auth_provider?: "wallet" | "google" | "both";
   email_verified?: boolean;
   wallet_address?: string | null;
   profile_completed?: boolean;
@@ -39,8 +39,8 @@ export interface Member {
 }
 
 // Auth method type
-export type AuthMethod = 'wallet' | 'google';
-export type AuthIntent = 'login' | 'signup';
+export type AuthMethod = "wallet" | "google";
+export type AuthIntent = "login" | "signup";
 
 // Google user info from OAuth
 export interface GoogleUserInfo {
@@ -141,7 +141,7 @@ export interface AcademyOverview {
   user_id: string;
   name: string;
   role: string;
-  member_type: 'member' | 'community';
+  member_type: "member" | "community";
   academy_access: boolean;
   xp: number;
   completed_lessons: number;
@@ -155,16 +155,16 @@ export interface AcademyActivity {
   user_id: string;
   user_name: string;
   role: string;
-  member_type: 'member' | 'community';
+  member_type: "member" | "community";
   track: string;
   lesson_id: string;
   action:
-    | 'started'
-    | 'checklist_updated'
-    | 'lesson_completed'
-    | 'quiz_passed'
-    | 'progress_updated'
-    | 'lesson_reviewed';
+    | "started"
+    | "checklist_updated"
+    | "lesson_completed"
+    | "quiz_passed"
+    | "progress_updated"
+    | "lesson_reviewed";
   lesson_completed: boolean;
   quiz_passed: boolean;
   checklist: boolean[];
@@ -280,12 +280,12 @@ export interface AcademyV2UnitSummary {
   id: string;
   source_id: string;
   title: string;
-  type: 'content' | 'challenge' | 'quiz';
-  section: 'learn' | 'practice';
+  type: "content" | "challenge" | "quiz";
+  section: "learn" | "practice";
   order: number;
   xp_reward: number;
-  language?: 'typescript' | 'rust';
-  build_type?: 'standard' | 'buildable';
+  language?: "typescript" | "rust";
+  build_type?: "standard" | "buildable";
   deployable?: boolean;
 }
 
@@ -317,7 +317,7 @@ export interface AcademyV2CourseSummary {
   source_id: string;
   title: string;
   description: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: "beginner" | "intermediate" | "advanced";
   duration_hours: number;
   xp_reward: number;
   xp_per_unit: number;
@@ -344,7 +344,7 @@ export interface AcademyV2Path {
   title: string;
   tag: string;
   description: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: "beginner" | "intermediate" | "advanced";
   order: number;
   course_count: number;
   learn_unit_count: number;

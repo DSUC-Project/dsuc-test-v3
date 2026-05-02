@@ -1,4 +1,4 @@
-import type { AcademyV2UnitDetail } from '@/types';
+import type { AcademyV2UnitDetail } from "@/types";
 
 export type ChallengeRunCase = {
   id: string;
@@ -29,33 +29,33 @@ type HeuristicCaseResult = {
 };
 
 const MOCK_PUBLIC_KEYS = {
-  sender: '7Yd7W6rR6C9rF3VQ9t9f1vW3zV7h8mJ3L2P6xWq4gBkA',
-  recipient: 'C9oS2N8fK4mD7vQ1nB5xL6wR3tY8pH2jU4sA9cE7rQwX',
-  owner: '9wQ2aF7nH4dK8mR3uT6xB1vP5cY7jL9sE2qW4zN6gHbC',
-  programId: 'B4pL8xQ3mN6vR1tY7cD2fH9kJ5sA4wE8uP3nG6zC2qMx',
-  payer: 'D7qM3vB9xN2kH6tR4wY8cP1fL5sJ7uE3aG9mQ2zV6rTx',
-  walletA: 'F3xQ7mN2vB6kH9tR4wY8cP1fL5sJ7uE3aG9mQ2zV6rTy',
-  walletB: 'H8mQ2xN6vB3kR9tY4cP1fL5sJ7uE3aG9wD2zV6rT4nKx',
+  sender: "7Yd7W6rR6C9rF3VQ9t9f1vW3zV7h8mJ3L2P6xWq4gBkA",
+  recipient: "C9oS2N8fK4mD7vQ1nB5xL6wR3tY8pH2jU4sA9cE7rQwX",
+  owner: "9wQ2aF7nH4dK8mR3uT6xB1vP5cY7jL9sE2qW4zN6gHbC",
+  programId: "B4pL8xQ3mN6vR1tY7cD2fH9kJ5sA4wE8uP3nG6zC2qMx",
+  payer: "D7qM3vB9xN2kH6tR4wY8cP1fL5sJ7uE3aG9mQ2zV6rTx",
+  walletA: "F3xQ7mN2vB6kH9tR4wY8cP1fL5sJ7uE3aG9mQ2zV6rTy",
+  walletB: "H8mQ2xN6vB3kR9tY4cP1fL5sJ7uE3aG9wD2zV6rT4nKx",
 };
 
 const LAMPORTS_PER_SOL = 1_000_000_000;
 
 function normalizeChallengeSource(code: string) {
-  return String(code || '')
-    .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/\/\/.*$/gm, '')
-    .replace(/\s+/g, '')
+  return String(code || "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\/\/.*$/gm, "")
+    .replace(/\s+/g, "")
     .trim();
 }
 
 function stripImportBlocks(code: string) {
-  return String(code || '').replace(/^\s*import[\s\S]*?;\s*$/gm, '');
+  return String(code || "").replace(/^\s*import[\s\S]*?;\s*$/gm, "");
 }
 
 function stripInterfaceBlocks(code: string) {
-  const source = String(code || '');
+  const source = String(code || "");
   let cursor = 0;
-  let output = '';
+  let output = "";
 
   while (cursor < source.length) {
     const match = /\binterface\s+[A-Za-z0-9_]+\s*\{/.exec(source.slice(cursor));
@@ -67,14 +67,14 @@ function stripInterfaceBlocks(code: string) {
     const start = cursor + match.index;
     output += source.slice(cursor, start);
 
-    let braceIndex = start + match[0].lastIndexOf('{');
+    let braceIndex = start + match[0].lastIndexOf("{");
     let depth = 0;
     let end = braceIndex;
     while (end < source.length) {
       const char = source[end];
-      if (char === '{') {
+      if (char === "{") {
         depth += 1;
-      } else if (char === '}') {
+      } else if (char === "}") {
         depth -= 1;
         if (depth === 0) {
           end += 1;
@@ -91,8 +91,8 @@ function stripInterfaceBlocks(code: string) {
 }
 
 function stripParamTypes(params: string) {
-  let output = '';
-  let mode: 'normal' | 'type' = 'normal';
+  let output = "";
+  let mode: "normal" | "type" = "normal";
   let parenDepth = 0;
   let braceDepth = 0;
   let bracketDepth = 0;
@@ -101,56 +101,62 @@ function stripParamTypes(params: string) {
   for (let index = 0; index < params.length; index += 1) {
     const char = params[index];
 
-    if (mode === 'normal') {
-      if (char === ':' && parenDepth === 0 && braceDepth === 0 && bracketDepth === 0 && angleDepth === 0) {
-        mode = 'type';
-        continue;
-      }
-
-      output += char;
-    } else {
-      if (char === '<') {
-        angleDepth += 1;
-        continue;
-      }
-      if (char === '>' && angleDepth > 0) {
-        angleDepth -= 1;
-        continue;
-      }
-      if (char === '(') {
-        parenDepth += 1;
-        continue;
-      }
-      if (char === ')' && parenDepth > 0) {
-        parenDepth -= 1;
-        continue;
-      }
-      if (char === '{') {
-        braceDepth += 1;
-        continue;
-      }
-      if (char === '}' && braceDepth > 0) {
-        braceDepth -= 1;
-        continue;
-      }
-      if (char === '[') {
-        bracketDepth += 1;
-        continue;
-      }
-      if (char === ']' && bracketDepth > 0) {
-        bracketDepth -= 1;
-        continue;
-      }
-
+    if (mode === "normal") {
       if (
-        char === ',' &&
+        char === ":" &&
         parenDepth === 0 &&
         braceDepth === 0 &&
         bracketDepth === 0 &&
         angleDepth === 0
       ) {
-        mode = 'normal';
-        output += ',';
+        mode = "type";
+        continue;
+      }
+
+      output += char;
+    } else {
+      if (char === "<") {
+        angleDepth += 1;
+        continue;
+      }
+      if (char === ">" && angleDepth > 0) {
+        angleDepth -= 1;
+        continue;
+      }
+      if (char === "(") {
+        parenDepth += 1;
+        continue;
+      }
+      if (char === ")" && parenDepth > 0) {
+        parenDepth -= 1;
+        continue;
+      }
+      if (char === "{") {
+        braceDepth += 1;
+        continue;
+      }
+      if (char === "}" && braceDepth > 0) {
+        braceDepth -= 1;
+        continue;
+      }
+      if (char === "[") {
+        bracketDepth += 1;
+        continue;
+      }
+      if (char === "]" && bracketDepth > 0) {
+        bracketDepth -= 1;
+        continue;
+      }
+
+      if (
+        char === "," &&
+        parenDepth === 0 &&
+        braceDepth === 0 &&
+        bracketDepth === 0 &&
+        angleDepth === 0
+      ) {
+        mode = "normal";
+        output += ",";
       }
     }
   }
@@ -159,12 +165,14 @@ function stripParamTypes(params: string) {
 }
 
 function stripFunctionTypes(code: string) {
-  const source = String(code || '');
+  const source = String(code || "");
   let cursor = 0;
-  let output = '';
+  let output = "";
 
   while (cursor < source.length) {
-    const match = /\b(?:async\s+)?function\s+[A-Za-z0-9_]+\s*\(/.exec(source.slice(cursor));
+    const match = /\b(?:async\s+)?function\s+[A-Za-z0-9_]+\s*\(/.exec(
+      source.slice(cursor),
+    );
     if (!match) {
       output += source.slice(cursor);
       break;
@@ -180,9 +188,9 @@ function stripFunctionTypes(code: string) {
 
     for (; endParams < source.length; endParams += 1) {
       const char = source[endParams];
-      if (char === '(') {
+      if (char === "(") {
         parenDepth += 1;
-      } else if (char === ')') {
+      } else if (char === ")") {
         parenDepth -= 1;
         if (parenDepth === 0) {
           break;
@@ -200,7 +208,7 @@ function stripFunctionTypes(code: string) {
       cursor += 1;
     }
 
-    if (source[cursor] === ':') {
+    if (source[cursor] === ":") {
       cursor += 1;
       let braceDepth = 0;
       let bracketDepth = 0;
@@ -209,25 +217,31 @@ function stripFunctionTypes(code: string) {
 
       while (cursor < source.length) {
         const char = source[cursor];
-        if (char === '{' && braceDepth === 0 && bracketDepth === 0 && angleDepth === 0 && nestedParenDepth === 0) {
-          output += ' ';
+        if (
+          char === "{" &&
+          braceDepth === 0 &&
+          bracketDepth === 0 &&
+          angleDepth === 0 &&
+          nestedParenDepth === 0
+        ) {
+          output += " ";
           break;
         }
-        if (char === '{') {
+        if (char === "{") {
           braceDepth += 1;
-        } else if (char === '}' && braceDepth > 0) {
+        } else if (char === "}" && braceDepth > 0) {
           braceDepth -= 1;
-        } else if (char === '[') {
+        } else if (char === "[") {
           bracketDepth += 1;
-        } else if (char === ']' && bracketDepth > 0) {
+        } else if (char === "]" && bracketDepth > 0) {
           bracketDepth -= 1;
-        } else if (char === '<') {
+        } else if (char === "<") {
           angleDepth += 1;
-        } else if (char === '>' && angleDepth > 0) {
+        } else if (char === ">" && angleDepth > 0) {
           angleDepth -= 1;
-        } else if (char === '(') {
+        } else if (char === "(") {
           nestedParenDepth += 1;
-        } else if (char === ')' && nestedParenDepth > 0) {
+        } else if (char === ")" && nestedParenDepth > 0) {
           nestedParenDepth -= 1;
         }
         cursor += 1;
@@ -243,12 +257,16 @@ function sanitizeJsLikeChallengeSource(code: string) {
 }
 
 function extractPrimaryFunctionName(code: string) {
-  const matches = [...String(code || '').matchAll(/\bfunction\s+([A-Za-z0-9_]+)\s*\(/g)];
+  const matches = [
+    ...String(code || "").matchAll(/\bfunction\s+([A-Za-z0-9_]+)\s*\(/g),
+  ];
   return matches[0]?.[1] || null;
 }
 
 function extractRustPrimaryFunctionName(code: string) {
-  const matches = [...String(code || '').matchAll(/\bfn\s+([A-Za-z0-9_]+)\s*\(/g)];
+  const matches = [
+    ...String(code || "").matchAll(/\bfn\s+([A-Za-z0-9_]+)\s*\(/g),
+  ];
   return matches[0]?.[1] || null;
 }
 
@@ -256,12 +274,16 @@ class MockPublicKey {
   value: string;
 
   constructor(input: string | MockPublicKey) {
-    const raw = input instanceof MockPublicKey ? input.toBase58() : String(input || '').trim();
-    if (!raw || raw === 'invalid') {
-      throw new Error('Invalid public key');
+    const raw =
+      input instanceof MockPublicKey
+        ? input.toBase58()
+        : String(input || "").trim();
+    if (!raw || raw === "invalid") {
+      throw new Error("Invalid public key");
     }
 
-    this.value = raw.length >= 32 ? raw : `${raw}${MOCK_PUBLIC_KEYS.sender}`.slice(0, 32);
+    this.value =
+      raw.length >= 32 ? raw : `${raw}${MOCK_PUBLIC_KEYS.sender}`.slice(0, 32);
   }
 
   toBase58() {
@@ -273,7 +295,9 @@ class MockPublicKey {
   }
 
   toBytes() {
-    return Array.from(new TextEncoder().encode(this.value.padEnd(32, '1').slice(0, 32)));
+    return Array.from(
+      new TextEncoder().encode(this.value.padEnd(32, "1").slice(0, 32)),
+    );
   }
 
   static isOnCurve(bytes: number[] | Uint8Array) {
@@ -289,7 +313,11 @@ class MockKeypair {
   }
 
   static generate() {
-    const randomSeed = `${MOCK_PUBLIC_KEYS.payer}${Math.random().toString(36).slice(2)}`.slice(0, 44);
+    const randomSeed =
+      `${MOCK_PUBLIC_KEYS.payer}${Math.random().toString(36).slice(2)}`.slice(
+        0,
+        44,
+      );
     return new MockKeypair(randomSeed);
   }
 }
@@ -330,7 +358,7 @@ const MockSystemProgram = {
     lamports: number;
   }) {
     return {
-      programId: '11111111111111111111111111111111',
+      programId: "11111111111111111111111111111111",
       fromPubkey,
       toPubkey,
       lamports,
@@ -339,11 +367,13 @@ const MockSystemProgram = {
 };
 
 async function mockCreateMint() {
-  return new MockPublicKey(`${MOCK_PUBLIC_KEYS.programId}${Date.now()}`.slice(0, 44));
+  return new MockPublicKey(
+    `${MOCK_PUBLIC_KEYS.programId}${Date.now()}`.slice(0, 44),
+  );
 }
 
 function createAccountDataFixture() {
-  const username = 'alice';
+  const username = "alice";
   const usernameBytes = new TextEncoder().encode(username);
   const result = new Uint8Array(9 + usernameBytes.length);
   const view = new DataView(result.buffer);
@@ -400,7 +430,7 @@ function createSandbox() {
 }
 
 function evaluateArgumentList(input: string, sandbox: Record<string, any>) {
-  if (!String(input || '').trim()) {
+  if (!String(input || "").trim()) {
     return [];
   }
 
@@ -412,7 +442,7 @@ function evaluateArgumentList(input: string, sandbox: Record<string, any>) {
 async function executePrimaryFunction(
   sanitizedCode: string,
   primaryFunction: string,
-  input: string
+  input: string,
 ) {
   const sandbox = createSandbox();
   const keys = Object.keys(sandbox);
@@ -424,12 +454,14 @@ async function executePrimaryFunction(
       "use strict";
       ${sanitizedCode}
       return typeof ${primaryFunction} === "function" ? ${primaryFunction} : null;
-    `
+    `,
   );
 
   const fn = factory(...values);
-  if (typeof fn !== 'function') {
-    throw new Error(`Primary function "${primaryFunction}" was not found after compilation.`);
+  if (typeof fn !== "function") {
+    throw new Error(
+      `Primary function "${primaryFunction}" was not found after compilation.`,
+    );
   }
 
   const args = evaluateArgumentList(input, sandbox);
@@ -437,28 +469,39 @@ async function executePrimaryFunction(
 }
 
 function evaluateExpectedOutput(expectedOutput: string, result: unknown) {
-  const expression = String(expectedOutput || '').trim();
+  const expression = String(expectedOutput || "").trim();
   if (!expression) {
     return true;
   }
 
   try {
     return Boolean(
-      new Function('result', 'Transaction', `return (${expression});`)(result, MockTransaction)
+      new Function("result", "Transaction", `return (${expression});`)(
+        result,
+        MockTransaction,
+      ),
     );
   } catch {
     return Boolean(
-      new Function('result', 'Transaction', `${expression}`)(result, MockTransaction)
+      new Function("result", "Transaction", `${expression}`)(
+        result,
+        MockTransaction,
+      ),
     );
   }
 }
 
 function isSupportedJsLikeChallenge(unit: AcademyV2UnitDetail) {
-  return unit.section === 'practice' && !unit.language && !!unit.code && unit.tests.length > 0;
+  return (
+    unit.section === "practice" &&
+    !unit.language &&
+    !!unit.code &&
+    unit.tests.length > 0
+  );
 }
 
 function testPattern(source: string, pattern: RegExp | string) {
-  if (typeof pattern === 'string') {
+  if (typeof pattern === "string") {
     return source.includes(pattern);
   }
 
@@ -476,7 +519,7 @@ function countMatches(source: string, pattern: RegExp) {
 
 function buildHeuristicCase(
   passed: boolean,
-  fallbackError: string
+  fallbackError: string,
 ): HeuristicCaseResult {
   return {
     passed,
@@ -550,22 +593,24 @@ function hasFullCounterFlow(source: string) {
   );
 }
 
-function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult[] | null {
-  const source = String(unit.code || '');
+function buildRustHeuristicCases(
+  unit: AcademyV2UnitDetail,
+): HeuristicCaseResult[] | null {
+  const source = String(unit.code || "");
 
   switch (unit.id) {
-    case 'anchor-setup-challenge':
+    case "anchor-setup-challenge":
       return [
         buildHeuristicCase(
           countMatches(source, /AccountMeta\s*\{/g) >= 3,
-          'Add exactly two AccountMeta entries for the user and the system program.'
+          "Add exactly two AccountMeta entries for the user and the system program.",
         ),
         buildHeuristicCase(
           matchAll(source, [
             /instruction_name\s*(?:\.as_bytes\(\))?\s*\.len\(\)/m,
             /data_len/m,
           ]),
-          'Encode the instruction name length and include it in the returned data_len field.'
+          "Encode the instruction name length and include it in the returned data_len field.",
         ),
         buildHeuristicCase(
           matchAll(source, [
@@ -575,10 +620,10 @@ function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult
             /data_len:\{\}/m,
             /program_id/m,
           ]),
-          'Return the instruction summary string with program_id, account count, and data length.'
+          "Return the instruction summary string with program_id, account count, and data length.",
         ),
       ];
-    case 'anchor-accounts-challenge':
+    case "anchor-accounts-challenge":
       return [
         buildHeuristicCase(
           matchAll(source, [
@@ -587,14 +632,14 @@ function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult
             /MissingRequiredSignature/m,
             /AccountNotWritable/m,
           ]),
-          'Cover the valid path plus all expected Anchor-style account errors.'
+          "Cover the valid path plus all expected Anchor-style account errors.",
         ),
         buildHeuristicCase(
           matchAll(source, [
             /account_owner\s*!=\s*expected_owner/m,
             /IncorrectProgramId/m,
           ]),
-          'Validate owner mismatches and return IncorrectProgramId.'
+          "Validate owner mismatches and return IncorrectProgramId.",
         ),
         buildHeuristicCase(
           matchAll(source, [
@@ -602,7 +647,7 @@ function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult
             /!\s*is_signer/m,
             /MissingRequiredSignature/m,
           ]),
-          'Check the signer requirement before approving the account.'
+          "Check the signer requirement before approving the account.",
         ),
         buildHeuristicCase(
           matchAll(source, [
@@ -610,10 +655,10 @@ function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult
             /!\s*is_writable/m,
             /AccountNotWritable/m,
           ]),
-          'Reject non-writable accounts when the instruction needs mutation.'
+          "Reject non-writable accounts when the instruction needs mutation.",
         ),
       ];
-    case 'pda-advanced-challenge':
+    case "pda-advanced-challenge":
       return [
         buildHeuristicCase(
           matchAll(source, [
@@ -621,13 +666,13 @@ function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult
             /find_pda\s*\(\s*&\s*\[\s*"stats"\s*,\s*user\s*\]\s*,\s*program_id\s*\)/m,
             /find_pda\s*\(\s*&\s*\[\s*"vault"\s*,\s*user\s*\]\s*,\s*program_id\s*\)/m,
           ]),
-          'Derive the user, stats, and vault PDAs with distinct seed prefixes.'
+          "Derive the user, stats, and vault PDAs with distinct seed prefixes.",
         ),
         buildHeuristicCase(
           matchAll(source, [
             /\(\s*[A-Za-z_][A-Za-z0-9_]*\s*,\s*[A-Za-z_][A-Za-z0-9_]*\s*,\s*[A-Za-z_][A-Za-z0-9_]*\s*\)/m,
           ]),
-          'Return a tuple with the three derived PDA hashes.'
+          "Return a tuple with the three derived PDA hashes.",
         ),
         buildHeuristicCase(
           matchAll(source, [
@@ -635,10 +680,10 @@ function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult
             /\[\s*"stats"\s*,\s*user\s*\]/m,
             /\[\s*"vault"\s*,\s*user\s*\]/m,
           ]),
-          'Use the function user parameter inside every PDA seed set.'
+          "Use the function user parameter inside every PDA seed set.",
         ),
       ];
-    case 'cpi-challenge':
+    case "cpi-challenge":
       return [
         buildHeuristicCase(
           matchAll(source, [
@@ -646,14 +691,11 @@ function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult
             /recipient_balance\s*\+\s*amount/m,
             /vault_balance\s*-\s*amount/m,
           ]),
-          'Return updated vault and recipient balances when the transfer succeeds.'
+          "Return updated vault and recipient balances when the transfer succeeds.",
         ),
         buildHeuristicCase(
-          matchAll(source, [
-            /vault_balance\s*<\s*amount/m,
-            /Err\s*\(/m,
-          ]),
-          'Reject transfers that exceed the vault balance.'
+          matchAll(source, [/vault_balance\s*<\s*amount/m, /Err\s*\(/m]),
+          "Reject transfers that exceed the vault balance.",
         ),
         buildHeuristicCase(
           matchAll(source, [
@@ -662,49 +704,49 @@ function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult
             /recipient_balance\s*\+\s*amount/m,
             /vault_balance\s*-\s*amount/m,
           ]),
-          'Derive the vault PDA bump and include it with the updated balances.'
+          "Derive the vault PDA bump and include it with the updated balances.",
         ),
       ];
-    case 'testing-challenge':
+    case "testing-challenge":
       return [
         buildHeuristicCase(
           matchAll(source, [
             /PASS:/m,
             /sender_initial\s*[<>]=?\s*transfer_amount\s*\+\s*fee|transfer_amount\s*\+\s*fee\s*[<>]=?\s*sender_initial/m,
           ]),
-          'Check affordability and emit a PASS payload for valid transfers.'
+          "Check affordability and emit a PASS payload for valid transfers.",
         ),
         buildHeuristicCase(
           /FAIL:insufficient_funds/.test(source),
-          'Return FAIL:insufficient_funds when the sender cannot afford the transfer.'
+          "Return FAIL:insufficient_funds when the sender cannot afford the transfer.",
         ),
         buildHeuristicCase(
           /sender_initial\s*-\s*transfer_amount\s*-\s*fee/.test(source),
-          'Compute the sender balance as initial minus transfer amount and fee.'
+          "Compute the sender balance as initial minus transfer amount and fee.",
         ),
       ];
-    case 'rust-basics-challenge':
+    case "rust-basics-challenge":
       return [
         buildHeuristicCase(
           matchAll(source, [
             /OK:/m,
             /self\.balance\s*-=\s*amount|balance\s*-\s*amount/m,
           ]),
-          'Return the updated balance inside an OK:<remaining> string.'
+          "Return the updated balance inside an OK:<remaining> string.",
         ),
         buildHeuristicCase(
           matchAll(source, [
             /ERR:/m,
             /amount\s*>\s*self\.balance|self\.balance\s*<\s*amount|balance\s*<\s*amount|amount\s*>\s*balance/m,
           ]),
-          'Return an ERR:* response when the withdrawal exceeds the balance.'
+          "Return an ERR:* response when the withdrawal exceeds the balance.",
         ),
         buildHeuristicCase(
           /self\.balance\s*-=\s*amount|balance\s*-\s*amount/.test(source),
-          'Use the same subtraction path for exact-balance withdrawals so the result can reach zero.'
+          "Use the same subtraction path for exact-balance withdrawals so the result can reach zero.",
         ),
       ];
-    case 'serialization-challenge':
+    case "serialization-challenge":
       return [
         buildHeuristicCase(
           matchAll(source, [
@@ -713,176 +755,182 @@ function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult
             /balance\.to_le_bytes\(\)/m,
             /buf\.push\s*\(/m,
           ]),
-          'Write the owner length, balance bytes, and frozen flag into a Vec<u8>.'
+          "Write the owner length, balance bytes, and frozen flag into a Vec<u8>.",
         ),
         buildHeuristicCase(
           matchAll(source, [
             /owner\.len\(\)\s+as\s+u32/m,
             /owner\.as_bytes\(\)/m,
           ]),
-          'Serialize the owner length prefix and owner UTF-8 bytes.'
+          "Serialize the owner length prefix and owner UTF-8 bytes.",
         ),
         buildHeuristicCase(
           matchAll(source, [
             /extend_from_slice\s*\(\s*&\s*\(owner\.len\(\)\s+as\s+u32\)\.to_le_bytes\(\)\s*\)/m,
             /extend_from_slice\s*\(\s*owner\.as_bytes\(\)\s*\)/m,
           ]),
-          'Append owner bytes immediately after the length prefix.'
+          "Append owner bytes immediately after the length prefix.",
         ),
       ];
-    case 'error-challenge':
+    case "error-challenge":
       return [
         buildHeuristicCase(
           /Ok\s*\(\s*\(\s*\)\s*\)|Ok\s*\(\s*\)/m.test(source),
-          'Return Ok(()) only after every validation passes.'
+          "Return Ok(()) only after every validation passes.",
         ),
         buildHeuristicCase(
-          matchAll(source, [
-            /recipient\.is_empty\(\)/m,
-            /INVALID_RECIPIENT/m,
-          ]),
-          'Reject empty recipients with INVALID_RECIPIENT.'
+          matchAll(source, [/recipient\.is_empty\(\)/m, /INVALID_RECIPIENT/m]),
+          "Reject empty recipients with INVALID_RECIPIENT.",
         ),
         buildHeuristicCase(
-          matchAll(source, [
-            /amount\s*==\s*0/m,
-            /ZERO_AMOUNT/m,
-          ]),
-          'Reject zero-value transfers with ZERO_AMOUNT.'
+          matchAll(source, [/amount\s*==\s*0/m, /ZERO_AMOUNT/m]),
+          "Reject zero-value transfers with ZERO_AMOUNT.",
         ),
         buildHeuristicCase(
           matchAll(source, [
             /sender_balance\s*<\s*amount/m,
             /INSUFFICIENT_BALANCE/m,
           ]),
-          'Reject transfers that exceed the sender balance.'
+          "Reject transfers that exceed the sender balance.",
         ),
       ];
-    case 'rust-program-challenge':
+    case "rust-program-challenge":
       return [
         buildHeuristicCase(
           matchAll(source, [
             /Ok\s*\(\s*\(\s*new_sender\s*,\s*new_recipient\s*\)\s*\)/m,
             /new_recipient\s*=\s*recipient_balance\s*\+\s*amount/m,
           ]),
-          'Return the new sender and recipient balances on success.'
+          "Return the new sender and recipient balances on success.",
         ),
         buildHeuristicCase(
           matchAll(source, [
             /sender_balance\s*<\s*total_cost|sender_balance\s*<\s*amount\s*\+\s*fee/m,
             /INSUFFICIENT_BALANCE|Err\s*\(/m,
           ]),
-          'Reject transfers when amount plus fee exceeds the sender balance.'
+          "Reject transfers when amount plus fee exceeds the sender balance.",
         ),
         buildHeuristicCase(
-          /new_sender\s*=\s*sender_balance\s*-\s*total_cost|new_sender\s*=\s*sender_balance\s*-\s*amount\s*-\s*fee/m.test(source),
-          'Subtract both the transfer amount and fee from the sender balance.'
+          /new_sender\s*=\s*sender_balance\s*-\s*total_cost|new_sender\s*=\s*sender_balance\s*-\s*amount\s*-\s*fee/m.test(
+            source,
+          ),
+          "Subtract both the transfer amount and fee from the sender balance.",
         ),
       ];
-    case 'pda-challenge':
+    case "pda-challenge":
       return [
         buildHeuristicCase(
           matchAll(source, [
             /for\s+bump\s+in\s+\(0\.\.=255u8\)\.rev\(\)/m,
             /hash\s*%\s*2\s*==\s*0/m,
           ]),
-          'Search bumps from 255 down until an off-curve hash is found.'
+          "Search bumps from 255 down until an off-curve hash is found.",
         ),
         buildHeuristicCase(
-          /hash_with_bump\s*\(\s*seeds\s*,\s*bump\s*,\s*program_id\s*\)/m.test(source),
-          'Call hash_with_bump with the provided seeds, bump, and program_id.'
+          /hash_with_bump\s*\(\s*seeds\s*,\s*bump\s*,\s*program_id\s*\)/m.test(
+            source,
+          ),
+          "Call hash_with_bump with the provided seeds, bump, and program_id.",
         ),
         buildHeuristicCase(
           /return\s*\(\s*hash\s*,\s*bump\s*\)/m.test(source),
-          'Return the derived hash and bump together.'
+          "Return the derived hash and bump together.",
         ),
       ];
-    case 'your-first-build':
+    case "your-first-build":
       return [
         buildHeuristicCase(
-          hasCounterProgramBase(source) && /pub\s+struct\s+Initialize/m.test(source),
-          'Keep the base Anchor program shell with initialize and Initialize accounts.'
+          hasCounterProgramBase(source) &&
+            /pub\s+struct\s+Initialize/m.test(source),
+          "Keep the base Anchor program shell with initialize and Initialize accounts.",
         ),
       ];
-    case 'add-instruction':
+    case "add-instruction":
       return [
         buildHeuristicCase(
-          hasCounterProgramBase(source) && /pub\s+struct\s+Initialize/m.test(source),
-          'Keep the base Anchor program shell intact.'
+          hasCounterProgramBase(source) &&
+            /pub\s+struct\s+Initialize/m.test(source),
+          "Keep the base Anchor program shell intact.",
         ),
         buildHeuristicCase(
-          /pub\s+fn\s+greet\s*\(\s*_?ctx\s*:\s*Context\s*<\s*Greet\s*>\s*\)\s*->\s*Result\s*<\s*\(\s*\)\s*>/m.test(source),
-          'Add the greet instruction to the program module.'
+          /pub\s+fn\s+greet\s*\(\s*_?ctx\s*:\s*Context\s*<\s*Greet\s*>\s*\)\s*->\s*Result\s*<\s*\(\s*\)\s*>/m.test(
+            source,
+          ),
+          "Add the greet instruction to the program module.",
         ),
         buildHeuristicCase(
           /pub\s+struct\s+Greet/m.test(source),
-          'Define the Greet accounts struct.'
+          "Define the Greet accounts struct.",
         ),
       ];
-    case 'define-counter-account':
+    case "define-counter-account":
       return [
         buildHeuristicCase(
           hasCounterProgramBase(source) &&
             hasInitializeCounterConstraints(source) &&
-            /pub\s+system_program\s*:\s*Program\s*<\s*'info\s*,\s*System\s*>/m.test(source),
-          'Set up Initialize with the Counter PDA and system program.'
+            /pub\s+system_program\s*:\s*Program\s*<\s*'info\s*,\s*System\s*>/m.test(
+              source,
+            ),
+          "Set up Initialize with the Counter PDA and system program.",
         ),
         buildHeuristicCase(
           hasCounterAccountStruct(source),
-          'Define the Counter account struct with count and authority.'
+          "Define the Counter account struct with count and authority.",
         ),
         buildHeuristicCase(
           matchAll(source, [
             /seeds\s*=\s*\[\s*b"counter"\s*,\s*user\.key\(\)\.as_ref\(\)\s*\]/m,
             /bump/m,
           ]),
-          'Add the counter PDA constraints with seeds and bump.'
+          "Add the counter PDA constraints with seeds and bump.",
         ),
       ];
-    case 'wire-up-initialize':
+    case "wire-up-initialize":
       return [
         buildHeuristicCase(
           hasInitializedCounterScaffold(source),
-          'Wire initialize so the Counter account is configured correctly.'
+          "Wire initialize so the Counter account is configured correctly.",
         ),
         buildHeuristicCase(
-          /pub\s+system_program\s*:\s*Program\s*<\s*'info\s*,\s*System\s*>/m.test(source),
-          'Include the system_program account in Initialize.'
+          /pub\s+system_program\s*:\s*Program\s*<\s*'info\s*,\s*System\s*>/m.test(
+            source,
+          ),
+          "Include the system_program account in Initialize.",
         ),
         buildHeuristicCase(
           matchAll(source, [
             /counter\.count\s*=\s*0/m,
             /counter\.authority\s*=\s*ctx\.accounts\.user\.key\(\)/m,
           ]),
-          'Initialize the counter state and authority values.'
+          "Initialize the counter state and authority values.",
         ),
       ];
-    case 'build-increment':
+    case "build-increment":
       return [
         buildHeuristicCase(
           hasInitializedCounterScaffold(source),
-          'Keep the initialized counter scaffold intact before layering increment on top.'
+          "Keep the initialized counter scaffold intact before layering increment on top.",
         ),
         buildHeuristicCase(
           matchAll(source, [
             /pub\s+fn\s+increment\s*\(\s*ctx\s*:\s*Context\s*<\s*Increment\s*>\s*\)\s*->\s*Result\s*<\s*\(\s*\)\s*>/m,
             /counter\.count\s*\+=\s*1/m,
           ]),
-          'Add the increment instruction and mutate the counter.'
+          "Add the increment instruction and mutate the counter.",
         ),
         buildHeuristicCase(
           hasIncrementStruct(source),
-          'Define the Increment accounts struct with a mutable counter account.'
+          "Define the Increment accounts struct with a mutable counter account.",
         ),
       ];
-    case 'complete-counter-program':
+    case "complete-counter-program":
       return [
         buildHeuristicCase(
           hasFullCounterFlow(source) &&
             hasIncrementStruct(source) &&
             hasDecrementStruct(source) &&
             /pub\s+fn\s+decrement\s*\(/m.test(source),
-          'Keep the full counter program wired with initialize, increment, and decrement.'
+          "Keep the full counter program wired with initialize, increment, and decrement.",
         ),
         buildHeuristicCase(
           matchAll(source, [
@@ -890,15 +938,15 @@ function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult
             /require!\s*\(\s*counter\.count\s*>\s*0\s*,\s*ErrorCode::Underflow\s*\)/m,
             /counter\.count\s*-=\s*1/m,
           ]),
-          'Add decrement with an explicit underflow guard.'
+          "Add decrement with an explicit underflow guard.",
         ),
         buildHeuristicCase(
           /enum\s+ErrorCode[\s\S]*Underflow/m.test(source),
-          'Define the ErrorCode enum with the Underflow variant.'
+          "Define the ErrorCode enum with the Underflow variant.",
         ),
       ];
-    case 'deploy-to-devnet':
-    case 'deploy-program-devnet':
+    case "deploy-to-devnet":
+    case "deploy-program-devnet":
       return [
         buildHeuristicCase(
           hasFullCounterFlow(source) &&
@@ -906,7 +954,7 @@ function buildRustHeuristicCases(unit: AcademyV2UnitDetail): HeuristicCaseResult
             hasDecrementStruct(source) &&
             /enum\s+ErrorCode[\s\S]*Underflow/m.test(source) &&
             /pub\s+fn\s+decrement\s*\(/m.test(source),
-          'Keep the counter program structurally complete before the real deploy/build step.'
+          "Keep the counter program structurally complete before the real deploy/build step.",
         ),
       ];
     default:
@@ -920,10 +968,12 @@ function buildHeuristicReport(
   primaryFunction: string | null,
   caseResults: HeuristicCaseResult[],
   successMessage: string,
-  failureMessage: string
+  failureMessage: string,
 ): ChallengeRunReport {
   const cases: ChallengeRunCase[] = unit.tests.map((test, index) => {
-    const result = caseResults[index] || buildHeuristicCase(false, 'No verifier matched this check.');
+    const result =
+      caseResults[index] ||
+      buildHeuristicCase(false, "No verifier matched this check.");
     return {
       id: test.id,
       description: test.description,
@@ -956,26 +1006,37 @@ function buildHeuristicReport(
   };
 }
 
-function buildRustRuntimeMessage(unit: AcademyV2UnitDetail, allPassed: boolean) {
-  if (unit.build_type === 'buildable') {
+function buildRustRuntimeMessage(
+  unit: AcademyV2UnitDetail,
+  allPassed: boolean,
+) {
+  if (unit.build_type === "buildable") {
     return allPassed
-      ? 'Scaffold verification passed. The required Anchor structure is present, but this is still not a real cargo or anchor build.'
-      : 'Some scaffold checks are still failing. These checks validate required Anchor structure locally, not a real cargo or anchor build.';
+      ? "Scaffold verification passed. The required Anchor structure is present, but this is still not a real cargo or anchor build."
+      : "Some scaffold checks are still failing. These checks validate required Anchor structure locally, not a real cargo or anchor build.";
   }
 
   return allPassed
-    ? 'Guided Rust checks passed for this draft. Core logic and structure look complete for this lesson.'
-    : 'Some guided Rust checks are still failing. These checks validate lesson logic locally, not a real cargo build.';
+    ? "Guided Rust checks passed for this draft. Core logic and structure look complete for this lesson."
+    : "Some guided Rust checks are still failing. These checks validate lesson logic locally, not a real cargo build.";
 }
 
-function runRustHeuristicChallenge(unit: AcademyV2UnitDetail): ChallengeRunReport | null {
-  if (unit.language !== 'rust' || !unit.tests.length) {
+function runRustHeuristicChallenge(
+  unit: AcademyV2UnitDetail,
+): ChallengeRunReport | null {
+  if (unit.language !== "rust" || !unit.tests.length) {
     return null;
   }
 
-  if (unit.solution && normalizeChallengeSource(unit.code) === normalizeChallengeSource(unit.solution)) {
+  if (
+    unit.solution &&
+    normalizeChallengeSource(unit.code) ===
+      normalizeChallengeSource(unit.solution)
+  ) {
     const runtimeLabel =
-      unit.build_type === 'buildable' ? 'Rust scaffold verifier' : 'Guided Rust verifier';
+      unit.build_type === "buildable"
+        ? "Rust scaffold verifier"
+        : "Guided Rust verifier";
 
     return buildHeuristicReport(
       unit,
@@ -983,7 +1044,7 @@ function runRustHeuristicChallenge(unit: AcademyV2UnitDetail): ChallengeRunRepor
       extractRustPrimaryFunctionName(unit.code),
       unit.tests.map(() => buildHeuristicCase(true, undefined)),
       buildRustRuntimeMessage(unit, true),
-      buildRustRuntimeMessage(unit, false)
+      buildRustRuntimeMessage(unit, false),
     );
   }
 
@@ -993,7 +1054,9 @@ function runRustHeuristicChallenge(unit: AcademyV2UnitDetail): ChallengeRunRepor
   }
 
   const runtimeLabel =
-    unit.build_type === 'buildable' ? 'Rust scaffold verifier' : 'Guided Rust verifier';
+    unit.build_type === "buildable"
+      ? "Rust scaffold verifier"
+      : "Guided Rust verifier";
   const primaryFunction = extractRustPrimaryFunctionName(unit.code);
   const successMessage = buildRustRuntimeMessage(unit, true);
   const failureMessage = buildRustRuntimeMessage(unit, false);
@@ -1004,7 +1067,7 @@ function runRustHeuristicChallenge(unit: AcademyV2UnitDetail): ChallengeRunRepor
     primaryFunction,
     caseResults,
     successMessage,
-    failureMessage
+    failureMessage,
   );
 }
 
@@ -1012,8 +1075,14 @@ export function canRunAcademyChallenge(unit: AcademyV2UnitDetail) {
   return isSupportedJsLikeChallenge(unit) || !!runRustHeuristicChallenge(unit);
 }
 
-export async function runAcademyChallenge(unit: AcademyV2UnitDetail): Promise<ChallengeRunReport> {
-  if (unit.solution && normalizeChallengeSource(unit.code) === normalizeChallengeSource(unit.solution)) {
+export async function runAcademyChallenge(
+  unit: AcademyV2UnitDetail,
+): Promise<ChallengeRunReport> {
+  if (
+    unit.solution &&
+    normalizeChallengeSource(unit.code) ===
+      normalizeChallengeSource(unit.solution)
+  ) {
     const cases: ChallengeRunCase[] = unit.tests.map((test) => ({
       id: test.id,
       description: test.description,
@@ -1024,13 +1093,15 @@ export async function runAcademyChallenge(unit: AcademyV2UnitDetail): Promise<Ch
     const visibleCases = cases.filter((item) => item.hidden !== true);
     const hiddenCases = cases.filter((item) => item.hidden === true);
     const primaryFunction =
-      unit.language === 'rust' ? extractRustPrimaryFunctionName(unit.code) : extractPrimaryFunctionName(unit.code);
+      unit.language === "rust"
+        ? extractRustPrimaryFunctionName(unit.code)
+        : extractPrimaryFunctionName(unit.code);
     const runtimeLabel =
-      unit.language === 'rust'
-        ? unit.build_type === 'buildable'
-          ? 'Rust scaffold verifier'
-          : 'Guided Rust verifier'
-        : 'Browser challenge runner';
+      unit.language === "rust"
+        ? unit.build_type === "buildable"
+          ? "Rust scaffold verifier"
+          : "Guided Rust verifier"
+        : "Browser challenge runner";
 
     return {
       supported: true,
@@ -1043,7 +1114,8 @@ export async function runAcademyChallenge(unit: AcademyV2UnitDetail): Promise<Ch
       hiddenTotalCount: hiddenCases.length,
       primaryFunction,
       runtimeLabel,
-      message: 'The submitted source matches the reference solution for this challenge.',
+      message:
+        "The submitted source matches the reference solution for this challenge.",
       cases,
     };
   }
@@ -1060,15 +1132,18 @@ export async function runAcademyChallenge(unit: AcademyV2UnitDetail): Promise<Ch
       passedCount: 0,
       totalCount: unit.tests.length,
       visiblePassedCount: 0,
-      visibleTotalCount: unit.tests.filter((item) => item.hidden !== true).length,
+      visibleTotalCount: unit.tests.filter((item) => item.hidden !== true)
+        .length,
       hiddenPassedCount: 0,
-      hiddenTotalCount: unit.tests.filter((item) => item.hidden === true).length,
+      hiddenTotalCount: unit.tests.filter((item) => item.hidden === true)
+        .length,
       primaryFunction: null,
-      runtimeLabel: unit.language === 'rust' ? 'Guided Rust lab' : 'Guided practice',
+      runtimeLabel:
+        unit.language === "rust" ? "Guided Rust lab" : "Guided practice",
       message:
-        unit.language === 'rust'
-          ? 'This challenge is a guided Rust lab for now. Browser execution is not enabled yet.'
-          : 'This practice unit does not have an executable browser runner yet.',
+        unit.language === "rust"
+          ? "This challenge is a guided Rust lab for now. Browser execution is not enabled yet."
+          : "This practice unit does not have an executable browser runner yet.",
       cases: [],
     };
   }
@@ -1081,12 +1156,15 @@ export async function runAcademyChallenge(unit: AcademyV2UnitDetail): Promise<Ch
       passedCount: 0,
       totalCount: unit.tests.length,
       visiblePassedCount: 0,
-      visibleTotalCount: unit.tests.filter((item) => item.hidden !== true).length,
+      visibleTotalCount: unit.tests.filter((item) => item.hidden !== true)
+        .length,
       hiddenPassedCount: 0,
-      hiddenTotalCount: unit.tests.filter((item) => item.hidden === true).length,
+      hiddenTotalCount: unit.tests.filter((item) => item.hidden === true)
+        .length,
       primaryFunction: null,
-      runtimeLabel: 'Unsupported challenge',
-      message: 'No runnable primary function could be detected in this challenge source.',
+      runtimeLabel: "Unsupported challenge",
+      message:
+        "No runnable primary function could be detected in this challenge source.",
       cases: [],
     };
   }
@@ -1096,14 +1174,18 @@ export async function runAcademyChallenge(unit: AcademyV2UnitDetail): Promise<Ch
 
   for (const test of unit.tests) {
     try {
-      const result = await executePrimaryFunction(sanitizedCode, primaryFunction, test.input || '');
-      const passed = evaluateExpectedOutput(test.expectedOutput || '', result);
+      const result = await executePrimaryFunction(
+        sanitizedCode,
+        primaryFunction,
+        test.input || "",
+      );
+      const passed = evaluateExpectedOutput(test.expectedOutput || "", result);
       cases.push({
         id: test.id,
         description: test.description,
         hidden: test.hidden === true,
         passed,
-        error: passed ? undefined : 'Expected output check failed.',
+        error: passed ? undefined : "Expected output check failed.",
       });
     } catch (error: any) {
       cases.push({
@@ -1111,7 +1193,7 @@ export async function runAcademyChallenge(unit: AcademyV2UnitDetail): Promise<Ch
         description: test.description,
         hidden: test.hidden === true,
         passed: false,
-        error: error?.message || 'Challenge execution failed.',
+        error: error?.message || "Challenge execution failed.",
       });
     }
   }
@@ -1133,10 +1215,10 @@ export async function runAcademyChallenge(unit: AcademyV2UnitDetail): Promise<Ch
     hiddenPassedCount,
     hiddenTotalCount: hiddenCases.length,
     primaryFunction,
-    runtimeLabel: 'Browser challenge runner',
+    runtimeLabel: "Browser challenge runner",
     message: allPassed
-      ? 'All visible and hidden checks passed for this challenge.'
-      : 'Some checks are still failing. Fix the code and run the challenge again.',
+      ? "All visible and hidden checks passed for this challenge."
+      : "Some checks are still failing. Fix the code and run the challenge again.",
     cases,
   };
 }
