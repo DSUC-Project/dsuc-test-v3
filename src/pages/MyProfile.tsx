@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -85,7 +86,7 @@ export function MyProfile() {
 
   const handleSaveAll = async () => {
     if (isOnboarding && !hasProfileBasics) {
-      alert('Please complete basic profile information: name and at least one skill or social link.');
+      toast.error('Please complete basic profile information: name and at least one skill or social link.');
       return;
     }
 
@@ -123,13 +124,13 @@ export function MyProfile() {
       }
       setIsEditingSocials(false);
       setIsEditingBank(false);
-      alert('Profile updated successfully');
+      toast.success('Profile updated successfully');
       if (isOnboarding) {
         navigate('/home', { replace: true });
       }
     } catch (err) {
       console.error('[MyProfile] Save failed:', err);
-      alert('Failed to update profile. Please check console.');
+      toast.error('Failed to update profile. Please check console.');
     }
   };
 
@@ -140,7 +141,7 @@ export function MyProfile() {
       });
       setIsEditingSocials(false);
     } catch (err) {
-       alert('Failed to update social links.');
+       toast.error('Failed to update social links.');
     }
   };
 
@@ -159,7 +160,7 @@ export function MyProfile() {
       });
       setIsEditingBank(false);
     } catch (err) {
-       alert('Failed to update bank account.');
+       toast.error('Failed to update bank account.');
     }
   };
 
@@ -191,7 +192,7 @@ export function MyProfile() {
       };
       await linkGoogleAccount(googleUserInfo);
     } catch (error) {
-      alert('Failed to link Google account. Please try again.');
+      toast.error('Failed to link Google account. Please try again.');
     } finally {
       setIsLinkingGoogle(false);
     }
@@ -225,13 +226,13 @@ export function MyProfile() {
         <div className="flex items-center gap-4 w-full md:w-auto">
           <button
             onClick={handleLogout}
-            className="flex-1 md:flex-none brutal-btn bg-red-500 text-white hover:bg-red-600 font-bold text-xs uppercase tracking-wider px-6 py-4 flex items-center justify-center gap-2 transition-colors border brutal-border shadow-sm"
+            className="flex-1 md:flex-none  bg-red-500 text-white hover:bg-red-600 font-bold text-xs uppercase tracking-wider px-6 py-4 flex items-center justify-center gap-2 transition-colors border brutal-border shadow-sm"
           >
             <LogOut size={20} /> Log Out
           </button>
           <button
             onClick={handleSaveAll}
-            className="flex-1 md:flex-none brutal-btn bg-primary hover:opacity-90 text-main-bg font-bold text-xs px-6 py-4 flex items-center justify-center gap-2 transition-all uppercase tracking-wider border brutal-border shadow-sm"
+            className="flex-1 md:flex-none  bg-primary hover:opacity-90 text-main-bg font-bold text-xs px-6 py-4 flex items-center justify-center gap-2 transition-all uppercase tracking-wider border brutal-border shadow-sm"
           >
             <Save size={20} /> Save Changes
           </button>
@@ -247,7 +248,7 @@ export function MyProfile() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-surface border brutal-border p-8 shadow-neo relative group overflow-hidden brutal-card"
+            className="bg-surface border brutal-border p-8 shadow-sm relative group overflow-hidden "
           >
             <div className="flex flex-col items-center relative z-10">
               <div className="w-32 h-32 p-1 border brutal-border mb-6 relative group/avatar bg-primary/10 shadow-sm transition-transform duration-500 hover:scale-105">
@@ -324,14 +325,14 @@ export function MyProfile() {
               {!isEditingSocials ? (
                 <button
                   onClick={() => setIsEditingSocials(true)}
-                  className="p-2 border brutal-border bg-primary text-main-bg hover:opacity-90 transition-colors shadow-sm brutal-btn"
+                  className="p-2 border brutal-border bg-primary text-main-bg hover:opacity-90 transition-colors shadow-sm "
                 >
                   <Edit2 size={18} />
                 </button>
               ) : (
                 <button
                   onClick={handleSaveSocials}
-                  className="bg-primary border brutal-border text-main-bg font-bold text-xs uppercase tracking-wider px-4 py-2 shadow-sm hover:opacity-90 transition-colors brutal-btn"
+                  className="bg-primary border brutal-border text-main-bg font-bold text-xs uppercase tracking-wider px-4 py-2 shadow-sm hover:opacity-90 transition-colors "
                 >
                   Save
                 </button>
@@ -390,7 +391,7 @@ export function MyProfile() {
                 </h3>
                 <p className="text-text-muted font-bold text-sm mt-2">Overview of your learning journey and achievements.</p>
               </div>
-              <button onClick={() => navigate('/academy')} className="group flex items-center justify-center gap-2 bg-primary hover:opacity-90 text-main-bg border brutal-border shadow-sm px-6 py-4 font-bold text-xs uppercase tracking-wider transition-all brutal-btn">
+              <button onClick={() => navigate('/academy')} className="group flex items-center justify-center gap-2 bg-primary hover:opacity-90 text-main-bg border brutal-border shadow-sm px-6 py-4 font-bold text-xs uppercase tracking-wider transition-all ">
                 Go to Academy <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform border-l-2 border-current pl-1" />
               </button>
             </div>
@@ -437,14 +438,14 @@ export function MyProfile() {
                 {!isEditingBank ? (
                   <button
                     onClick={() => setIsEditingBank(true)}
-                    className="p-3 border brutal-border bg-primary text-main-bg hover:opacity-90 transition-colors shadow-sm brutal-btn"
+                    className="p-3 border brutal-border bg-primary text-main-bg hover:opacity-90 transition-colors shadow-sm "
                   >
                     <Edit2 size={24} />
                   </button>
                 ) : (
                   <button
                     onClick={handleSaveBank}
-                    className="bg-primary border brutal-border text-main-bg font-bold text-xs uppercase tracking-wider px-6 py-4 shadow-sm hover:opacity-90 transition-colors brutal-btn"
+                    className="bg-primary border brutal-border text-main-bg font-bold text-xs uppercase tracking-wider px-6 py-4 shadow-sm hover:opacity-90 transition-colors "
                   >
                     Save Bank
                   </button>
@@ -575,7 +576,7 @@ export function MyProfile() {
                       <div className="bg-surface p-1 shadow-sm border brutal-border inline-block">
                         <GoogleLogin
                           onSuccess={handleGoogleLinkSuccess}
-                          onError={() => alert('Failed')}
+                          onError={() => toast.error('Failed')}
                           useOneTap={false}
                           theme="outline"
                           size="medium"

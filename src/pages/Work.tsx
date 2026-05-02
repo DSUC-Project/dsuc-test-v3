@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { motion } from 'motion/react';
@@ -15,12 +16,12 @@ export function Work() {
 
   const handleAddClick = () => {
     if (!currentUser) {
-      alert('Vui lòng đăng nhập trước!');
+      toast('Vui lòng đăng nhập trước!');
       return;
     }
 
     if (!canManage) {
-      alert('Tài khoản cộng đồng không thể tạo dự án/nhiệm vụ.');
+      toast('Tài khoản cộng đồng không thể tạo dự án/nhiệm vụ.');
       return;
     }
     setIsModalOpen(true);

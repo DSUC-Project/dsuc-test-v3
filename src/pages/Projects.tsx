@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useState } from 'react';
 import { SectionHeader, SoftBrutalCard, ActionButton, StatusBadge } from '@/components/ui/Primitives';
 import { useStore } from '@/store/useStore';
@@ -100,11 +101,11 @@ export function Projects() {
 
   const handleAddClick = () => {
     if (!currentUser) {
-      alert('Vui lòng đăng nhập trước!');
+      toast('Vui lòng đăng nhập trước!');
       return;
     }
     if (!canManage) {
-      alert('Tài khoản cộng đồng không thể tạo dự án.');
+      toast('Tài khoản cộng đồng không thể tạo dự án.');
       return;
     }
     setIsAddModalOpen(true);

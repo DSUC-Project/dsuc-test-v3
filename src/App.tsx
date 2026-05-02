@@ -38,6 +38,8 @@ function LegacyCommunityLessonRedirect() {
   return <Navigate to={`/academy/community/${track}/${lesson}`} replace />;
 }
 
+import { Toaster } from 'react-hot-toast';
+
 export default function App() {
   const warmupBackend = useStore((state) => state.warmupBackend);
   const fetchMembers = useStore((state) => state.fetchMembers);
@@ -97,6 +99,7 @@ export default function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <BrowserRouter>
+        <Toaster position="bottom-right" toastOptions={{ className: 'border border-border-main shadow-sm', style: { borderRadius: '0' } }} />
         <Routes>
           <Route element={<PageShell />}>
             <Route path="/" element={<Navigate to="/home" replace />} />

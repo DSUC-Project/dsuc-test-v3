@@ -6,7 +6,7 @@ import { motion } from 'motion/react';
 
 export const PaperPanel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => {
   return (
-    <div ref={ref} className={cn("bg-surface border brutal-border p-6", className)} {...props} />
+    <div ref={ref} className={cn("bg-surface border border-border-main rounded-xl p-6", className)} {...props} />
   )
 });
 PaperPanel.displayName = 'PaperPanel';
@@ -17,7 +17,7 @@ export const SoftBrutalCard = React.forwardRef<HTMLDivElement, React.HTMLAttribu
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
       ref={ref} 
-      className={cn("bg-surface border brutal-border brutal-shadow-sm p-6 overflow-hidden", className)} 
+      className={cn("bg-surface border border-border-main shadow-sm rounded-xl p-6 overflow-hidden", className)} 
       {...(props as any)} 
     />
   )
@@ -28,12 +28,12 @@ interface ActionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
   variant?: 'primary' | 'secondary' | 'danger' | 'success';
 }
 export const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(({ className, variant = 'primary', ...props }, ref) => {
-  const base = "px-4 py-2 font-bold uppercase tracking-wider text-sm transition-all border brutal-border active:translate-y-0 active:shadow-none";
+  const base = "px-4 py-2 font-bold uppercase tracking-wider text-sm transition-all border border-border-main rounded-xl active:scale-95";
   let variants = {
-    primary: "bg-primary text-main-bg brutal-shadow-sm hover:-translate-y-1 hover:shadow-[4px_4px_0_0_var(--shadow-brutal-color)]",
-    secondary: "bg-surface text-text-main brutal-shadow-sm hover:bg-main-bg hover:-translate-y-1 hover:shadow-[4px_4px_0_0_var(--shadow-brutal-color)]",
-    danger: "bg-red-500 text-main-bg brutal-shadow-sm hover:-translate-y-1 hover:shadow-[4px_4px_0_0_var(--shadow-brutal-color)]",
-    success: "bg-emerald-500 text-main-bg brutal-shadow-sm hover:-translate-y-1 hover:shadow-[4px_4px_0_0_var(--shadow-brutal-color)]",
+    primary: "bg-primary text-white shadow-sm hover:shadow-md hover:bg-primary/90",
+    secondary: "bg-surface text-text-main shadow-sm hover:bg-main-bg hover:shadow-md",
+    danger: "bg-red-500 text-white shadow-sm hover:shadow-md hover:bg-red-600",
+    success: "bg-emerald-500 text-white shadow-sm hover:shadow-md hover:bg-emerald-600",
   }
   return (
     <button ref={ref} className={cn(base, variants[variant], className)} {...props} />
@@ -43,7 +43,7 @@ ActionButton.displayName = 'ActionButton';
 
 export const StatusBadge = ({ status, className }: { status: string, className?: string }) => {
   return (
-    <span className={cn("inline-flex items-center px-2 py-0.5 border brutal-border font-mono text-[10px] uppercase tracking-widest bg-main-bg", className)}>
+    <span className={cn("inline-flex items-center px-3 py-1 rounded-full border border-border-main font-mono text-xs font-medium uppercase bg-surface text-text-muted", className)}>
       {status}
     </span>
   )
@@ -58,9 +58,9 @@ interface SectionHeaderProps {
 }
 
 export const SectionHeader = ({ title, showNumber = false, number, subtitle, className }: SectionHeaderProps) => (
-  <div className={cn("mb-8 border-b brutal-border pb-4 flex items-end gap-4", className)}>
+  <div className={cn("mb-8 border-b border-border-main pb-4 flex items-end gap-4", className)}>
     {showNumber && number && (
-      <span className="font-display text-3xl text-text-muted/30">{number}</span>
+      <span className="font-heading text-3xl text-text-muted/30">{number}</span>
     )}
     <div>
       <h2 className="font-heading text-2xl md:text-3xl font-bold uppercase tracking-tight">{title}</h2>

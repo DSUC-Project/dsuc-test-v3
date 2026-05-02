@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -18,7 +19,7 @@ export function ProjectDetail() {
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
-    alert('Link Copied to Clipboard');
+    toast('Link Copied to Clipboard');
   };
 
   return (

@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -309,7 +310,7 @@ export function Admin() {
 
       await refresh();
     } catch (error: any) {
-      alert(error.message || 'Failed to update user');
+      toast(error.message || 'Failed to update user');
     } finally {
       setSavingId(null);
     }
@@ -348,7 +349,7 @@ export function Admin() {
       });
       await refresh();
     } catch (error: any) {
-      alert(error.message || 'Failed to create user');
+      toast(error.message || 'Failed to create user');
     }
   };
 
@@ -373,7 +374,7 @@ export function Admin() {
 
       await refresh();
     } catch (error: any) {
-      alert(error.message || 'Failed to delete user');
+      toast(error.message || 'Failed to delete user');
     } finally {
       setDeletingKey(null);
     }
@@ -409,7 +410,7 @@ export function Admin() {
 
       await refresh();
     } catch (error: any) {
-      alert(error.message || 'Failed to update status');
+      toast(error.message || 'Failed to update status');
     } finally {
       setStatusSavingKey(null);
     }
@@ -436,7 +437,7 @@ export function Admin() {
 
       await refresh();
     } catch (error: any) {
-      alert(error.message || 'Failed to delete content');
+      toast(error.message || 'Failed to delete content');
     } finally {
       setDeletingKey(null);
     }
@@ -459,7 +460,7 @@ export function Admin() {
 
       await refresh();
     } catch (error: any) {
-      alert(error.message || 'Finance action failed');
+      toast(error.message || 'Finance action failed');
     } finally {
       setFinanceActionId(null);
     }
@@ -481,7 +482,7 @@ export function Admin() {
   const createAgentKey = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newAgentKeyName.trim()) {
-      alert('Key name is required');
+      toast('Key name is required');
       return;
     }
 
@@ -510,7 +511,7 @@ export function Admin() {
       setNewAgentKeyScopes('*');
       await refresh();
     } catch (error: any) {
-      alert(error.message || 'Failed to create agent key');
+      toast(error.message || 'Failed to create agent key');
     } finally {
       setAgentKeySaving(false);
     }
@@ -544,7 +545,7 @@ export function Admin() {
 
       await refresh();
     } catch (error: any) {
-      alert(error.message || 'Failed to update agent key');
+      toast(error.message || 'Failed to update agent key');
     } finally {
       setAgentKeyActionId(null);
     }
@@ -574,7 +575,7 @@ export function Admin() {
       setRotatedAgentKey(result?.key || '');
       await refresh();
     } catch (error: any) {
-      alert(error.message || 'Failed to rotate agent key');
+      toast(error.message || 'Failed to rotate agent key');
     } finally {
       setAgentKeyActionId(null);
     }
@@ -602,7 +603,7 @@ export function Admin() {
 
       await refresh();
     } catch (error: any) {
-      alert(error.message || 'Failed to delete agent key');
+      toast(error.message || 'Failed to delete agent key');
     } finally {
       setAgentKeyActionId(null);
     }
@@ -615,9 +616,9 @@ export function Admin() {
 
     try {
       await navigator.clipboard.writeText(value);
-      alert('Copied to clipboard');
+      toast('Copied to clipboard');
     } catch {
-      alert('Copy failed. Please copy manually.');
+      toast.error('Copy failed. Please copy manually.');
     }
   };
 

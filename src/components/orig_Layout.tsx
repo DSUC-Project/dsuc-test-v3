@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -510,7 +511,7 @@ function WalletModal({
       }
     } catch (error) {
       console.error('[GoogleLogin] Error:', error);
-      alert('Google login failed. Please try again.');
+      toast.error('Google login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -518,7 +519,7 @@ function WalletModal({
 
   const handleGoogleError = () => {
     console.error('[GoogleLogin] Google login failed');
-    alert('Google login failed. Please try again.');
+    toast.error('Google login failed. Please try again.');
   };
 
   if (!isOpen) return null;

@@ -57,47 +57,40 @@ function heading<Tag extends 'h1' | 'h2' | 'h3' | 'h4'>(tag: Tag, className: str
 const markdownComponents: Components = {
   h1: heading(
     'h1',
-    'mt-8 mb-4 decoration-brutal-yellow underline decoration-4 underline-offset-8 text-3xl font-display font-black uppercase tracking-widest text-brutal-black first:mt-0 sm:text-4xl'
+    'mt-8 mb-4 border-b border-border-main pb-2 text-3xl font-heading font-bold uppercase tracking-tight text-text-main first:mt-0 sm:text-4xl'
   ),
   h2: heading(
     'h2',
-    'mt-8 mb-4 border-l-8 border-brutal-black bg-brutal-blue px-4 py-2 text-2xl font-display font-black uppercase tracking-wider text-brutal-black first:mt-0 sm:text-3xl shadow-neo-sm'
+    'mt-8 mb-4 border-b border-border-main pb-2 text-2xl font-heading font-bold text-text-main first:mt-0 sm:text-3xl'
   ),
   h3: heading(
     'h3',
-    'mt-6 mb-3 text-xl font-display font-black uppercase tracking-wide text-brutal-black sm:text-2xl flex items-center gap-2 before:content-[""] before:w-3 before:h-3 before:bg-brutal-pink before:border-2 before:border-brutal-black'
+    'mt-6 mb-3 text-xl font-heading font-bold text-text-main sm:text-2xl'
   ),
   h4: heading(
     'h4',
-    'mt-5 mb-2 text-lg font-display font-black uppercase tracking-wide text-brutal-black sm:text-xl'
+    'mt-5 mb-2 text-lg font-heading font-bold text-text-main sm:text-xl'
   ),
   p: ({ children }) => (
-    <p className="mt-4 mb-4 text-base font-bold text-gray-800 first:mt-0 sm:text-lg">
+    <p className="mt-4 mb-4 text-base leading-relaxed text-text-muted first:mt-0 sm:text-lg">
       {children}
     </p>
   ),
-  strong: ({ children }) => <strong className="font-black text-brutal-black bg-brutal-yellow px-1 border-2 border-brutal-black">{children}</strong>,
-  em: ({ children }) => <em className="italic font-bold text-brutal-blue">{children}</em>,
+  strong: ({ children }) => <strong className="font-bold text-text-main">{children}</strong>,
+  em: ({ children }) => <em className="italic text-text-muted">{children}</em>,
   ul: ({ children }) => (
-    <ul className="mt-4 mb-4 list-none space-y-2 pl-4 text-base font-bold text-gray-800 sm:text-lg border-l-4 border-brutal-black">
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
-          return React.cloneElement(child, {
-            className: `${(child.props as any).className || ''} relative before:content-[""] before:absolute before:-left-[18px] before:top-2.5 before:w-2 before:h-2 before:bg-brutal-black`
-          } as any);
-        }
-        return child;
-      })}
+    <ul className="mt-4 mb-4 list-disc space-y-2 pl-6 text-base text-text-muted sm:text-lg">
+      {children}
     </ul>
   ),
   ol: ({ children }) => (
-    <ol className="mt-4 mb-4 list-decimal space-y-2 pl-6 text-base font-bold text-gray-800 marker:font-black marker:text-brutal-black sm:text-lg">
+    <ol className="mt-4 mb-4 list-decimal space-y-2 pl-6 text-base text-text-muted marker:font-bold marker:text-text-muted sm:text-lg">
       {children}
     </ol>
   ),
   li: ({ children, className }) => <li className={`pl-2 ${className || ''}`}>{children}</li>,
   blockquote: ({ children }) => (
-    <blockquote className="mt-5 mb-5 border-4 border-brutal-black bg-brutal-yellow p-5 text-lg font-black text-brutal-black shadow-neo-sm">
+    <blockquote className="mt-5 mb-5 border-l-4 border-primary bg-surface p-5 text-lg italic text-text-muted">
       {children}
     </blockquote>
   ),
@@ -106,28 +99,28 @@ const markdownComponents: Components = {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="font-black text-white bg-brutal-blue border-b-4 border-brutal-black hover:bg-brutal-pink px-1 transition-colors hover:-translate-y-1 inline-block"
+      className="font-medium text-primary underline underline-offset-4 hover:text-primary/80 transition-colors"
     >
       {children}
     </a>
   ),
-  hr: () => <hr className="my-8 border-[2px] border-brutal-black border-dashed" />,
+  hr: () => <hr className="my-8 border-t border-border-main" />,
   table: ({ children }) => (
-    <div className="my-6 overflow-x-auto border-4 border-brutal-black bg-white shadow-neo">
-      <table className="min-w-full border-collapse text-left text-sm font-bold text-brutal-black">
+    <div className="my-6 overflow-x-auto rounded-lg border border-border-main bg-surface shadow-sm">
+      <table className="min-w-full border-collapse text-left text-sm text-text-main">
         {children}
       </table>
     </div>
   ),
-  thead: ({ children }) => <thead className="bg-brutal-blue border-b-4 border-brutal-black">{children}</thead>,
-  tbody: ({ children }) => <tbody className="divide-y-4 divide-brutal-black">{children}</tbody>,
-  tr: ({ children }) => <tr className="align-top hover:bg-brutal-yellow/50 transition-colors">{children}</tr>,
+  thead: ({ children }) => <thead className="bg-main-bg border-b border-border-main">{children}</thead>,
+  tbody: ({ children }) => <tbody className="divide-y divide-border-main">{children}</tbody>,
+  tr: ({ children }) => <tr className="align-top hover:bg-main-bg/50 transition-colors">{children}</tr>,
   th: ({ children }) => (
-    <th className="border-r-4 border-brutal-black last:border-r-0 px-4 py-3 font-display text-sm font-black uppercase tracking-wider text-white">
+    <th className="px-4 py-3 font-mono text-xs font-bold uppercase tracking-wider text-text-muted">
       {children}
     </th>
   ),
-  td: ({ children }) => <td className="px-4 py-3 border-r-4 border-brutal-black last:border-r-0 text-base">{children}</td>,
+  td: ({ children }) => <td className="px-4 py-3 text-base">{children}</td>,
   pre: ({ children }) => (
     <div className="my-6">
       <CodeSurface code={rawTextFromChildren(children)} label="lesson code" />
@@ -137,8 +130,8 @@ const markdownComponents: Components = {
     const content = String(children).replace(/\n$/, '');
     if (props.inline) {
       return (
-        <code className="border-2 border-brutal-black bg-gray-200 px-1.5 py-0.5 font-mono text-sm font-bold text-brutal-pink">
-          {content}
+        <code className="rounded border border-border-main bg-surface px-1.5 py-0.5 font-mono text-sm text-text-main">
+           {content}
         </code>
       );
     }
@@ -153,12 +146,12 @@ const markdownComponents: Components = {
           checked={checked}
           readOnly
           disabled
-          className="mr-2 h-4 w-4 appearance-none border-2 border-brutal-black checked:bg-brutal-blue checked:focus:bg-brutal-blue relative checked:before:content-['✓'] checked:before:absolute checked:before:text-white checked:before:text-xs checked:before:font-black checked:before:left-0.5 checked:before:-top-0.5"
+          className="mr-2 h-4 w-4 rounded border-border-main text-primary focus:ring-primary"
         />
       );
     }
 
-    return <input type={type} checked={checked} readOnly disabled className="border-2 border-brutal-black" />;
+    return <input type={type} checked={checked} readOnly disabled className="border-border-main rounded" />;
   },
 };
 

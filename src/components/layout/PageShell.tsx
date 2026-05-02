@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
@@ -152,7 +153,7 @@ function RealAuthModal({
       if (success) onClose();
     } catch (error) {
       console.error('[GoogleLogin] Error:', error);
-      alert('Google login failed. Please try again.');
+      toast.error('Google login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -215,7 +216,7 @@ function RealAuthModal({
               <div className="w-full flex flex-col items-center">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
-                  onError={() => alert('Google login failed')}
+                  onError={() => toast.error('Google login failed')}
                   useOneTap={false}
                   theme="outline"
                   size="large"

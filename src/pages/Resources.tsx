@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useEffect, useState } from 'react';
 import { FileText, Folder, Link as LinkIcon, Video, ExternalLink, Search, Plus, X } from 'lucide-react';
 import { SectionHeader, SoftBrutalCard, StatusBadge, ActionButton } from '@/components/ui/Primitives';
@@ -134,11 +135,11 @@ export function Resources() {
 
   const handleAddClick = () => {
     if (!currentUser) {
-      alert('Vui lòng đăng nhập trước!');
+      toast('Vui lòng đăng nhập trước!');
       return;
     }
     if (!canManage) {
-      alert('Tài khoản cộng đồng không thể thêm tài nguyên.');
+      toast('Tài khoản cộng đồng không thể thêm tài nguyên.');
       return;
     }
     setIsModalOpen(true);

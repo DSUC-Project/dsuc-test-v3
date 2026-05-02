@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import React, { useState } from 'react';
 import { SectionHeader, SoftBrutalCard, StatusBadge, ActionButton } from '@/components/ui/Primitives';
 import { useStore } from '@/store/useStore';
@@ -102,11 +103,11 @@ export function Events() {
 
   const handleAddClick = () => {
     if (!currentUser) {
-      alert('Please log in first!');
+      toast.error('Please log in first!');
       return;
     }
     if (!canManage) {
-      alert('Community accounts cannot create events.');
+      toast.error('Community accounts cannot create events.');
       return;
     }
     setIsModalOpen(true);

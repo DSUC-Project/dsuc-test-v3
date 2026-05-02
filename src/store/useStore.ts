@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { create } from "zustand";
 import {
   FinanceRequest,
@@ -416,7 +417,7 @@ export const useStore = create<AppState>((set, get) => ({
         }
       } else {
         console.warn("Wallet provider not found");
-        alert(
+        toast(
           `${provider} is not installed or not available. Please install the ${provider} extension.`
         );
         return;
@@ -466,7 +467,7 @@ export const useStore = create<AppState>((set, get) => ({
             return;
           } else {
             // Backend responded OK but no member found
-            alert(
+            toast(
               "❌ NOT A CLUB MEMBER\n\nYour wallet is not registered in the system.\nPlease register to use the website!"
             );
             set({
@@ -480,7 +481,7 @@ export const useStore = create<AppState>((set, get) => ({
         } else {
           // Backend error - member not found
           console.warn("Backend auth failed - member not found");
-          alert(
+          toast(
             "❌ NOT A CLUB MEMBER\n\nYour wallet is not registered in the system.\nPlease register to use the website!"
           );
           set({
@@ -494,7 +495,7 @@ export const useStore = create<AppState>((set, get) => ({
       } catch (e) {
         console.warn("Backend auth failed", e);
         // Network error - show generic message
-        alert(
+        toast(
           "❌ AUTHENTICATION FAILED\n\nCannot connect to server. Please try again later."
         );
         set({
@@ -586,14 +587,14 @@ export const useStore = create<AppState>((set, get) => ({
 
         return true;
       } else {
-        alert(
+        toast(
           `❌ LOGIN FAILED\n\n${result.message || "Email is not registered in the system."}`
         );
         return false;
       }
     } catch (error) {
       console.error("[loginWithGoogle] Error:", error);
-      alert("❌ AUTHENTICATION FAILED\n\nCannot connect to server. Please try again later.");
+      toast.error("❌ AUTHENTICATION FAILED\n\nCannot connect to server. Please try again later.");
       return false;
     }
   },
@@ -603,7 +604,7 @@ export const useStore = create<AppState>((set, get) => ({
     try {
       const state = get();
       if (!state.walletAddress || !state.currentUser) {
-        alert("Please login with wallet first before linking Google account.");
+        toast.error("Please login with wallet first before linking Google account.");
         return false;
       }
 
@@ -640,15 +641,15 @@ export const useStore = create<AppState>((set, get) => ({
             members,
           };
         });
-        alert("✅ Account linked successfully!\n\nYou can now login with either Google or Wallet.");
+        toast.success("✅ Account linked successfully!\n\nYou can now login with either Google or Wallet.");
         return true;
       } else {
-        alert(`❌ Account linking failed\n\n${result.message || "An error occurred."}`);
+        toast(`❌ Account linking failed\n\n${result.message || "An error occurred."}`);
         return false;
       }
     } catch (error) {
       console.error("[linkGoogleAccount] Error:", error);
-      alert("❌ ACCOUNT LINKING FAILED\n\nCannot connect to server. Please try again later.");
+      toast.error("❌ ACCOUNT LINKING FAILED\n\nCannot connect to server. Please try again later.");
       return false;
     }
   },
@@ -725,12 +726,12 @@ export const useStore = create<AppState>((set, get) => ({
 
     if (!state.currentUser) {
       console.error("[addEvent] User not authenticated");
-      alert("Please sign in first!");
+      toast.error("Please sign in first!");
       return;
     }
 
     if (!canManageClubData(state)) {
-      alert("Community accounts cannot create club events.");
+      toast.error("Community accounts cannot create club events.");
       return;
     }
 
@@ -780,12 +781,12 @@ export const useStore = create<AppState>((set, get) => ({
 
     if (!state.currentUser) {
       console.error("[addBounty] User not authenticated");
-      alert("Please sign in first!");
+      toast.error("Please sign in first!");
       return;
     }
 
     if (!canManageClubData(state)) {
-      alert("Community accounts cannot create bounties.");
+      toast.error("Community accounts cannot create bounties.");
       return;
     }
 
@@ -833,12 +834,12 @@ export const useStore = create<AppState>((set, get) => ({
 
     if (!state.currentUser) {
       console.error("[addRepo] User not authenticated");
-      alert("Please sign in first!");
+      toast.error("Please sign in first!");
       return;
     }
 
     if (!canManageClubData(state)) {
-      alert("Community accounts cannot create repositories.");
+      toast.error("Community accounts cannot create repositories.");
       return;
     }
 
@@ -885,12 +886,12 @@ export const useStore = create<AppState>((set, get) => ({
 
     if (!state.currentUser) {
       console.error("[addResource] User not authenticated");
-      alert("Please sign in first!");
+      toast.error("Please sign in first!");
       return;
     }
 
     if (!canManageClubData(state)) {
-      alert("Community accounts cannot create resources.");
+      toast.error("Community accounts cannot create resources.");
       return;
     }
 
@@ -936,12 +937,12 @@ export const useStore = create<AppState>((set, get) => ({
 
     if (!state.currentUser) {
       console.error("[addProject] User not authenticated");
-      alert("Please sign in first!");
+      toast.error("Please sign in first!");
       return;
     }
 
     if (!canManageClubData(state)) {
-      alert("Community accounts cannot create projects.");
+      toast.error("Community accounts cannot create projects.");
       return;
     }
 
@@ -1213,11 +1214,11 @@ export const useStore = create<AppState>((set, get) => ({
       } else {
         const error = await res.json();
         console.error("[updateCurrentUser] Failed:", error);
-        alert("Failed to update profile");
+        toast.error("Failed to update profile");
       }
     } catch (err) {
       console.error("[updateCurrentUser] Error:", err);
-      alert("Failed to update profile");
+      toast.error("Failed to update profile");
     }
   },
 }));

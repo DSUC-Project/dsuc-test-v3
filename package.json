@@ -37,6 +37,7 @@
     "passport-google-oauth20": "^2.0.0",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
+    "react-hot-toast": "^2.6.0",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.14.2",
     "remark-gfm": "^4.0.1",
