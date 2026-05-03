@@ -1287,7 +1287,7 @@ export function AcademyAdmin() {
 
           <div className="mt-5 grid gap-4 lg:grid-cols-2">
             {curatedPaths.length === 0 ? (
-              <div className="border-dashed /12 bg-black/18 p-5 text-sm leading-7 text-white/52 lg:col-span-2">
+              <div className=" /12 bg-black/18 p-5 text-sm leading-7 text-white/52 lg:col-span-2">
                 No curated paths loaded from the local seed yet.
               </div>
             ) : (
@@ -1360,7 +1360,7 @@ export function AcademyAdmin() {
             </div>
 
             {curatedPaths.length === 0 ? (
-              <div className="mt-5 border-dashed /12 bg-black/18 p-5 text-sm leading-7 text-white/52">
+              <div className="mt-5 /12 bg-black/18 p-5 text-sm leading-7 text-white/52">
                 Curated content browser will appear here after the seed catalog
                 is available.
               </div>

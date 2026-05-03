@@ -64,7 +64,7 @@ function heading<Tag extends "h1" | "h2" | "h3" | "h4">(
 const markdownComponents: Components = {
   h1: heading(
     "h1",
-    "mt-8 mb-4 border-b border-border-main pb-2 text-3xl font-heading font-bold uppercase tracking-tight text-text-main first:mt-0 sm:text-4xl",
+    "mt-8 mb-4  pb-2 text-3xl font-heading font-bold uppercase tracking-tight text-text-main first:mt-0 sm:text-4xl",
   ),
   h2: heading(
     "h2",
@@ -115,9 +115,9 @@ const markdownComponents: Components = {
       {children}
     </a>
   ),
-  hr: () => <hr className="my-8 border-t border-border-main" />,
+  hr: () => <hr className="my-8 " />,
   table: ({ children }) => (
-    <div className="my-6 overflow-x-auto rounded-lg border border-border-main bg-surface shadow-sm">
+    <div className="my-6 overflow-x-auto rounded-lg  bg-surface shadow-sm">
       <table className="min-w-full border-collapse text-left text-sm text-text-main">
         {children}
       </table>

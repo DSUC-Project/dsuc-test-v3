@@ -133,7 +133,7 @@ export function AcademyTrack() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-20 pt-10 px-4 sm:px-6">
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 -main shadow-sm">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 shadow-sm">
         <Link
           to="/academy"
           className="inline-flex items-center text-sm font-bold uppercase tracking-widest text-text-main hover:-translate-x-1 transition-transform"
@@ -205,7 +205,7 @@ export function AcademyTrack() {
                   disabled={isLocked}
                 >
                   <div
-                    className={`relative flex-shrink-0 flex items-center justify-center w-12 h-12 border border-border-main transition-colors z-10 ${
+                    className={`relative flex-shrink-0 flex items-center justify-center w-12 h-12  transition-colors z-10 ${
                       isLocked
                         ? "bg-gray-200"
                         : isCompleted

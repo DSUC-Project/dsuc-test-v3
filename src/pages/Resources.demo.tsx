@@ -73,7 +73,7 @@ export function Resources() {
             <button
               key={c}
               onClick={() => setActiveCategory(c)}
-              className={`px-4 py-2 font-mono text-xs uppercase tracking-widest border border-border-main transition-colors ${activeCategory === c ? "bg-primary text-main-bg font-bold" : "bg-surface hover:bg-main-bg text-text-muted hover:text-text-main"}`}
+              className={`px-4 py-2 font-mono text-xs uppercase tracking-widest  transition-colors ${activeCategory === c ? "bg-primary text-main-bg font-bold" : "bg-surface hover:bg-main-bg text-text-muted hover:text-text-main"}`}
             >
               {c}
             </button>
@@ -119,7 +119,7 @@ export function Resources() {
               {resource.description}
             </p>
 
-            <div className="flex items-center justify-between border-t border-dashed border-border-main pt-4 mt-auto">
+            <div className="flex items-center justify-between  pt-4 mt-auto">
               <div className="flex flex-wrap gap-1">
                 {resource.tags?.slice(0, 2).map((tag: string) => (
                   <span
@@ -135,7 +135,7 @@ export function Resources() {
           </SoftBrutalCard>
         ))}
         {filteredResources.length === 0 && (
-          <div className="col-span-full p-12 text-center border-dashed border-2 border-border-main text-text-muted font-mono text-xs uppercase">
+          <div className="col-span-full p-12 text-center  border-2 border-border-main text-text-muted font-mono text-xs uppercase">
             No resources found.
           </div>
         )}

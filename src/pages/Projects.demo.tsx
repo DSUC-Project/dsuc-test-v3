@@ -9,7 +9,7 @@ import {
 export function Projects() {
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 pb-8 border-b border-dashed border-border-main">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 pb-8 ">
         <SectionHeader
           title="Project Showcase"
           subtitle="Products shipped by DSUC builders."
@@ -25,7 +25,7 @@ export function Projects() {
             key={i}
             className="flex flex-col p-0 overflow-hidden cursor-pointer group"
           >
-            <div className="aspect-[16/9] w-full bg-main-bg border border-border-main overflow-hidden relative">
+            <div className="aspect-[16/9] w-full bg-main-bg  overflow-hidden relative">
               <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors z-10" />
               {/* placeholder image */}
               <div className="w-full h-full bg-[radial-gradient(var(--text-main)_1px,transparent_1px)] [background-size:12px_12px] opacity-10" />
@@ -49,7 +49,7 @@ export function Projects() {
                 communities, learning paths, and project bounties on Solana.
               </p>
 
-              <div className="flex items-center justify-between border-t border-dashed border-border-main pt-4">
+              <div className="flex items-center justify-between border-t  border-border-main pt-4">
                 <div className="flex -space-x-2">
                   <div className="w-6 h-6 rounded-full border border-border-main bg-primary" />
                   <div className="w-6 h-6 rounded-full border border-border-main bg-accent" />

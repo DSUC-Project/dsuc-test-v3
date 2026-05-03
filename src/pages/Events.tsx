@@ -7,7 +7,7 @@ import {
   ActionButton,
 } from "@/components/ui/Primitives";
 import { useStore } from "@/store/useStore";
-import { Plus, X, Calendar, MapPin, Clock } from "lucide-react";
+import { Plus, X, Calendar, MapPin, Clock, ArrowRight } from "lucide-react";
 import { ModalShell } from "@/components/ui/ModalShell";
 import { Card, ActionCard } from "@/components/ui/Cards";
 import { Event as AppEvent } from "@/types";
@@ -71,7 +71,7 @@ function AddEventModal({
           <input
             name="title"
             required
-            className="w-full border border-border-main bg-surface p-3 text-sm focus:border-primary outline-none transition-colors"
+            className="w-full  bg-surface p-3 text-sm focus:border-primary outline-none transition-colors"
           />
         </div>
 
@@ -195,7 +195,7 @@ export function Events() {
         </div>
       </div>
 
-      <div className="flex gap-4 mb-8 border-b border-border-main border-dashed pb-4 w-full overflow-auto font-mono text-xs uppercase font-bold">
+      <div className="flex gap-4 mb-8 w-full overflow-auto font-mono text-xs uppercase font-bold">
         <button
           onClick={() => setFilter("upcoming")}
           className={`transition-colors ${filter === "upcoming" ? "text-primary" : "text-text-muted hover:text-text-main"}`}
@@ -216,9 +216,9 @@ export function Events() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
+      <div className="relative border-l-[3px] border-text-main ml-4 md:ml-8 pl-6 md:pl-12 py-4 space-y-10 before:content-[''] before:absolute before:border-l-[3px] before: before:border-surface before:left-[-3px] before:top-0 before:h-full before:w-0">
         {filteredEvents.length > 0 ? (
-          filteredEvents.map((evt) => {
+          filteredEvents.map((evt, idx) => {
             const dateObj = evt.date ? new Date(evt.date) : new Date();
             const month = dateObj.toLocaleString("en-US", { month: "short" });
             const day = String(dateObj.getDate()).padStart(2, "0");
@@ -228,72 +228,66 @@ export function Events() {
                 (evt as any).link ||
                 "",
             ).trim();
+            
             return (
-              <SoftBrutalCard
-                intent="accent"
-                interactive
-                withPattern
-                key={evt.id}
-                className="flex flex-col md:flex-row md:items-stretch group p-0"
+              <div 
+                key={evt.id} 
+                className={`relative group ${lumaLink ? 'cursor-pointer' : ''}`}
+                onClick={() => {
+                  if (lumaLink) window.open(lumaLink, "_blank", "noopener,noreferrer");
+                }}
               >
-                {/* Date Box */}
-                <div className="flex-shrink-0 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-border-main px-6 py-5 w-full md:w-32 bg-main-bg group-hover:bg-accent transition-colors">
-                  <p className="font-mono text-[10px] uppercase tracking-widest mb-1 text-text-muted group-hover:text-surface">
-                    {month}
-                  </p>
-                  <p className="font-heading font-black text-4xl leading-none text-text-main group-hover:text-surface">
-                    {day}
-                  </p>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 p-5 lg:p-6 flex flex-col justify-center min-w-0 bg-surface">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="px-2 py-0.5 bg-main-bg text-text-main border border-border-main text-[10px] font-mono uppercase font-bold text-accent">
-                      {evt.type || "SESSION"}
-                    </span>
+                {/* Timeline Node Marker */}
+                <div className="absolute -left-[32px] md:-left-[56px] top-6 w-4 h-4 rounded-none bg-surface border-4 border-text-main group-hover:bg-primary group-hover:scale-125 transition-transform z-10 shadow-[2px_2px_0_0_rgba(0,0,0,1)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,1)]" />
+                
+                {/* Compact Event Card */}
+                <div className="bg-surface border-2 border-text-main shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] group-hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:group-hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] group-hover:-translate-y-1 group-hover:-translate-x-1 transition-all duration-300 p-0 flex flex-row items-stretch">
+                  
+                  {/* Date Block */}
+                  <div className="flex flex-col items-center justify-center p-4 bg-main-bg border-r-2 border-text-main w-20 md:w-24 group-hover:bg-primary group-hover:text-surface transition-colors flex-shrink-0">
+                    <span className="font-heading font-black text-3xl leading-none">{day}</span>
+                    <span className="font-mono text-[10px] uppercase font-bold tracking-widest mt-1 opacity-80">{month}</span>
                   </div>
-                  <h3 className="font-heading font-bold text-xl uppercase tracking-tight mb-2 truncate group-hover:text-accent transition-colors">
-                    {evt.title}
-                  </h3>
-                  <p className="text-text-muted text-sm max-w-2xl leading-relaxed line-clamp-2">
-                    {evt.description || "Upcoming ecosystem deep dive."}
-                  </p>
 
-                  <div className="flex items-center gap-4 mt-4 font-mono text-[10px] uppercase text-text-muted font-bold">
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="w-3 h-3 text-accent" />{" "}
-                      {evt.time || "18:00"}
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <MapPin className="w-3 h-3 text-accent" />{" "}
-                      <span className="truncate max-w-[150px]">
-                        {evt.location}
+                  {/* Content Block */}
+                  <div className="flex-1 p-4 flex flex-col justify-center min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="px-2 py-0.5 bg-highlight text-text-main border border-text-main text-[9px] font-mono uppercase font-black tracking-widest">
+                        {evt.type || "EVENT"}
                       </span>
+                      {evt.time && (
+                        <span className="font-mono text-[10px] font-bold text-text-muted flex items-center gap-1 group-hover:text-primary transition-colors">
+                          <Clock size={10} /> {evt.time}
+                        </span>
+                      )}
+                    </div>
+                    
+                    <h3 className="font-heading font-black text-lg md:text-xl uppercase tracking-tight text-text-main line-clamp-1 mb-1">
+                      {evt.title}
+                    </h3>
+                    
+                    <div className="flex items-center gap-3 font-mono text-[10px] font-bold text-text-muted mt-2">
+                       {evt.location && (
+                          <span className="flex items-center gap-1 truncate max-w-[150px] md:max-w-xs">
+                             <MapPin size={10} className="text-primary" /> {evt.location}
+                          </span>
+                       )}
                     </div>
                   </div>
-                </div>
 
-                {/* Info & CTA */}
-                <div className="flex flex-col items-center justify-center p-5 md:w-48 bg-main-bg border-t md:border-t-0 md:border-l border-border-main">
-                  <div className="w-full">
-                    {lumaLink ? (
-                      <a
-                        href={lumaLink}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="block w-full text-center font-bold font-mono text-xs tracking-widest uppercase flex items-center justify-center border border-border-main px-4 py-3 bg-surface hover:bg-main-bg text-text-main hover:text-accent hover:border-accent transition-colors whitespace-nowrap shadow-sm hover:shadow-md"
-                      >
-                        RSVP ↗
-                      </a>
-                    ) : (
-                      <div className="w-full text-center font-mono text-[10px] text-text-muted py-2 uppercase font-bold tracking-widest border border-dashed border-border-main bg-surface">
-                        Internal Session
-                      </div>
-                    )}
-                  </div>
+                  {/* Action Block */}
+                  {lumaLink && (
+                    <div className="hidden sm:flex items-center justify-center px-6 border-l-2 border-text-main bg-main-bg text-text-muted group-hover:bg-text-main group-hover:text-surface transition-colors">
+                      <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  )}
+                  {lumaLink && (
+                    <div className="sm:hidden flex items-center justify-center px-4 text-text-muted group-hover:text-primary transition-colors border-l-2 border-dashed border-border-main">
+                      <ArrowRight size={16} />
+                    </div>
+                  )}
                 </div>
-              </SoftBrutalCard>
+              </div>
             );
           })
         ) : (

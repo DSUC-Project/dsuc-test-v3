@@ -44,7 +44,7 @@ export function Work() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16 space-y-12">
-      <div className="flex flex-col md:flex-row md:items-end justify-between items-start gap-4 mb-8 pb-8 border-b border-dashed border-border-main">
+      <div className="flex flex-col md:flex-row md:items-end justify-between items-start gap-4 mb-8">
         <SectionHeader
           title="Work Board"
           subtitle="Bounties & Open Source repositories from DSUC."
@@ -66,7 +66,7 @@ export function Work() {
         </div>
       </div>
 
-      <div className="flex bg-surface w-fit border border-border-main shadow-sm">
+      <div className="flex bg-surface w-fit shadow-sm">
         <TabButton
           active={activeTab === "bounties"}
           onClick={() => setActiveTab("bounties")}
@@ -123,9 +123,9 @@ function BountyBoard() {
       {columns.map((status) => (
         <div
           key={status}
-          className="bg-main-bg border border-border-main p-4 h-full flex flex-col shadow-sm"
+          className="bg-main-bg  p-4 h-full flex flex-col shadow-sm"
         >
-          <div className="flex items-center gap-2 mb-4 border-b border-border-main pb-3">
+          <div className="flex items-center gap-2 mb-4  pb-3">
             <span className="font-heading text-sm font-bold uppercase tracking-widest text-text-main shrink-0 flex-1">
               {status}
             </span>
@@ -141,7 +141,7 @@ function BountyBoard() {
                 <BountyCard key={bounty.id} bounty={bounty} />
               ))}
             {bounties.filter((b) => b.status === status).length === 0 && (
-              <div className="h-24 border-dashed border border-border-main flex items-center justify-center text-text-muted text-[10px] font-mono uppercase tracking-widest bg-surface">
+              <div className="h-24 flex items-center justify-center text-text-muted text-[10px] font-mono uppercase tracking-widest bg-surface">
                 Empty
               </div>
             )}
@@ -154,9 +154,9 @@ function BountyBoard() {
 
 function BountyCard({ bounty }: { bounty: Bounty; key?: React.Key }) {
   const content = (
-    <ActionCard className="p-4 flex flex-col h-full bg-surface shadow-none border-text-main/10 hover:border-primary group">
+    <ActionCard className="p-4 flex flex-col h-full bg-surface shadow-none hover:border-primary group">
       <div className="flex justify-between items-start mb-3 w-full">
-        <span className="text-[9px] font-mono font-bold px-2 py-0.5 uppercase border border-border-main bg-main-bg text-text-muted">
+        <span className="text-[9px] font-mono font-bold px-2 py-0.5 uppercase bg-main-bg text-text-muted">
           {bounty.difficulty}
         </span>
         <span className="text-primary font-mono font-bold text-xs">
@@ -170,14 +170,14 @@ function BountyCard({ bounty }: { bounty: Bounty; key?: React.Key }) {
         {bounty.tags.map((tag) => (
           <span
             key={tag}
-            className="text-[9px] text-text-muted font-mono uppercase tracking-wider bg-main-bg px-1.5 py-0.5 border border-border-main"
+            className="text-[9px] text-text-muted font-mono uppercase tracking-wider bg-main-bg px-1.5 py-0.5"
           >
             #{tag}
           </span>
         ))}
       </div>
       {bounty.submitLink && (
-        <div className="mt-2 w-full py-1.5 text-primary text-[10px] font-bold font-mono tracking-widest uppercase transition-colors flex items-center justify-center gap-1 border border-border-main hover:bg-primary hover:text-main-bg">
+        <div className="mt-2 w-full py-1.5 text-primary text-[10px] font-bold font-mono tracking-widest uppercase transition-colors flex items-center justify-center gap-1 hover:bg-primary hover:text-main-bg">
           VIEW TASK
           <ExternalLink
             size={12}
@@ -220,7 +220,7 @@ function RepoList() {
             as="div"
           >
             <div className="flex items-start sm:items-center gap-5 flex-1">
-              <div className="w-10 h-10 bg-main-bg flex items-center justify-center text-primary border border-border-main shrink-0 group-hover:bg-primary group-hover:text-main-bg transition-colors">
+              <div className="w-10 h-10 bg-main-bg flex items-center justify-center text-primary shrink-0 group-hover:bg-primary group-hover:text-main-bg transition-colors">
                 <Code size={20} />
               </div>
               <div className="flex-1">
@@ -234,11 +234,11 @@ function RepoList() {
             </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-4 py-2 shrink-0 sm:mt-0">
-              <div className="flex items-center gap-2 text-text-main font-mono font-bold text-[10px] uppercase tracking-widest bg-main-bg border border-border-main px-2 py-1">
+              <div className="flex items-center gap-2 text-text-main font-mono font-bold text-[10px] uppercase tracking-widest bg-main-bg px-2 py-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-text-main" />
                 {repo.language}
               </div>
-              <div className="flex items-center gap-3 text-xs font-mono font-bold text-text-muted bg-main-bg border border-border-main px-2 py-1">
+              <div className="flex items-center gap-3 text-xs font-mono font-bold text-text-muted bg-main-bg px-2 py-1">
                 <div className="flex items-center gap-1">
                   <Star size={12} className="text-text-muted" /> {repo.stars}
                 </div>
@@ -248,7 +248,7 @@ function RepoList() {
                 </div>
               </div>
               {repo.repoLink && (
-                <div className="p-1.5 border border-border-main text-text-main bg-main-bg group-hover:bg-primary group-hover:text-main-bg transition-colors sm:block hidden">
+                <div className="p-1.5 text-text-main bg-main-bg group-hover:bg-primary group-hover:text-main-bg transition-colors sm:block hidden">
                   <ExternalLink size={16} />
                 </div>
               )}

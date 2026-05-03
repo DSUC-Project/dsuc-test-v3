@@ -55,7 +55,7 @@ export function MemberDetail() {
     <div className="container mx-auto pt-10 px-4 sm:px-6 pb-20 space-y-12">
       <button
         onClick={() => navigate("/members")}
-        className="flex items-center gap-2 text-text-muted hover:text-text-main transition-colors font-mono text-xs uppercase tracking-widest w-fit border border-border-main px-4 py-2 bg-surface hover:bg-main-bg"
+        className="flex items-center gap-2 text-text-muted hover:text-text-main transition-colors font-mono text-xs uppercase tracking-widest w-fit px-4 py-2 bg-surface hover:bg-main-bg"
       >
         <ArrowLeft size={16} /> Back to Members
       </button>
@@ -73,7 +73,7 @@ export function MemberDetail() {
               onClick={() =>
                 handleContactSelect("email", `mailto:${member.email}`)
               }
-              className="w-full flex items-center gap-4 bg-surface hover:bg-main-bg border border-border-main p-4 transition-all group"
+              className="w-full flex items-center gap-4 bg-surface hover:bg-main-bg  p-4 transition-all group"
             >
               <Mail
                 className="text-text-muted group-hover:text-primary transition-colors"
@@ -152,7 +152,7 @@ export function MemberDetail() {
             !member.socials?.telegram &&
             !member.socials?.twitter &&
             !member.socials?.facebook && (
-              <div className="text-center text-text-muted font-mono text-xs p-6 border border-dashed border-border-main bg-main-bg uppercase">
+              <div className="text-center text-text-muted font-mono text-xs p-6 border border-border-main bg-main-bg uppercase">
                 No contact info provided.
               </div>
             )}
@@ -213,7 +213,7 @@ export function MemberDetail() {
 
         {/* Right Column: Detailed Dossier */}
         <div className="md:col-span-8 lg:col-span-8 space-y-10 relative z-10">
-          <div className="border-b border-border-main border-dashed pb-8 relative">
+          <div className=" pb-8 relative">
             <motion.h1
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -238,7 +238,7 @@ export function MemberDetail() {
 
           <div className="space-y-8">
             <SoftBrutalCard className="p-8">
-              <h3 className="text-xs font-mono font-bold text-text-muted uppercase tracking-widest mb-6 flex items-center gap-3 border-b border-border-main border-dashed pb-4">
+              <h3 className="text-xs font-mono font-bold text-text-muted uppercase tracking-widest mb-6 flex items-center gap-3">
                 <span className="w-2 h-2 bg-primary" /> Skills & Expertise
               </h3>
               <div className="flex flex-wrap gap-3">
@@ -263,7 +263,7 @@ export function MemberDetail() {
             </SoftBrutalCard>
 
             <SoftBrutalCard className="p-8">
-              <h3 className="text-xs font-mono font-bold text-text-muted uppercase tracking-widest mb-6 flex items-center gap-3 border-b border-border-main border-dashed pb-4">
+              <h3 className="text-xs font-mono font-bold text-text-muted uppercase tracking-widest mb-6 flex items-center gap-3">
                 <span className="w-2 h-2 bg-highlight" /> Social Links
               </h3>
               <div className="flex flex-wrap gap-4">
@@ -281,7 +281,7 @@ export function MemberDetail() {
                     <Github size={20} />
                   </a>
                 ) : (
-                  <div className="w-12 h-12 flex items-center justify-center border border-border-main border-dashed bg-main-bg text-text-muted opacity-50">
+                  <div className="w-12 h-12 flex items-center justify-center border border-border-main  bg-main-bg text-text-muted opacity-50">
                     <Github size={20} />
                   </div>
                 )}

@@ -113,7 +113,7 @@ export default function App() {
         <Toaster
           position="bottom-right"
           toastOptions={{
-            className: "border border-border-main shadow-sm",
+            className: " shadow-sm",
             style: { borderRadius: "0" },
           }}
         />

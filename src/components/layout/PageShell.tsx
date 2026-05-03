@@ -137,7 +137,7 @@ export function PageShell() {
           </motion.main>
         </AnimatePresence>
 
-        <footer className="mt-auto py-8 bg-surface/50 backdrop-blur text-center text-xs font-mono uppercase tracking-widest text-text-muted relative z-10 border-t border-dashed border-border-main">
+        <footer className="mt-auto py-8 bg-surface/50 backdrop-blur text-center text-xs font-mono uppercase tracking-widest text-text-muted relative z-10 border-t  border-border-main">
           <p>DSUC Labs OS v2.0 &copy; {new Date().getFullYear()}</p>
         </footer>
 
@@ -210,7 +210,7 @@ function RealAuthModal({
     >
       <div className="space-y-6">
         <div className="mb-6 text-center">
-          <div className="bg-primary w-16 h-16 mx-auto mb-4 border border-border-main flex items-center justify-center">
+          <div className="bg-primary w-16 h-16 mx-auto mb-4  flex items-center justify-center">
             <Terminal size={32} className="text-main-bg" />
           </div>
           <p className="mt-2 text-sm text-text-muted border-t border-dashed border-border-main pt-2">

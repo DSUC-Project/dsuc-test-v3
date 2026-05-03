@@ -133,7 +133,7 @@ export function Meet() {
                 initial={{ scale: 0.9, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                className="relative bg-surface rounded-none p-8 shadow-md border border-border-main max-w-sm w-full text-center"
+                className="relative bg-surface rounded-none p-8 shadow-md  max-w-sm w-full text-center"
               >
                 <button
                   onClick={() => setShowComingSoon(false)}
@@ -323,7 +323,7 @@ export function Meet() {
       </div>
 
       {/* Controls Bar */}
-      <div className="h-24 px-6 flex items-center justify-between border-t border-border-main border-dashed bg-main-bg">
+      <div className="h-24 px-6 flex items-center justify-between  bg-main-bg">
         <div className="flex items-center gap-4 w-1/3">
           <div className="text-text-main font-mono text-[10px] font-bold border border-border-main uppercase tracking-widest bg-surface px-4 py-2.5 flex items-center gap-3 shadow-sm">
             <div className="w-2.5 h-2.5 bg-emerald-500 rounded-none relative">

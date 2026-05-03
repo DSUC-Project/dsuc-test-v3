@@ -133,7 +133,7 @@ export function AcademyCourse() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12 md:py-24 space-y-16">
-        <div className="h-64 animate-pulse bg-surface -main" />
+        <div className="h-64 animate-pulse bg-surface" />
       </div>
     );
   }
@@ -147,7 +147,7 @@ export function AcademyCourse() {
         <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">
           Could not load course
         </h1>
-        <p className="mx-auto mt-4 max-w-xl p-4 text-sm text-text-muted bg-surface border border-border-main border-dashed font-mono">
+        <p className="mx-auto mt-4 max-w-xl p-4 text-sm text-text-muted bg-surface  font-mono">
           {error || "Course data is unavailable. Please try again later."}
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -287,7 +287,7 @@ export function AcademyCourse() {
 
               <div className="space-y-6">
                 {firstIncomplete ? (
-                  <p className="text-sm font-mono text-text-muted p-3 bg-main-bg border border-border-main border-dashed">
+                  <p className="text-sm font-mono text-text-muted p-3 bg-main-bg border border-border-main ">
                     {firstIncomplete.moduleTitle}
                   </p>
                 ) : (

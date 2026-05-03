@@ -103,7 +103,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             href="https://discord.gg/dsuc"
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-3 p-3 border border-border-main bg-surface hover:bg-main-bg transition-colors group"
+            className="flex items-center gap-3 p-3  bg-surface hover:bg-main-bg transition-colors group"
           >
             <MessageSquare className="w-4 h-4 text-primary" />
             <div>
@@ -149,7 +149,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
         <form
           onSubmit={handleSubmit}
-          className="border-t border-border-main pt-6 flex flex-col gap-3"
+          className=" pt-6 flex flex-col gap-3"
         >
           <div className="flex flex-col gap-1.5">
             <label className="font-mono text-[10px] uppercase text-text-muted font-bold tracking-widest">

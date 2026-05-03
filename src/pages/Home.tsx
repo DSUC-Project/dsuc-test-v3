@@ -19,7 +19,7 @@ function MarqueeStrip() {
   const noAnimation = shouldReduceMotion || isMobile;
 
   return (
-    <div className="w-full relative overflow-hidden py-4 border-y border-border-main border-dashed bg-main-bg dark:bg-navy-surface flex items-center">
+    <div className="w-full relative overflow-hidden py-4  bg-main-bg dark:bg-navy-surface flex items-center">
       <motion.div
         className="flex whitespace-nowrap font-display uppercase font-bold text-2xl tracking-widest text-primary"
         animate={noAnimation ? {} : { x: ["0%", "-50%"] }}
@@ -90,7 +90,7 @@ export function Home() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1 border border-border-main mb-8 bg-surface uppercase font-mono text-xs tracking-widest text-text-muted"
+              className="inline-flex items-center gap-2 px-3 py-1  mb-8 bg-surface uppercase font-mono text-xs tracking-widest text-text-muted"
             >
               <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
               DSUC Labs / Builder Operating System
@@ -141,7 +141,7 @@ export function Home() {
               </Link>
               <ActionButton
                 variant="secondary"
-                className="border-dashed"
+                className=""
                 onClick={() => setContactOpen(true)}
               >
                 Contact DSUC
@@ -269,7 +269,7 @@ export function Home() {
                 className="absolute bottom-[10%] -right-4 z-20 w-64"
               >
                 <SoftBrutalCard intent="accent" withPattern>
-                  <p className="font-mono text-[10px] uppercase text-text-muted mb-2 border-b border-border-main pb-1">
+                  <p className="font-mono text-[10px] uppercase text-text-muted mb-2  pb-1">
                     Incoming Event
                   </p>
                   <div className="pt-1">

@@ -292,7 +292,7 @@ export function AcademyUnit() {
 
   if (!unitData) {
     return (
-      <div className="mx-auto mt-12 max-w-2xl rounded-xl border border-border-main bg-white p-12 text-center shadow-sm">
+      <div className="mx-auto mt-12 max-w-2xl rounded-xl  bg-white p-12 text-center shadow-sm">
         <div className="mb-6 mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10 text-destructive shadow-sm">
           <AlertTriangle className="h-8 w-8" />
         </div>
@@ -512,7 +512,7 @@ export function AcademyUnit() {
         {isPractice && (
           <div className="flex w-full shrink-0 flex-col gap-6 xl:w-[400px] xl:order-1">
             <section className="flex flex-col rounded-xl border border-border-main bg-white shadow-sm xl:sticky xl:top-24">
-              <div className="mb-4 flex items-center gap-2 border-b border-border-main pb-3 p-5">
+              <div className="mb-4 flex items-center gap-2  pb-3 p-5">
                 <div className="rounded-md border border-border-main bg-surface px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-main shadow-sm">
                   Lab Instructions
                 </div>
@@ -841,7 +841,7 @@ export function AcademyUnit() {
                                 </div>
                               ))
                             ) : (
-                              <div className="rounded-xl border border-dashed border-border-main bg-surface p-4 text-center text-sm font-medium text-text-muted">
+                              <div className="rounded-xl border border-border-main bg-surface p-4 text-center text-sm font-medium text-text-muted">
                                 The runner did not return structured results for
                                 this lab.
                               </div>
@@ -893,7 +893,7 @@ export function AcademyUnit() {
                 {activeWorkspaceTab === "solution" && (
                   <div className="min-h-[600px] bg-white p-6 text-text-main">
                     {!solutionUnlocked ? (
-                      <div className="flex h-full flex-col items-center justify-center rounded-xl border border-dashed border-border-main bg-surface py-20 text-center">
+                      <div className="flex h-full flex-col items-center justify-center rounded-xl border  border-border-main bg-surface py-20 text-center">
                         <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm border border-border-main">
                           <Lightbulb
                             className="h-8 w-8 text-amber-500 fill-amber-500/20"
@@ -1149,7 +1149,7 @@ export function AcademyUnit() {
         )}
       </div>
 
-      <div className="mt-12 mb-20 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between border-t border-border-main pt-10">
+      <div className="mt-12 mb-20 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between  pt-10">
         <NavUnitLink
           label="Previous"
           unit={previous_unit}

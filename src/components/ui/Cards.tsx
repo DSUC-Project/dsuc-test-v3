@@ -26,10 +26,8 @@ export const ActionCard = React.forwardRef<any, any>(
     const Component = as === "div" ? motion.div : motion.button;
     return (
       <Component
-        whileHover={{ y: -4 }}
-        whileTap={{ y: 0 }}
         ref={ref}
-        className="w-full focus:outline-none"
+        className="w-full h-full focus:outline-none"
         {...props}
       >
         <SoftBrutalCard

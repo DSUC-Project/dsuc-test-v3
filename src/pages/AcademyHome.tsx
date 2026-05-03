@@ -219,7 +219,7 @@ export function AcademyHome() {
       <section className="relative">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
           <div className="lg:col-span-7 flex flex-col items-start z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 border border-border-main mb-8 bg-surface uppercase font-mono text-xs tracking-widest text-text-muted">
+            <div className="inline-flex items-center gap-2 px-3 py-1  mb-8 bg-surface uppercase font-mono text-xs tracking-widest text-text-muted">
               {currentUser ? (
                 <>
                   <Trophy size={14} className="text-primary" /> {firstName} is
@@ -236,13 +236,13 @@ export function AcademyHome() {
               <span className="text-primary">Academy</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-text-muted max-w-lg mb-10 leading-relaxed font-sans border-l-2 border-border-main pl-4">
+            <p className="text-lg md:text-xl text-text-muted max-w-lg mb-10 leading-relaxed font-sans">
               Learn Solana step-by-step, complete real-world exercises, and
               maintain your learning streak.
             </p>
 
             <div className="grid grid-cols-3 gap-4 w-full max-w-lg mb-8">
-              <div className="p-4 border border-border-main bg-surface text-center">
+              <div className="p-4 bg-surface text-center">
                 <BookOpen className="w-5 h-5 mx-auto mb-2 text-primary" />
                 <p className="font-display text-2xl font-bold">
                   {paths.length}
@@ -251,7 +251,7 @@ export function AcademyHome() {
                   Paths
                 </p>
               </div>
-              <div className="p-4 border border-border-main bg-surface text-center">
+              <div className="p-4 bg-surface text-center">
                 <Boxes className="w-5 h-5 mx-auto mb-2 text-primary" />
                 <p className="font-display text-2xl font-bold">
                   {totalCuratedUnits}
@@ -260,7 +260,7 @@ export function AcademyHome() {
                   Total Units
                 </p>
               </div>
-              <div className="p-4 border border-border-main bg-surface text-center">
+              <div className="p-4 bg-surface text-center">
                 <Flame className="w-5 h-5 mx-auto mb-2 text-primary" />
                 <p className="font-display text-2xl font-bold">
                   {totalCompletedUnits}
@@ -277,7 +277,7 @@ export function AcademyHome() {
             <div className="w-full bg-surface border border-border-main p-6 shadow-sm flex flex-col h-full">
               {currentUser ? (
                 <div className="space-y-6 flex-1 flex flex-col">
-                  <div className="flex items-start justify-between border-b border-dashed border-border-main pb-6">
+                  <div className="flex items-start justify-between  pb-6">
                     <div>
                       <StatusBadge
                         status="Active Streak"
@@ -303,7 +303,7 @@ export function AcademyHome() {
                           {academyWeekdayFormatter.format(day.date)}
                         </span>
                         <div
-                          className={`flex h-10 w-full sm:h-12 items-center justify-center border border-border-main transition-all ${day.completed ? "bg-primary text-white" : "bg-main-bg text-text-muted/30"} ${day.isToday && !day.completed ? "border-primary border-dashed" : ""}`}
+                          className={`flex h-10 w-full sm:h-12 items-center justify-center border border-border-main transition-all ${day.completed ? "bg-primary text-white" : "bg-main-bg text-text-muted/30"} ${day.isToday && !day.completed ? "border-primary " : ""}`}
                         >
                           {day.completed || day.isToday ? (
                             <Flame className="w-4 h-4" />
@@ -399,14 +399,14 @@ export function AcademyHome() {
                     interactive
                     className="h-full flex flex-col"
                   >
-                    <div className="absolute top-0 left-0 w-full h-1 bg-main-bg border-b border-dashed border-border-main">
+          <div className="absolute top-0 left-0 w-full h-1 border-b border-border-main">
                       <div
                         className="h-full bg-primary transition-all duration-1000 ease-out"
                         style={{ width: `${progressPercent}%` }}
                       />
                     </div>
 
-                    <div className="pt-2 flex-1 flex flex-col">
+                    <div className="pt-4 flex-1 flex flex-col">
                       <div className="flex justify-between items-start mb-6">
                         <StatusBadge status={path.tag || path.difficulty} />
                         <div className="text-right">
@@ -421,21 +421,21 @@ export function AcademyHome() {
                       </h3>
 
                       <div className="grid grid-cols-2 gap-3 mb-8 w-full mt-auto">
-                        <div className="border border-border-main bg-main-bg px-3 py-2">
-                          <div className="font-bold">{path.course_count}</div>
+                        <div className="px-3 py-2">
+                          <div className="font-bold text-2xl">{path.course_count}</div>
                           <div className="text-[10px] font-mono text-text-muted uppercase mt-0.5">
                             Courses
                           </div>
                         </div>
-                        <div className="border border-border-main bg-main-bg px-3 py-2">
-                          <div className="font-bold">{path.total_unit_count}</div>
+                        <div className="px-3 py-2">
+                          <div className="font-bold text-2xl">{path.total_unit_count}</div>
                           <div className="text-[10px] font-mono text-text-muted uppercase mt-0.5">
                             Units
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between border-t border-dashed border-border-main pt-4 text-sm font-bold mt-auto">
+                      <div className="flex items-center justify-between pt-4 text-sm font-bold mt-auto">
                         <span className="text-text-muted capitalize">
                           {path.difficulty}
                         </span>

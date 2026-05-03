@@ -99,7 +99,7 @@ export function AcademyPath() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12 md:py-24 space-y-32">
-        <div className="h-64 animate-pulse bg-surface -main" />
+        <div className="h-64 animate-pulse bg-surface" />
       </div>
     );
   }
@@ -107,7 +107,7 @@ export function AcademyPath() {
   if (!path) {
     return (
       <div className="container mx-auto px-4 py-24 text-center">
-        <div className="p-8 -main border-dashed bg-surface text-text-muted font-mono text-sm max-w-md mx-auto">
+        <div className="p-8 -main bg-surface text-text-muted font-mono text-sm max-w-md mx-auto">
           {error || "Path not found."}
         </div>
         <div className="mt-8">
@@ -189,7 +189,7 @@ export function AcademyPath() {
         />
 
         {path.courses.length === 0 ? (
-          <div className="p-12 text-center bg-surface -main border-dashed font-mono text-sm text-text-muted mt-8">
+          <div className="p-12 text-center bg-surface -main  font-mono text-sm text-text-muted mt-8">
             This path is currently under construction.
           </div>
         ) : (

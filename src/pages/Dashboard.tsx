@@ -42,7 +42,7 @@ export function Dashboard() {
       {/* Hero Section */}
       <section className="relative min-h-[50vh] flex flex-col justify-center items-center text-center pt-10">
         {/* Abstract Background Shapes */}
-        <div className="absolute top-20 left-10 w-16 h-16 bg-highlight border border-border-main pointer-events-none -z-10 shadow-sm" />
+        <div className="absolute top-20 left-10 w-16 h-16 bg-highlight  pointer-events-none -z-10 shadow-sm" />
         <div className="absolute bottom-20 right-10 w-24 h-24 bg-primary/20 transform rotate-12 pointer-events-none -z-10" />
         <div className="absolute top-1/4 right-20 w-12 h-12 bg-primary border border-border-main transform rotate-45 pointer-events-none -z-10 shadow-sm" />
         <div className="absolute bottom-1/3 left-20 w-20 h-20 bg-emerald-400/20 transform -rotate-12 pointer-events-none -z-10" />
@@ -122,7 +122,7 @@ export function Dashboard() {
       </section>
 
       {/* Stats Tickers */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6 border-y border-dashed border-border-main bg-surface">
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6  bg-surface">
         <StatCard label="Members" value="15" suffix="HACKERS" />
         <StatCard label="Active Projects" value="10+" suffix="PROJECTS" />
         <StatCard label="Interns" value="5+" suffix="MEMBERS" />
@@ -146,7 +146,7 @@ export function Dashboard() {
             </React.Fragment>
           ))}
           {eventHistory.length === 0 && (
-            <div className="col-span-3 text-center py-16 bg-surface border border-border-main border-dashed shadow-sm text-text-muted font-mono font-bold text-lg uppercase tracking-widest">
+            <div className="col-span-3 text-center py-16 bg-surface border border-border-main  shadow-sm text-text-muted font-mono font-bold text-lg uppercase tracking-widest">
               NO RECENT EVENTS
             </div>
           )}
@@ -176,32 +176,46 @@ function EventCard({ event, idx }: { event: any; idx: number }) {
     : "---";
 
   const inner = (
-    <div className="flex flex-col h-full">
-      <div className="flex justify-between items-start mb-6">
-        <span className="px-2 py-0.5 bg-main-bg border border-border-main text-text-main font-mono text-[10px] font-bold uppercase tracking-widest">
-          {event.type}
-        </span>
-        <div className="text-right flex flex-col items-end">
-          <div className="text-3xl font-display font-black text-text-main group-hover:text-primary transition-colors leading-none tracking-tighter">
+    <div className="flex flex-col h-full bg-surface border-2 border-text-main shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] group-hover:-translate-y-2 group-hover:-translate-x-2 group-hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:group-hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-all duration-300">
+      
+      {/* Top Details & Date */}
+      <div className="flex items-stretch border-b-2 border-text-main">
+        <div className="flex-1 p-4 flex flex-col justify-center">
+          <span className="inline-block self-start px-2 py-0.5 bg-primary text-white border border-text-main font-mono text-[10px] font-black uppercase tracking-widest mb-1 shadow-sm">
+            {event.type}
+          </span>
+          {event.time && (
+            <span className="font-mono text-[10px] text-text-muted font-bold text-xs">
+              {event.time}
+            </span>
+          )}
+        </div>
+        <div className="p-4 bg-highlight border-l-2 border-text-main flex flex-col items-center justify-center min-w-[80px]">
+          <div className="text-3xl font-heading font-black text-text-main leading-none">
             {dayLabel}
           </div>
-          <div className="text-[10px] font-mono font-bold text-text-muted uppercase mt-1">
+          <div className="text-[10px] font-mono font-bold text-text-main uppercase mt-1">
             {monthLabel}
           </div>
         </div>
       </div>
 
-      <div className="flex-1">
-        <h3 className="text-lg font-heading font-bold mb-3 text-text-main group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+      {/* Main Content */}
+      <div className="p-5 flex flex-col flex-1">
+        <h3 className="text-xl font-heading font-black mb-auto text-text-main group-hover:text-primary transition-colors line-clamp-2 leading-tight">
           {event.title}
         </h3>
-      </div>
-
-      <div className="mt-4 pt-4 border-t border-border-main border-dashed">
-        <p className="font-mono text-[10px] font-bold uppercase text-text-muted flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-          {event.location || "Location TBA"}
-        </p>
+        
+        <div className="mt-4 flex items-center justify-between font-mono text-[10px] font-bold uppercase text-text-muted">
+          <p className="flex items-center gap-1.5 truncate pr-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+            <span className="truncate">{event.location || "Location TBA"}</span>
+          </p>
+          
+          {lumaLink && (
+            <ArrowUpRight size={16} className="text-text-main group-hover:text-primary group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform flex-shrink-0" />
+          )}
+        </div>
       </div>
     </div>
   );
@@ -214,19 +228,17 @@ function EventCard({ event, idx }: { event: any; idx: number }) {
       className="h-full"
     >
       {lumaLink ? (
-        <a
-          href={lumaLink}
-          target="_blank"
-          rel="noopener noreferrer"
+        <div
+          onClick={() => window.open(lumaLink, "_blank", "noopener,noreferrer")}
+          role="button"
+          tabIndex={0}
           aria-label={`Open event ${event.title}`}
-          className="block h-full group focus-visible:outline-none"
+          className="block h-full group focus-visible:outline-none cursor-pointer"
         >
-          <Card className="h-full p-6 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[4px_4px_0_0_var(--color-primary)] transition-all cursor-pointer">
-            {inner}
-          </Card>
-        </a>
+          {inner}
+        </div>
       ) : (
-        <Card className="h-full p-6 shadow-sm">{inner}</Card>
+        <div className="h-full group">{inner}</div>
       )}
     </motion.div>
   );

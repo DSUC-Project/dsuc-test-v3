@@ -117,10 +117,10 @@ export function AppBackground({
         )}
       >
         {/* Subtle geometric circles/lines */}
-        <div className="absolute w-[600px] h-[600px] border border-border-main/35 dark:border-border-main/15 rounded-full" />
+        <div className="absolute w-[600px] h-[600px] /35 dark:border-border-main/15 rounded-full" />
         <div className="absolute w-[400px] h-[400px] border border-border-main/45 dark:border-border-main/25 rounded-full" />
         {intensity === "high" && (
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 -main/40 dark:-main/20" />
+          <div className="absolute top-1/4 left-1/4 w-32 h-32/40 dark:-main/20" />
         )}
       </div>
     </div>

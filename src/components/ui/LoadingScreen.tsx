@@ -28,7 +28,7 @@ export function LoadingScreen() {
             className="absolute inset-4 border-b-2 border-l-2 border-accent dark:border-primary rounded-full opacity-60"
           />
           {/* Logo */}
-          <div className="w-16 h-16 bg-surface border border-border-main flex items-center justify-center font-display font-bold text-2xl z-10 shadow-lg select-none">
+          <div className="w-16 h-16 bg-surface  flex items-center justify-center font-display font-bold text-2xl z-10 shadow-lg select-none">
             D
           </div>
         </div>

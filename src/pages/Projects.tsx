@@ -78,7 +78,7 @@ function AddProjectModal({
           <input
             name="name"
             required
-            className="w-full bg-surface border border-border-main px-4 py-3 outline-none font-sans text-sm transition-all focus:border-primary"
+            className="w-full bg-surface px-4 py-3 outline-none font-sans text-sm transition-all focus:border-primary"
           />
         </div>
 
@@ -90,7 +90,7 @@ function AddProjectModal({
             name="description"
             rows={3}
             required
-            className="w-full bg-surface border border-border-main px-4 py-3 outline-none font-sans text-sm transition-all focus:border-primary resize-none"
+            className="w-full bg-surface  px-4 py-3 outline-none font-sans text-sm transition-all focus:border-primary resize-none"
           />
         </div>
 
@@ -175,7 +175,7 @@ export function Projects() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-border-main pb-8 border-dashed">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
         <SectionHeader
           title="Project Showcase"
           subtitle="Products shipped by DSUC builders."
@@ -244,7 +244,7 @@ export function Projects() {
                     {proj.tech_stack.slice(0, 4).map((t) => (
                       <span
                         key={t}
-                        className="px-2 py-1 bg-main-bg border-b border-r border-border-main text-[9px] font-mono whitespace-nowrap text-text-muted"
+                        className="px-2 py-1 bg-main-bg text-[9px] font-mono whitespace-nowrap text-text-muted"
                       >
                         {t}
                       </span>
@@ -257,7 +257,7 @@ export function Projects() {
                   </div>
                 )}
 
-                <div className="pt-4 mt-auto border-t border-border-main border-dashed w-full flex items-end justify-between">
+                <div className="pt-4 mt-auto  w-full flex items-end justify-between">
                   <div className="flex flex-col w-full">
                     <span className="text-[9px] font-mono uppercase text-text-muted mb-1 font-bold">
                       Builders

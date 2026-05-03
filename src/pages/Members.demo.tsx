@@ -46,12 +46,12 @@ export function Members() {
 
   const MemberCard = ({ member }: { member: (typeof mockMembers)[0] }) => (
     <div
-      className="bg-surface border border-border-main shadow-sm p-6 text-center hover:bg-main-bg transition-colors cursor-pointer group"
+      className="bg-surface border border-border-main shadow-sm p-6 text-center transition-all duration-300 hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] cursor-pointer group"
       onClick={() => navigate(`/member/${member.id}`)}
     >
       <img
         src={member.avatar}
-        className="w-16 h-16 rounded-full mx-auto mb-3 border-border-main"
+        className="w-16 h-16 rounded-full mx-auto mb-3 border border-border-main"
         alt={member.name}
       />
       <h3 className="font-heading font-bold text-base group-hover:text-primary transition-colors">

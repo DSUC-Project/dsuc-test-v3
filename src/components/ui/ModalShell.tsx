@@ -38,10 +38,10 @@ export function ModalShell({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.98, y: 10 }}
               transition={{ duration: 0.15, ease: "easeOut" }}
-              className="w-full max-w-lg bg-surface border border-border-main shadow-2xl pointer-events-auto flex flex-col max-h-full"
+              className="w-full max-w-lg bg-surface shadow-2xl pointer-events-auto flex flex-col max-h-full"
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between p-5 border-b border-border-main bg-main-bg/50 shrink-0">
+              <div className="flex items-center justify-between p-5  bg-main-bg/50 shrink-0">
                 <div className="flex flex-col gap-1">
                   {label && (
                     <span className="font-mono text-[10px] uppercase text-text-muted font-bold tracking-widest">
@@ -67,7 +67,7 @@ export function ModalShell({
 
               {/* Modal Footer */}
               {footer && (
-                <div className="p-5 border-t border-border-main bg-main-bg/50 shrink-0 flex items-center justify-end gap-3">
+                <div className="p-5  bg-main-bg/50 shrink-0 flex items-center justify-end gap-3">
                   {footer}
                 </div>
               )}
@@ -113,7 +113,7 @@ export function AuthModalExample({
     >
       <div className="space-y-6">
         {mode === "register" && (
-          <div className="p-4 bg-primary/5 border border-border-main text-sm">
+          <div className="p-4 bg-primary/5  text-sm">
             <p className="font-mono font-bold text-xs text-primary uppercase mb-1">
               Notice
             </p>

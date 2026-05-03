@@ -96,7 +96,7 @@ function AddResourceModal({
           <input
             name="name"
             required
-            className="w-full bg-surface border border-border-main px-4 py-3 outline-none font-sans text-sm transition-all focus:border-primary"
+            className="w-full bg-surface px-4 py-3 outline-none font-sans text-sm transition-all focus:border-primary"
           />
         </div>
 
@@ -108,7 +108,7 @@ function AddResourceModal({
             name="description"
             required
             rows={3}
-            className="w-full bg-surface border border-border-main px-4 py-3 outline-none font-sans text-sm transition-all focus:border-primary resize-none"
+            className="w-full bg-surface  px-4 py-3 outline-none font-sans text-sm transition-all focus:border-primary resize-none"
           />
         </div>
 
@@ -218,7 +218,7 @@ export function Resources() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16 space-y-12">
-      <div className="flex flex-col md:flex-row md:items-end justify-between items-start gap-4 mb-8 border-b border-border-main border-dashed pb-8 border-t-0 border-x-0">
+      <div className="flex flex-col md:flex-row md:items-end justify-between items-start gap-4 mb-8">
         <SectionHeader
           title="Resources"
           subtitle="Documentation, guides, and tools for the community."
@@ -303,12 +303,12 @@ export function Resources() {
               </p>
 
               {resource.tags && resource.tags.length > 0 && (
-                <div className="pt-4 border-t border-border-main border-dashed mt-auto">
+                <div className="pt-4  mt-auto">
                   <div className="flex flex-wrap gap-1.5">
                     {resource.tags.slice(0, 4).map((tag: string) => (
                       <span
                         key={tag}
-                        className="text-[9px] font-mono uppercase bg-main-bg px-2 py-1 border-b border-r border-border-main text-text-muted font-bold tracking-wider"
+                        className="text-[9px] font-mono uppercase bg-main-bg px-2 py-1 border-b  text-text-muted font-bold tracking-wider"
                       >
                         {tag}
                       </span>

@@ -13,7 +13,7 @@ export function Events() {
         subtitle="Workshops, meetups, and builder co-working sessions."
       />
 
-      <div className="flex gap-4 mb-8 border-b border-dashed border-border-main pb-4 w-full overflow-auto font-mono text-xs uppercase font-bold">
+      <div className="flex gap-4 mb-8  pb-4 w-full overflow-auto font-mono text-xs uppercase font-bold">
         <button className="text-primary hover:text-primary transition-colors">
           Upcoming
         </button>
@@ -31,7 +31,7 @@ export function Events() {
             key={i}
             className="flex flex-col md:flex-row md:items-center gap-6 group hover:bg-main-bg cursor-pointer transition-colors p-4 md:p-6"
           >
-            <div className="flex-shrink-0 text-center border border-border-main bg-surface px-6 py-4 min-w-[120px] group-hover:bg-primary group-hover:text-main-bg transition-colors">
+            <div className="flex-shrink-0 text-center  bg-surface px-6 py-4 min-w-[120px] group-hover:bg-primary group-hover:text-main-bg transition-colors">
               <p className="font-mono text-xs uppercase tracking-widest mb-1">
                 Oct
               </p>
@@ -57,7 +57,7 @@ export function Events() {
               </p>
             </div>
 
-            <div className="flex flex-col items-start md:items-end gap-4 min-w-[150px] font-mono text-xs uppercase border-t border-dashed border-border-main md:border-t-0 md:border-l md:pt-0 md:pl-6 pt-4 mt-4 md:mt-0">
+            <div className="flex flex-col items-start md:items-end gap-4 min-w-[150px] font-mono text-xs uppercase border-t  border-border-main md:border-t-0 md:border-l md:pt-0 md:pl-6 pt-4 mt-4 md:mt-0">
               <div className="space-y-1">
                 <p className="text-text-muted">
                   Time:{" "}

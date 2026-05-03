@@ -62,7 +62,7 @@ export function Leaderboard() {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: rank * 0.1 }}
-        className={`relative flex flex-col items-center justify-end p-6 border border-border-main ${style} ${heightModifier} transition-all group`}
+        className={`relative flex flex-col items-center justify-end p-6  ${style} ${heightModifier} transition-all group`}
       >
         {/* Background Number / Chip Graphic */}
         <div

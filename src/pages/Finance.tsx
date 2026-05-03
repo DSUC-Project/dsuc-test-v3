@@ -67,13 +67,13 @@ export function Finance() {
     return (
       <div className="mx-auto max-w-5xl space-y-8 pt-10">
         <SoftBrutalCard intent="locked" className="flex min-h-[500px] flex-col items-center justify-center space-y-6 bg-surface px-8 py-12 text-center text-text-muted">
-          <div className="flex h-20 w-20 items-center justify-center bg-main-bg border border-border-main text-text-muted text-4xl shadow-sm">
+          <div className="flex h-20 w-20 items-center justify-center bg-main-bg  text-text-muted text-4xl shadow-sm">
             🔒
           </div>
           <h2 className="font-heading text-3xl font-black uppercase tracking-tight text-text-main">
             Finance chỉ dành cho member
           </h2>
-          <p className="max-w-md border border-dashed border-border-main bg-main-bg px-4 py-3 text-sm font-bold uppercase tracking-widest text-text-main shadow-sm">
+          <p className="max-w-md bg-main-bg px-4 py-3 text-sm font-bold uppercase tracking-widest text-text-main shadow-sm">
             Hãy đăng nhập bằng tài khoản DSUC member để truy cập module Finance.
           </p>
           <div className="max-w-lg text-xs font-mono uppercase tracking-widest">
@@ -86,7 +86,7 @@ export function Finance() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 pb-20 pt-10 px-4 sm:px-6">
-      <div className="flex flex-col items-start justify-between gap-6 border-b border-border-main border-dashed pb-6 md:flex-row md:items-end">
+      <div className="flex flex-col items-start justify-between gap-6 pb-6 md:flex-row md:items-end">
         <div>
           <h2 className="mb-3 text-4xl font-heading font-black uppercase tracking-tighter text-text-main">
             Finance
@@ -254,7 +254,7 @@ function SubmitRequestForm({ onSubmitted }: { onSubmitted: () => void }) {
               <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">
                 Bill / Receipt
               </label>
-              <div className="relative border border-dashed border-border-main bg-main-bg transition-colors hover:border-primary cursor-pointer group">
+              <div className="relative border border-border-main bg-main-bg transition-colors hover:border-primary cursor-pointer group">
                 <input
                   type="file"
                   accept="image/*"
@@ -308,7 +308,7 @@ function SubmitRequestForm({ onSubmitted }: { onSubmitted: () => void }) {
           <h4 className="font-heading text-3xl font-black uppercase tracking-tight text-text-main">
             Minh bạch từng khoản chi
           </h4>
-          <p className="mt-4 border-l-4 border-dashed border-primary pl-4 text-sm font-bold text-text-muted">
+          <p className="mt-4 border-l-4 border-primary pl-4 text-sm font-bold text-text-muted">
             Mọi request, phê duyệt và lịch sử thanh toán đều được gom tại đây để
             President và Vice-President quản lý tập trung.
           </p>
@@ -390,7 +390,7 @@ function DirectTransferTool() {
                       </div>
                     </div>
                     {memberBankInfo && (
-                      <div className="pl-14 space-y-1 pt-2 border-t border-border-main border-dashed">
+                      <div className="pl-14 space-y-1 pt-2 ">
                         <div className="text-[9px] font-mono font-bold text-accent">
                           {BANKS.find((b) => b.id === memberBankInfo.bankId)
                             ?.shortName || memberBankInfo.bankId}
@@ -417,7 +417,7 @@ function DirectTransferTool() {
           </div>
         ) : (
           <Card className="space-y-6 p-6 shadow-sm">
-            <div className="flex items-center justify-between border-b border-border-main border-dashed pb-4 border-t-0 border-x-0">
+            <div className="flex items-center justify-between  pb-4 border-t-0 border-x-0">
               <div className="flex items-center gap-4">
                 <div className="h-12 w-12 overflow-hidden border border-border-main bg-main-bg shadow-sm">
                   <img
@@ -477,7 +477,7 @@ function DirectTransferTool() {
                 <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">
                   Proof of Bill
                 </label>
-                <div className="relative border border-dashed border-border-main bg-main-bg p-4 text-center transition-colors hover:border-primary cursor-pointer">
+                <div className="relative border border-border-main bg-main-bg p-4 text-center transition-colors hover:border-primary cursor-pointer">
                   <input
                     type="file"
                     accept="image/*"
@@ -509,7 +509,7 @@ function DirectTransferTool() {
       </div>
 
       {/* Right: QR Display */}
-      <Card className="relative flex flex-col items-center justify-center bg-surface shadow-sm min-h-[460px] p-8 border-dashed">
+      <Card className="relative flex flex-col items-center justify-center bg-surface shadow-sm min-h-[460px] p-8">
         {showQR && selectedMember && bankInfo ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -569,7 +569,7 @@ function PendingRequestsList() {
 
   if (financeRequests.length === 0) {
     return (
-      <Card className="flex h-64 items-center justify-center bg-surface text-sm font-mono font-bold uppercase tracking-widest text-text-muted shadow-sm border-dashed">
+      <Card className="flex h-64 items-center justify-center bg-surface text-sm font-mono font-bold uppercase tracking-widest text-text-muted shadow-sm">
         Không có yêu cầu chờ duyệt
       </Card>
     );
@@ -687,7 +687,7 @@ function ApprovalModal({
         {/* Top: Details */}
         <div className="flex flex-col h-full">
           <div className="space-y-4 font-mono text-xs">
-            <div className="flex justify-between border-b border-border-main border-dashed pb-2">
+            <div className="flex justify-between border-b border-border-main pb-2">
               <span className="uppercase tracking-widest text-text-muted font-bold">
                 Số tiền
               </span>
@@ -695,7 +695,7 @@ function ApprovalModal({
                 {parseInt(request.amount).toLocaleString()} VND
               </span>
             </div>
-            <div className="flex justify-between border-b border-border-main border-dashed pb-2">
+            <div className="flex justify-between border-b border-border-main pb-2">
               <span className="uppercase tracking-widest text-text-muted font-bold">
                 Người gửi
               </span>
@@ -703,13 +703,13 @@ function ApprovalModal({
                 {request.requesterName}
               </span>
             </div>
-            <div className="flex justify-between border-b border-border-main border-dashed pb-2">
+            <div className="flex justify-between border-b border-border-main pb-2">
               <span className="uppercase tracking-widest text-text-muted font-bold">
                 Ngân hàng
               </span>
               <span className="text-primary font-bold">{bankName}</span>
             </div>
-            <div className="flex justify-between border-b border-border-main border-dashed pb-2">
+            <div className="flex justify-between border-b border-border-main pb-2">
               <span className="uppercase tracking-widest text-text-muted font-bold">
                 Số tài khoản
               </span>
@@ -750,7 +750,7 @@ function ApprovalModal({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="relative flex flex-col items-center justify-center p-6 border border-border-main border-dashed bg-main-bg"
+              className="relative flex flex-col items-center justify-center p-6 border border-border-main bg-main-bg"
             >
               <div className="flex flex-col items-center w-full">
                 <div className="border-[4px] border-border-main bg-white p-2 mb-6">
@@ -792,7 +792,7 @@ function HistoryList() {
 
       <div className="overflow-x-auto w-full">
         <div className="min-w-[600px]">
-          <div className="grid grid-cols-4 px-6 py-4 border-b border-border-main border-dashed text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted bg-main-bg">
+          <div className="grid grid-cols-4 px-6 py-4 border-b border-border-main text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted bg-main-bg">
             <span>Status</span>
             <span>Amount</span>
             <span>Reason</span>

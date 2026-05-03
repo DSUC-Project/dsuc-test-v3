@@ -36,7 +36,7 @@ export const SoftBrutalCard = React.forwardRef<HTMLDivElement, SoftBrutalCardPro
       danger: "border-red-500/30 hover:border-red-500",
       info: "border-cyan-500/30 hover:border-cyan-500",
       warning: "border-orange-500/30 hover:border-orange-500",
-      locked: "border-dashed border-border-main opacity-75 backdrop-grayscale",
+      locked: " border-border-main opacity-75 backdrop-grayscale",
     };
 
     const stripColors = {
@@ -53,10 +53,9 @@ export const SoftBrutalCard = React.forwardRef<HTMLDivElement, SoftBrutalCardPro
     return (
       <motion.div
         ref={ref}
-        whileHover={interactive ? { y: -4, transition: { duration: 0.2, ease: "easeOut" } } : undefined}
         className={cn(
-          "bg-surface border p-6 overflow-hidden relative group transition-all duration-200",
-          interactive ? "cursor-pointer hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary/20" : "shadow-sm",
+          "bg-surface border border-border-main p-6 overflow-hidden relative group transition-all duration-300 hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)]",
+          interactive ? "cursor-pointer focus:outline-none" : "shadow-sm",
           baseColors[intent],
           className
         )}
@@ -90,7 +89,7 @@ export const ActionButton = React.forwardRef<
   ActionButtonProps
 >(({ className, variant = "primary", ...props }, ref) => {
   const base =
-    "px-6 py-2.5 font-bold uppercase tracking-widest text-xs transition-all border border-border-main active:translate-y-[2px]";
+    "px-6 py-2.5 font-bold uppercase tracking-widest text-xs transition-all  active:translate-y-[2px]";
   let variants = {
     primary:
       "bg-primary text-primary-foreground shadow-sm hover:shadow-md hover:bg-primary/90",
@@ -146,7 +145,7 @@ export const SectionHeader = ({
 }: SectionHeaderProps) => (
   <div
     className={cn(
-      "mb-12 border-b-2 border-border-main pb-4 flex items-end gap-6",
+      "mb-8 flex items-end gap-6",
       className,
     )}
   >

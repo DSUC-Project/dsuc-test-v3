@@ -36,7 +36,7 @@ export function ProjectDetail() {
     <div className="container mx-auto px-4 py-8 md:py-16 space-y-12">
       <button
         onClick={() => navigate("/projects")}
-        className="flex items-center gap-2 text-text-muted hover:text-text-main transition-colors font-mono text-xs uppercase tracking-widest w-fit border border-border-main px-4 py-2 bg-surface hover:bg-main-bg shadow-sm hover:-translate-y-0.5"
+        className="flex items-center gap-2 text-text-muted hover:text-text-main transition-colors font-mono text-xs uppercase tracking-widest w-fit  px-4 py-2 bg-surface hover:bg-main-bg shadow-sm hover:-translate-y-0.5"
       >
         <ArrowLeft size={16} /> Back to Projects
       </button>
@@ -88,7 +88,7 @@ export function ProjectDetail() {
           </div>
 
           <div className="mb-12 relative z-10 bg-main-bg border border-border-main p-8 mt-8">
-            <h3 className="text-xs font-mono font-bold text-text-muted uppercase mb-6 tracking-widest flex items-center gap-3 border-b border-border-main border-dashed pb-4">
+            <h3 className="text-xs font-mono font-bold text-text-muted uppercase mb-6 tracking-widest flex items-center gap-3">
               <span className="w-2 h-2 bg-primary block" /> Overview
             </h3>
             <p className="text-text-main font-sans text-lg font-medium leading-relaxed">
@@ -96,7 +96,7 @@ export function ProjectDetail() {
             </p>
 
             {project.tech_stack && project.tech_stack.length > 0 && (
-              <div className="mt-8 border-t border-dashed border-border-main pt-6">
+              <div className="mt-8  pt-6">
                 <h4 className="text-[10px] font-mono text-text-muted uppercase tracking-widest mb-4 font-bold">
                   Tech Stack
                 </h4>
@@ -114,7 +114,7 @@ export function ProjectDetail() {
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 relative z-10 mt-auto pt-8 border-t border-dashed border-border-main">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 relative z-10 mt-auto pt-8 border-t  border-border-main">
             <ActionButton
               variant="primary"
               onClick={() => window.open(project.link, "_blank")}

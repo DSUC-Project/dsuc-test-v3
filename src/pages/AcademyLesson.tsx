@@ -907,7 +907,7 @@ export function AcademyLesson() {
   if (loadingCatalog) {
     return (
       <div className="flex flex-col items-center justify-center py-32 space-y-4">
-        <div className="w-12 h-12 border border-border-main rounded-xl border-sky-200 border-t-sky-600 rounded-full animate-spin"></div>
+        <div className="w-12 h-12  rounded-xl border-sky-200 border-t-sky-600 rounded-full animate-spin"></div>
         <div className="text-sky-600 font-bold uppercase tracking-widest text-sm">
           Đang tải bài học...
         </div>
@@ -917,7 +917,7 @@ export function AcademyLesson() {
 
   if (!lesson || !trackInfo) {
     return (
-      <div className="m-8 -main bg-white py-20 text-center text-sm font-bold uppercase tracking-widest text-gray-500 shadow-sm">
+      <div className="m-8 bg-white py-20 text-center text-sm font-bold uppercase tracking-widest text-gray-500 shadow-sm">
         {err || "Không tìm thấy bài học"}
       </div>
     );

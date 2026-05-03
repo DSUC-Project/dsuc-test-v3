@@ -53,14 +53,14 @@ export function Navbar({
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full bg-surface/90 backdrop-blur transition-colors border-b border-dashed border-border-main">
+      <header className="sticky top-0 z-50 w-full bg-surface/90 backdrop-blur transition-colors border-b  border-border-main">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link
             to="/home"
             className="flex items-center gap-2 font-display font-bold text-xl uppercase tracking-tighter"
           >
-            <div className="w-10 h-10 bg-primary border border-border-main shadow-sm flex items-center justify-center overflow-hidden shrink-0">
+            <div className="w-10 h-10 bg-primary  shadow-sm flex items-center justify-center overflow-hidden shrink-0">
               <img
                 src="/logo.png"
                 alt="DSUC"
@@ -205,7 +205,7 @@ export function Navbar({
                   </Link>
                   <button
                     onClick={() => useStore.getState().logout()}
-                    className="px-4 py-2 text-xs uppercase hover:bg-main-bg text-left border-t border-border-main"
+                    className="px-4 py-2 text-xs uppercase hover:bg-main-bg text-left "
                   >
                     Logout
                   </button>
@@ -281,7 +281,7 @@ export function Navbar({
                   )}
                 </div>
 
-                <div className="flex items-center justify-between mt-4 border-dashed -main pt-4">
+                <div className="flex items-center justify-between mt-4 border-dashed pt-4">
                   <button
                     onClick={onToggleTheme}
                     className="flex items-center gap-2 p-2 border-border-main"

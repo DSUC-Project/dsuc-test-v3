@@ -40,7 +40,7 @@ export function SkillInput({
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              className="group flex items-center gap-2 bg-main-bg border border-border-main px-3 py-1.5 shadow-sm hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-md-none transition-all"
+              className="group flex items-center gap-2 bg-main-bg  px-3 py-1.5 shadow-sm hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-md-none transition-all"
             >
               <span className="font-mono text-xs font-bold uppercase text-text-main">
                 {skill}

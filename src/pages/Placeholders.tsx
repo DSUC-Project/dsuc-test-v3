@@ -5,7 +5,7 @@ export function ComponentPlaceholder({ title }: { title: string }) {
   return (
     <div className="container mx-auto px-4 py-16">
       <SectionHeader title={title} />
-      <div className="p-12 border-2 border-dashed border-border-main bg-main-bg text-center text-text-muted font-mono uppercase text-xs">
+      <div className="p-12 border-2 border-border-main bg-main-bg text-center text-text-muted font-mono uppercase text-xs">
         {title} page placeholder matching the DSUC Labs OS design system.
       </div>
     </div>

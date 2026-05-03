@@ -240,7 +240,7 @@ export function MyProfile() {
   return (
     <div className="min-h-screen pt-10 pb-32 max-w-6xl mx-auto px-4 sm:px-6 overflow-x-hidden bg-main-bg">
       {isOnboarding && (
-        <div className="mb-8 bg-surface border border-border-main p-6 rounded-lg shadow-sm">
+        <div className="mb-8 bg-surface  p-6 rounded-lg shadow-sm">
           <div className="text-xs font-bold uppercase tracking-widest text-primary mb-2">
             First Time Setup
           </div>
@@ -252,7 +252,7 @@ export function MyProfile() {
       )}
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-dashed border-border-main pb-6 mb-8 mt-4 gap-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end  pb-6 mb-8 mt-4 gap-6">
         <div>
           <h2 className="text-4xl sm:text-5xl font-display font-bold tracking-tight uppercase text-text-main">
             MY PROFILE
@@ -376,7 +376,7 @@ export function MyProfile() {
             transition={{ delay: 0.1 }}
           >
             <SoftBrutalCard intent="accent" className="p-8">
-              <div className="flex justify-between items-start mb-6 border-b border-dashed border-border-main pb-5">
+              <div className="flex justify-between items-start mb-6 border-b  border-border-main pb-5">
                 <div>
                   <h3 className="text-xl font-display font-bold text-text-main flex items-center gap-2">
                     <Link2 size={24} className="text-accent" /> Social Links
@@ -507,7 +507,7 @@ export function MyProfile() {
                   <div className="text-4xl font-display font-bold text-text-main">
                     {currentUser.streak || 0}
                   </div>
-                  <div className="text-[10px] font-bold text-text-main uppercase tracking-widest mt-2 border-t border-border-main pt-2 w-full">
+                  <div className="text-[10px] font-bold text-text-main uppercase tracking-widest mt-2  pt-2 w-full">
                     Learning Streak
                   </div>
                 </div>

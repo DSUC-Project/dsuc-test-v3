@@ -13,7 +13,7 @@ function MarqueeStrip() {
   const text =
     "BUILD · LEARN · SHIP · SOLANA · WEB3 · CODE · COMMUNITY · DSUC LABS · ";
   return (
-    <div className="w-full relative overflow-hidden py-4 border-y border-dashed border-border-main bg-main-bg dark:bg-navy-surface flex items-center">
+    <div className="w-full relative overflow-hidden py-4  bg-main-bg dark:bg-navy-surface flex items-center">
       <motion.div
         className="flex whitespace-nowrap font-display uppercase font-bold text-2xl tracking-widest text-primary"
         animate={{ x: ["0%", "-50%"] }}
@@ -49,7 +49,7 @@ export function Home() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1 border border-border-main mb-8 bg-surface uppercase font-mono text-xs tracking-widest text-text-muted"
+              className="inline-flex items-center gap-2 px-3 py-1  mb-8 bg-surface uppercase font-mono text-xs tracking-widest text-text-muted"
             >
               <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
               DSUC Labs / Builder Operating System
@@ -100,7 +100,7 @@ export function Home() {
               </Link>
               <ActionButton
                 variant="secondary"
-                className="border-dashed"
+                className=""
                 onClick={() => setContactOpen(true)}
               >
                 Contact DSUC
@@ -201,7 +201,7 @@ export function Home() {
       <MarqueeStrip />
 
       {/* System Overview Strip */}
-      <section className="bg-main-bg/50 border-t border-b border-border-main">
+      <section className="bg-main-bg/50 border-t ">
         <div className="container mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-border-main border-x border-border-main">
             {[
