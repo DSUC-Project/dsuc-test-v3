@@ -26,14 +26,14 @@ export function Members() {
   });
 
   const officialMembers = filteredMembers.filter(
-    (m) => m.memberType !== "community",
+    (m) => m.role !== "Community",
   );
   const communityMembers = filteredMembers.filter(
-    (m) => m.memberType === "community",
+    (m) => m.role === "Community",
   );
 
   const MemberCard = ({ member, intent = "default" }: { member: Member, intent?: "default" | "primary" | "warning" | "success" | "danger" | "info" | "locked" | "accent" }) => (
-    <div onClick={() => navigate(`/member/${member.id}`)} className="h-full cursor-pointer focus:outline-none group">
+    <div onClick={() => navigate(`/members/${member.id}`)} className="h-full cursor-pointer focus:outline-none group">
       <div className="relative h-full flex flex-col bg-surface border border-border-main transition-all duration-300 hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] overflow-hidden">
         
         {/* Header Cover Banner */}
@@ -54,7 +54,7 @@ export function Members() {
 
         <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-2 py-1 bg-surface font-mono text-[9px] uppercase font-black text-text-main border border-border-main">
           <span className={`w-2 h-2 rounded-full ${member.is_active ? 'bg-primary animate-pulse' : 'bg-gray-400'}`}></span>
-          {member.memberType === "community" ? "COMMUNITY" : "CORE"}
+          {member.role === "Community" ? "COMMUNITY" : "CORE"}
         </div>
 
         {/* Card Body */}

@@ -26,18 +26,33 @@ function AddEventModal({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    onAdd({
-      id: Math.random().toString(),
-      title: formData.get("title") as string,
-      date: formData.get("date") as string,
-      time: formData.get("time") as string,
-      location: formData.get("location") as string,
-      luma_link: formData.get("luma_link") as string,
-      description: formData.get("description") as string,
-      type: "Workshop",
-      attendees: 0,
-    });
-    onClose();
+    const imageFile = formData.get("image") as File;
+    
+    const finalizeAdd = (imageUrl?: string) => {
+      onAdd({
+        id: Math.random().toString(),
+        title: formData.get("title") as string,
+        date: formData.get("date") as string,
+        time: formData.get("time") as string,
+        location: formData.get("location") as string,
+        luma_link: formData.get("luma_link") as string,
+        description: formData.get("description") as string,
+        type: "Workshop",
+        attendees: 0,
+        image: imageUrl,
+      });
+      onClose();
+    };
+
+    if (imageFile && imageFile.size > 0) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        finalizeAdd(reader.result as string);
+      };
+      reader.readAsDataURL(imageFile);
+    } else {
+      finalizeAdd(undefined);
+    }
   };
 
   return (
@@ -49,13 +64,8 @@ function AddEventModal({
       footer={
         <div className="w-full flex items-center justify-end">
           <ActionButton
-            onClick={() =>
-              document
-                .getElementById("add-event-form")
-                ?.dispatchEvent(
-                  new Event("submit", { cancelable: true, bubbles: true }),
-                )
-            }
+            type="submit"
+            form="add-event-form"
             variant="primary"
           >
             Create Event
@@ -71,7 +81,19 @@ function AddEventModal({
           <input
             name="title"
             required
-            className="w-full  bg-surface p-3 text-sm focus:border-primary outline-none transition-colors"
+            className="w-full border border-border-main bg-surface p-3 text-sm focus:border-primary outline-none transition-colors"
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold uppercase tracking-widest text-text-muted">
+            Cover Image (Optional)
+          </label>
+          <input
+            name="image"
+            type="file"
+            accept="image/*"
+            className="w-full border border-border-main bg-surface p-2 text-sm focus:border-primary outline-none transition-colors file:mr-4 file:py-1 file:px-3 file:border-2 file:border-text-main file:bg-highlight file:text-text-main file:font-mono file:text-xs file:font-bold hover:file:bg-text-main hover:file:text-surface file:transition-colors file:shadow-[2px_2px_0_0_#000] dark:file:shadow-[2px_2px_0_0_#fff] cursor-pointer"
           />
         </div>
 
@@ -267,7 +289,8 @@ export function Events() {
           )}
         </div>
       ) : (
-        <div className="relative border-l-[3px] border-text-main ml-4 md:ml-8 pl-6 md:pl-12 py-4 space-y-10 before:content-[''] before:absolute before:border-l-[3px] before: before:border-surface before:left-[-3px] before:top-0 before:h-full before:w-0">
+        <div className="relative py-8 md:py-12 space-y-8 md:space-y-16">
+          <div className="absolute left-[24px] md:left-1/2 top-0 bottom-0 w-[3px] bg-text-main -ml-[1.5px] z-0"></div>
           {filteredEvents.length > 0 ? (
             filteredEvents.map((evt, idx) => {
               const dateObj = evt.date ? new Date(evt.date) : new Date();
@@ -279,64 +302,73 @@ export function Events() {
                   (evt as any).link ||
                   "",
               ).trim();
+              const isEven = idx % 2 === 0;
               
               return (
                 <div 
                   key={evt.id} 
-                  className={`relative group ${lumaLink ? 'cursor-pointer' : ''}`}
+                  className={`relative w-full flex flex-col md:flex-row group ${lumaLink ? 'cursor-pointer' : ''} ${isEven ? 'md:justify-start' : 'md:justify-end'}`}
                   onClick={() => {
                     if (lumaLink) window.open(lumaLink, "_blank", "noopener,noreferrer");
                   }}
                 >
                   {/* Timeline Node Marker */}
-                  <div className="absolute -left-[32px] md:-left-[56px] top-6 w-4 h-4 rounded-none bg-surface border-4 border-text-main group-hover:bg-primary group-hover:scale-125 transition-transform z-10 shadow-[2px_2px_0_0_rgba(0,0,0,1)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,1)]" />
+                  <div className="absolute left-[24px] md:left-1/2 top-8 md:top-1/2 w-5 h-5 bg-surface border-[4px] border-text-main -translate-x-1/2 md:-translate-y-1/2 group-hover:bg-primary group-hover:scale-125 transition-all z-10 shadow-[2px_2px_0_0_#000] dark:shadow-[2px_2px_0_0_#fff]" />
                   
                   {/* Compact Event Card */}
-                  <div className="bg-surface border-2 border-text-main shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] group-hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:group-hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] group-hover:-translate-y-1 group-hover:-translate-x-1 transition-all duration-300 p-0 flex flex-row items-stretch">
+                  <div className={`w-[calc(100%-48px)] md:w-[calc(50%-48px)] ml-auto md:ml-0 flex flex-col bg-surface border-2 border-text-main shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#fff] group-hover:shadow-[8px_8px_0_0_#000] dark:group-hover:shadow-[8px_8px_0_0_#fff] group-hover:-translate-y-1 group-hover:-translate-x-1 transition-all duration-300 p-0`}>
                     
-                    {/* Date Block */}
-                    <div className="flex flex-col items-center justify-center p-4 bg-main-bg border-r-2 border-text-main w-20 md:w-24 group-hover:bg-primary group-hover:text-surface transition-colors flex-shrink-0">
-                      <span className="font-heading font-black text-3xl leading-none">{day}</span>
-                      <span className="font-mono text-[10px] uppercase font-bold tracking-widest mt-1 opacity-80">{month}</span>
-                    </div>
+                    {evt.image && (
+                      <div className="w-full h-32 md:h-40 border-b-2 border-text-main overflow-hidden bg-highlight flex-shrink-0">
+                         <img src={evt.image} alt={evt.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 origin-center filter grayscale group-hover:grayscale-0" />
+                      </div>
+                    )}
+                    
+                    <div className="flex flex-row items-stretch w-full">
+                      {/* Date Block */}
+                      <div className="flex flex-col items-center justify-center p-4 bg-main-bg border-r-2 border-text-main w-20 md:w-24 group-hover:bg-primary group-hover:text-surface transition-colors flex-shrink-0">
+                        <span className="font-heading font-black text-3xl leading-none">{day}</span>
+                        <span className="font-mono text-[10px] uppercase font-bold tracking-widest mt-1 opacity-80">{month}</span>
+                      </div>
 
-                    {/* Content Block */}
-                    <div className="flex-1 p-4 flex flex-col justify-center min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="px-2 py-0.5 bg-highlight text-text-main border border-text-main text-[9px] font-mono uppercase font-black tracking-widest">
-                          {evt.type || "EVENT"}
-                        </span>
-                        {evt.time && (
-                          <span className="font-mono text-[10px] font-bold text-text-muted flex items-center gap-1 group-hover:text-primary transition-colors">
-                            <Clock size={10} /> {evt.time}
+                      {/* Content Block */}
+                      <div className="flex-1 p-4 flex flex-col justify-center min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="px-2 py-0.5 bg-highlight text-text-main border border-text-main text-[9px] font-mono uppercase font-black tracking-widest">
+                            {evt.type || "EVENT"}
                           </span>
-                        )}
-                      </div>
-                      
-                      <h3 className="font-heading font-black text-lg md:text-xl uppercase tracking-tight text-text-main line-clamp-1 mb-1">
-                        {evt.title}
-                      </h3>
-                      
-                      <div className="flex items-center gap-3 font-mono text-[10px] font-bold text-text-muted mt-2">
-                         {evt.location && (
-                            <span className="flex items-center gap-1 truncate max-w-[150px] md:max-w-xs">
-                               <MapPin size={10} className="text-primary" /> {evt.location}
+                          {evt.time && (
+                            <span className="font-mono text-[10px] font-bold text-text-muted flex items-center gap-1 group-hover:text-primary transition-colors">
+                              <Clock size={10} /> {evt.time}
                             </span>
-                         )}
+                          )}
+                        </div>
+                        
+                        <h3 className="font-heading font-black text-lg md:text-xl uppercase tracking-tight text-text-main line-clamp-1 mb-1">
+                          {evt.title}
+                        </h3>
+                        
+                        <div className="flex items-center gap-3 font-mono text-[10px] font-bold text-text-muted mt-2">
+                           {evt.location && (
+                              <span className="flex flex-1 items-center gap-1 truncate">
+                                 <MapPin size={10} className="text-primary flex-shrink-0" /> <span className="truncate">{evt.location}</span>
+                              </span>
+                           )}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Action Block */}
-                    {lumaLink && (
-                      <div className="hidden sm:flex items-center justify-center px-6 border-l-2 border-text-main bg-main-bg text-text-muted group-hover:bg-text-main group-hover:text-surface transition-colors">
-                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    )}
-                    {lumaLink && (
-                      <div className="sm:hidden flex items-center justify-center px-4 text-text-muted group-hover:text-primary transition-colors border-l-2 border-dashed border-border-main">
-                        <ArrowRight size={16} />
-                      </div>
-                    )}
+                      {/* Action Block */}
+                      {lumaLink && (
+                        <div className="hidden sm:flex items-center justify-center px-4 md:px-6 border-l-2 border-text-main bg-main-bg text-text-muted group-hover:bg-text-main group-hover:text-surface transition-colors flex-shrink-0">
+                          <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      )}
+                      {lumaLink && (
+                        <div className="sm:hidden flex items-center justify-center px-4 text-text-muted group-hover:text-primary transition-colors border-l-2 border-dashed border-border-main flex-shrink-0">
+                          <ArrowRight size={16} />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               );

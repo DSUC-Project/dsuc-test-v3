@@ -38,16 +38,16 @@ export function Members() {
   });
 
   const officialMembers = filteredMembers.filter(
-    (m) => m.memberType === "member",
+    (m) => m.role !== "Community",
   );
   const communityMembers = filteredMembers.filter(
-    (m) => m.memberType === "community",
+    (m) => m.role === "Community",
   );
 
   const MemberCard = ({ member }: { member: (typeof mockMembers)[0] }) => (
     <div
       className="bg-surface border border-border-main shadow-sm p-6 text-center transition-all duration-300 hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] cursor-pointer group"
-      onClick={() => navigate(`/member/${member.id}`)}
+      onClick={() => navigate(`/members/${member.id}`)}
     >
       <img
         src={member.avatar}
@@ -58,7 +58,7 @@ export function Members() {
         {member.name}
       </h3>
       <p className="font-mono text-xs uppercase text-text-muted mb-3">
-        {member.role}
+        {member.role || "Member"}
       </p>
       <div className="flex flex-wrap gap-1 justify-center mb-4 min-h-[22px]">
         {member.skills.slice(0, 3).map((s) => (

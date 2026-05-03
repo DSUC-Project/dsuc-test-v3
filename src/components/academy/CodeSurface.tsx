@@ -282,9 +282,9 @@ export function CodeSurface({
 
   return (
     <div
-      className={`overflow-hidden rounded-xl border border-[#333] bg-[#1e1e1e] shadow-sm flex flex-col ${className}`}
+      className={`overflow-hidden border border-[#333] shadow-[4px_4px_0_0_#000] flex flex-col ${className}`}
     >
-      <div className="flex items-center gap-2 border-b border-[#333] bg-[#252526] px-4 py-2 shrink-0">
+      <div className="flex items-center gap-2 border-b-2 border-[#111] bg-[#252526] px-4 py-2 shrink-0">
         <div className="h-3 w-3 rounded-full bg-[#F14C4C]" />
         <div className="h-3 w-3 rounded-full bg-[#CCA700]" />
         <div className="h-3 w-3 rounded-full bg-[#3BA55D]" />
@@ -293,7 +293,7 @@ export function CodeSurface({
         </div>
       </div>
       <div
-        className={`relative flex-1 bg-[#1e1e1e] overflow-auto  ${maxHeightClass}`}
+        className={`relative flex-1 bg-[#1e1e1e] overflow-auto ${maxHeightClass}`}
       >
         <div className="absolute left-0 top-0 bottom-0 w-[48px] py-4 pr-4 text-right text-xs text-[#6E7681] select-none font-mono leading-[24px]">
           {Array.from({ length: linesCount }).map((_, i) => (
@@ -333,9 +333,9 @@ export function CodeEditorPane({
 
   return (
     <div
-      className={`overflow-hidden rounded-xl border border-[#333] bg-[#1e1e1e] shadow-sm flex-1 flex flex-col ${className}`}
+      className={`overflow-hidden flex-1 flex flex-col border-t-0 border-[#333] ${className}`}
     >
-      <div className="flex items-center gap-2 border-b border-[#333] bg-[#252526] px-4 py-2 shrink-0">
+      <div className="flex items-center gap-2 border-b-2 border-[#111] bg-[#252526] px-4 py-2 shrink-0">
         <div className="h-3 w-3 rounded-full bg-[#F14C4C]" />
         <div className="h-3 w-3 rounded-full bg-[#CCA700]" />
         <div className="h-3 w-3 rounded-full bg-[#3BA55D]" />
@@ -363,7 +363,7 @@ export function CodeEditorPane({
               if (gutterRef.current)
                 gutterRef.current.scrollTop = event.currentTarget.scrollTop;
             }}
-            className="flex-1 m-0 p-0 pr-4 py-4 font-mono text-[13px] leading-[24px] resize-none bg-transparent outline-none whitespace-pre break-normal overflow-auto "
+            className="flex-1 m-0 p-0 pl-1 pr-4 py-4 font-mono text-[13px] leading-[24px] resize-none bg-transparent outline-none whitespace-pre break-normal overflow-auto w-full"
             style={{
               color: "#d4d4d4",
               caretColor: "#d4d4d4",

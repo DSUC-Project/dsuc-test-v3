@@ -361,8 +361,8 @@ export function MyProfile() {
                   )}
                 </div>
 
-                <div className="mb-6 flex w-fit items-center gap-2 border border-border-main bg-cyan-400 px-4 py-2 font-bold uppercase tracking-widest text-surface shadow-sm">
-                  <Flame className="text-surface" size={18} />
+                <div className="mb-6 flex w-fit items-center gap-2 border border-border-main bg-primary px-4 py-2 font-bold uppercase tracking-widest text-main-bg shadow-sm">
+                  <Flame className="text-main-bg" size={18} />
                   <span className="font-display text-2xl leading-none">
                     {currentUser.streak || 0}
                   </span>
@@ -390,13 +390,13 @@ export function MyProfile() {
                     <label className="text-[10px] font-bold text-text-main uppercase tracking-widest pl-1">
                       Member Tier
                     </label>
-                    <div className="w-full bg-cyan-400 border border-border-main px-4 py-3 text-surface font-bold text-sm uppercase tracking-wider flex items-center justify-between shadow-sm">
+                    <div className="w-full bg-primary border border-border-main px-4 py-3 text-main-bg font-bold text-sm uppercase tracking-wider flex items-center justify-between shadow-sm">
                       <span>
                         {currentUser.memberType === "community"
                           ? "Community"
                           : currentUser.role}
                       </span>
-                      <Hexagon size={20} className="text-surface" />
+                      <Hexagon size={20} className="text-main-bg" />
                     </div>
                   </div>
                 </div>
@@ -543,20 +543,20 @@ export function MyProfile() {
             transition={{ delay: 0.2 }}
             className="w-full"
           >
-            <SoftBrutalCard intent="primary" className="overflow-hidden p-0 w-full bg-primary text-primary-foreground">
+            <SoftBrutalCard intent="default" className="overflow-hidden p-0 w-full bg-surface text-text-main border-2 border-text-main relative z-10">
               <div className="p-8 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-border-main relative z-10 gap-6">
                 <div>
                   <h3 className="text-2xl font-display font-bold flex items-center gap-3">
                     <Trophy size={32} />
                     Learning Progress
                   </h3>
-                  <p className="font-bold text-sm mt-2 opacity-90">
+                  <p className="font-bold text-sm mt-2 text-text-muted">
                     Overview of your learning journey and achievements.
                   </p>
                 </div>
                 <button
                   onClick={() => navigate("/academy")}
-                  className="group flex items-center justify-center gap-2 bg-surface hover:bg-main-bg text-text-main border border-border-main shadow-[4px_4px_0_0_#000] px-6 py-4 font-bold text-xs uppercase tracking-wider transition-all hover:shadow-[6px_6px_0_0_#000] hover:-translate-y-1 hover:-translate-x-1"
+                  className="group flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-main-bg border border-border-main shadow-[4px_4px_0_0_#000] px-6 py-4 font-bold text-xs uppercase tracking-wider transition-all hover:shadow-[6px_6px_0_0_#000] hover:-translate-y-1 hover:-translate-x-1"
                 >
                   Go to Academy{" "}
                   <ArrowRight

@@ -941,23 +941,23 @@ export function AcademyLesson() {
         onExit={() => void exitToAcademy()}
       />
 
-      <div className="sticky top-24 z-50 flex flex-col gap-4 -main bg-white p-4 shadow-sm">
+      <div className="sticky top-24 z-50 flex flex-col gap-4 bg-surface p-4 border border-text-main shadow-[4px_4px_0_0_#000]">
         <div className="flex items-center justify-between">
           <button
             onClick={() => navigate(`/academy/community/${track}`)}
-            className="flex h-12 w-12 items-center justify-center bg-white border border-border-main text-text-main hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm hover:-translate-y-1 "
+            className="flex h-12 w-12 items-center justify-center bg-main-bg border border-text-main text-text-main transition-colors shadow-[2px_2px_0_0_#000] hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000]"
           >
             <ArrowLeft className="h-6 w-6" strokeWidth={3} />
           </button>
 
-          <div className="relative mx-6 h-6 flex-1 -main bg-gray-200">
+          <div className="relative mx-6 h-6 flex-1 bg-main-bg border border-text-main shadow-inner">
             <div
-              className="absolute left-0 top-0 h-full bg-primary text-primary-foreground -main transition-all duration-500 ease-out"
+              className="absolute left-0 top-0 h-full bg-primary text-primary-foreground transition-all duration-500 ease-out border-r border-text-main"
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
 
-          <div className="flex items-center gap-2 bg-surface text-text-main -main px-4 py-2 font-mono text-sm font-bold tracking-widest shadow-sm">
+          <div className="flex items-center gap-2 bg-main-bg text-text-main px-4 py-2 font-mono text-sm font-bold tracking-widest shadow-[2px_2px_0_0_#000] border border-text-main">
             <Trophy className="h-5 w-5 fill-text-main text-text-main" />
             <span className="hidden sm:inline">Chuỗi: </span>
             <span className="text-xl font-heading text-text-main leading-none">
@@ -966,30 +966,35 @@ export function AcademyLesson() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-2 font-mono text-[10px] font-bold uppercase tracking-widest text-text-main">
-          <span className="bg-white border border-border-main px-3 py-1 shadow-sm">
+        <div className="flex items-center justify-between px-2 font-mono text-[10px] font-bold uppercase tracking-widest text-text-main mt-4">
+          <span className="bg-main-bg border border-text-main px-3 py-1 shadow-[2px_2px_0_0_#000]">
             {trackTitle}
           </span>
-          <span className="bg-white border border-border-main px-3 py-1 shadow-sm">
+          <span className="bg-main-bg border border-text-main px-3 py-1 shadow-[2px_2px_0_0_#000]">
             Bước {currentStep + 1}/{totalSteps}
           </span>
         </div>
       </div>
 
-      <div className="relative flex min-h-[60vh] flex-col -main bg-white p-6 shadow-sm sm:p-10">
+      <div className="relative flex min-h-[60vh] flex-col bg-surface p-6 sm:p-10 border border-text-main shadow-[4px_4px_0_0_#000]">
         {err && (
-          <div className="mb-8 flex items-center gap-3 -main bg-primary text-primary-foreground px-5 py-4 font-mono text-[13px] font-bold uppercase tracking-widest shadow-sm">
+          <div className="mb-8 flex items-center gap-3 bg-primary text-primary-foreground px-5 py-4 font-mono text-[13px] font-bold uppercase tracking-widest shadow-[2px_2px_0_0_#000] border border-text-main">
             <Terminal size={20} className="shrink-0 text-white" /> {err}
           </div>
         )}
 
         {currentStep === 0 && (
           <div className="animate-in slide-in-from-right-8 duration-500 fade-in flex-grow">
-            <h1 className="mb-6 text-4xl font-heading font-bold text-text-main sm:text-5xl leading-tight tracking-tight">
-              {lesson.title}
-            </h1>
+            <div className="mb-8 flex flex-col gap-4 border-b-2 border-border-main pb-8">
+              <div className="mb-2 inline-block border border-text-main bg-primary px-2 py-1 text-xs font-bold uppercase tracking-widest text-main-bg shadow-[2px_2px_0_0_#000] w-fit">
+                Community Lesson
+              </div>
+              <h1 className="text-4xl font-heading font-black text-text-main sm:text-5xl uppercase tracking-tighter mt-4">
+                {lesson.title}
+              </h1>
+            </div>
 
-            <div className="mb-8 max-w-none text-base font-medium leading-relaxed text-slate-800">
+            <div className="mb-8 markdown-body prose-dsuc max-w-none">
               {renderMd(lesson.content_md)}
             </div>
 
@@ -998,13 +1003,13 @@ export function AcademyLesson() {
                 {lesson.callouts.map((callout, index) => (
                   <div
                     key={`${callout.title}-${index}`}
-                    className="relative overflow-hidden -main bg-surface p-6 shadow-sm rounded-xl"
+                    className="relative overflow-hidden bg-main-bg p-6 shadow-[4px_4px_0_0_#000] border border-text-main"
                   >
-                    <div className="mb-3 flex items-center gap-3 font-heading text-lg font-bold text-text-main bg-white -main px-4 py-2 w-fit uppercase tracking-widest">
+                    <div className="mb-3 flex items-center gap-3 font-heading text-lg font-bold text-text-main bg-surface px-4 py-2 w-fit uppercase tracking-widest border border-text-main shadow-[2px_2px_0_0_#000]">
                       <Terminal size={20} className="text-text-main" />{" "}
                       {callout.title || "Lưu ý"}
                     </div>
-                    <div className="relative z-10 text-base font-bold leading-relaxed text-text-main bg-white/50 p-4 -main">
+                    <div className="relative z-10 text-base font-bold leading-relaxed text-text-main bg-surface p-4 border border-text-main">
                       {callout.body}
                     </div>
                   </div>

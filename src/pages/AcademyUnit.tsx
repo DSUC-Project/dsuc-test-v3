@@ -507,18 +507,18 @@ export function AcademyUnit() {
       )}
 
       <div
-        className={`flex flex-col gap-8 ${isPractice ? "xl:flex-row" : "xl:grid xl:grid-cols-[minmax(0,1fr)_320px]"}`}
+        className={`flex flex-col gap-8 ${isPractice ? "xl:grid xl:grid-cols-[34%_minmax(0,1fr)]" : "xl:grid xl:grid-cols-[minmax(0,1fr)_320px]"}`}
       >
         {isPractice && (
-          <div className="flex w-full shrink-0 flex-col gap-6 xl:w-[400px] xl:order-1">
-            <section className="flex flex-col rounded-xl border border-border-main bg-white shadow-sm xl:sticky xl:top-24">
-              <div className="mb-4 flex items-center gap-2  pb-3 p-5">
-                <div className="rounded-md border border-border-main bg-surface px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-main shadow-sm">
+          <div className="flex w-full min-w-0 flex-col gap-6 xl:order-1">
+            <section className="flex flex-col rounded-xl border border-border-main bg-surface shadow-[4px_4px_0_0_#000] xl:sticky xl:top-24 xl:max-h-[calc(100vh-120px)]">
+              <div className="mb-4 flex items-center gap-2 border-b-2 border-text-main bg-main-bg pb-3 p-5">
+                <div className="rounded-md border border-text-main bg-primary text-main-bg px-2 py-1 text-[10px] font-bold uppercase tracking-widest shadow-[2px_2px_0_0_#000]">
                   Lab Instructions
                 </div>
               </div>
-              <div className="flexible-container overflow-y-auto  p-5 pt-0">
-                <div className="markdown-body prose prose-slate prose-sm max-w-none prose-headings:font-heading prose-headings:font-bold prose-headings:text-text-main prose-headings:uppercase prose-p:text-text-muted hover:prose-a:text-primary prose-strong:font-bold prose-code:font-mono">
+              <div className="flexible-container overflow-y-auto p-5 pt-0">
+                <div className="markdown-body prose-dsuc max-w-none">
                   {renderMd(unit.content_md)}
                 </div>
               </div>
@@ -532,16 +532,16 @@ export function AcademyUnit() {
           {!isPractice ? (
             <>
               {embedUrl && (
-                <section className="overflow-hidden rounded-xl border border-border-main bg-white shadow-sm">
-                  <div className="border-b border-border-main bg-surface px-6 py-4">
+                <section className="overflow-hidden border border-text-main bg-surface shadow-[4px_4px_0_0_#000]">
+                  <div className="border-b-2 border-text-main bg-main-bg px-6 py-4">
                     <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                       Video Lesson
                     </div>
-                    <h2 className="font-heading text-xl font-bold uppercase tracking-tight text-text-main">
+                    <h2 className="font-heading text-xl font-black uppercase tracking-tight text-text-main">
                       Watch Tutorial
                     </h2>
                   </div>
-                  <div className="relative w-full bg-primary pb-[56.25%] text-primary-foreground">
+                  <div className="relative w-full bg-main-bg pb-[56.25%] text-text-main">
                     <iframe
                       src={embedUrl}
                       title={unit.title}
@@ -553,23 +553,23 @@ export function AcademyUnit() {
                 </section>
               )}
 
-              <section className="rounded-xl border border-border-main bg-white p-6 shadow-sm sm:p-10">
-                <div className="mb-8 flex flex-col gap-4 border-b border-border-main pb-8 sm:flex-row sm:items-end sm:justify-between">
+              <section className="bg-surface border border-text-main p-6 sm:p-10 shadow-[4px_4px_0_0_#000]">
+                <div className="mb-8 flex flex-col gap-4 border-b-2 border-border-main pb-8 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <div className="mb-2 inline-block rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                    <div className="mb-2 inline-block border border-text-main bg-primary px-2 py-1 text-xs font-bold uppercase tracking-widest text-main-bg shadow-[2px_2px_0_0_#000]">
                       Theory Lesson
                     </div>
-                    <h2 className="font-heading text-3xl font-bold uppercase tracking-tighter text-text-main sm:text-4xl text-primary">
+                    <h2 className="font-heading text-3xl font-black uppercase tracking-tighter text-text-main sm:text-4xl mt-4">
                       Course Content
                     </h2>
                   </div>
                   {outline.length > 0 && (
-                    <div className="shrink-0 rounded-full border border-border-main bg-surface px-4 py-2 text-xs font-medium text-text-main">
+                    <div className="shrink-0 border border-text-main bg-main-bg px-4 py-2 text-xs font-bold uppercase tracking-widest text-text-main shadow-[2px_2px_0_0_#000]">
                       {outline.length} sections
                     </div>
                   )}
                 </div>
-                <div className="markdown-body prose prose-slate max-w-[800px] prose-headings:font-heading prose-headings:font-bold prose-headings:text-text-main prose-headings:uppercase prose-p:text-text-muted prose-p:font-medium hover:prose-a:text-primary prose-a:font-bold prose-strong:font-bold">
+                <div className="markdown-body prose-dsuc max-w-[800px]">
                   {renderMd(unit.content_md)}
                 </div>
               </section>
@@ -580,25 +580,25 @@ export function AcademyUnit() {
                   onClick={() =>
                     navigate(`/academy/unit/${course.id}/${next_unit.id}`)
                   }
-                  className="group flex w-full items-center justify-between gap-4 rounded-xl border border-border-main bg-surface p-6 text-left shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+                  className="group flex w-full items-center justify-between gap-4 border border-text-main bg-surface p-6 text-left shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000]"
                 >
                   <div className="min-w-0">
-                    <div className="mb-2 inline-block rounded-md border border-border-main bg-white px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-muted shadow-sm">
+                    <div className="mb-2 inline-block border border-text-main bg-main-bg px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                       Up Next
                     </div>
                     <h3 className="truncate font-heading text-xl font-bold uppercase text-text-main sm:text-2xl group-hover:text-primary transition-colors">
                       {next_unit.title}
                     </h3>
-                    <p className="mt-2 text-sm font-medium leading-relaxed text-text-muted">
+                    <p className="mt-2 text-sm font-mono leading-relaxed text-text-muted">
                       {next_unit.section === "practice"
                         ? "Next step is a practical lab to apply what you just learned."
                         : "Continue with the next reading unit."}
                     </p>
                   </div>
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border-main bg-white shadow-sm transition-transform group-hover:translate-x-1 group-hover:border-primary group-hover:text-primary">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-text-main bg-main-bg shadow-[2px_2px_0_0_#000] transition-transform group-hover:-rotate-12 group-hover:text-primary group-hover:border-primary">
                     <ChevronRight
                       className="h-6 w-6"
-                      strokeWidth={2}
+                      strokeWidth={3}
                       aria-hidden="true"
                     />
                   </div>
@@ -607,8 +607,8 @@ export function AcademyUnit() {
             </>
           ) : (
             <>
-              <section className="relative flex flex-col rounded-xl border border-border-main bg-main-bg shadow-sm overflow-hidden">
-                <div className="flex flex-col justify-between gap-4 border-b border-border-main bg-white px-4 py-3 sm:flex-row sm:items-center">
+              <section className="relative flex flex-col border border-text-main bg-main-bg shadow-[4px_4px_0_0_#000] xl:max-h-[calc(100vh-120px)] overflow-hidden xl:sticky xl:top-24 xl:self-start">
+                <div className="flex flex-col justify-between gap-4 border-b-2 border-text-main bg-surface px-4 py-3 sm:flex-row sm:items-center">
                   <div className="flex flex-wrap items-center gap-2">
                     <LabTabButton
                       label="Editor"
@@ -642,32 +642,32 @@ export function AcademyUnit() {
                         type="button"
                         onClick={() => void handleRunChallenge()}
                         disabled={runLoading}
-                        className="inline-flex items-center gap-2 rounded-lg border border-primary bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-primary shadow-sm transition-all hover:-translate-y-0.5 hover:bg-primary hover:text-white disabled:pointer-events-none disabled:opacity-50"
+                        className="inline-flex items-center gap-2 border-2 border-text-main bg-primary px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-main-bg shadow-[2px_2px_0_0_#000] transition-all hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[4px_4px_0_0_#000] disabled:pointer-events-none disabled:opacity-50"
                       >
                         {runLoading ? (
                           <LoaderCircle className="h-4 w-4 animate-spin" />
                         ) : (
-                          <Play className="h-4 w-4 fill-current" />
+                          <Play className="h-3 w-3 fill-current" />
                         )}
                         {runLoading ? "Running..." : "Run Checks"}
                       </button>
                     )}
 
                     {activeWorkspaceTab === "editor" && (
-                      <div className="flex items-center rounded-lg border border-border-main bg-white shadow-sm overflow-hidden">
+                      <div className="flex items-center border-2 border-text-main bg-main-bg shadow-[2px_2px_0_0_#000]">
                         <button
                           type="button"
                           onClick={copyDraft}
-                          className="p-2 text-text-muted transition-colors hover:bg-surface hover:text-text-main"
+                          className="p-1.5 text-text-muted transition-colors hover:bg-surface hover:text-text-main"
                           title="Copy Code"
                         >
                           <ClipboardCopy className="h-4 w-4" />
                         </button>
-                        <div className="w-px h-4 bg-border-main"></div>
+                        <div className="w-0.5 h-6 bg-text-main"></div>
                         <button
                           type="button"
                           onClick={resetDraft}
-                          className="p-2 text-text-muted transition-colors hover:bg-surface hover:text-destructive"
+                          className="p-1.5 text-text-muted transition-colors hover:bg-surface hover:text-destructive"
                           title="Reset Code"
                         >
                           <AlertTriangle className="h-4 w-4" />
@@ -677,36 +677,36 @@ export function AcademyUnit() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 overflow-x-auto bg-surface px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted border-b border-border-main">
+                <div className="flex flex-wrap items-center gap-2 overflow-x-auto bg-surface px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted border-b-2 border-text-main">
                   {runnerSupported ? (
-                    <span className="flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-emerald-600 shadow-sm border border-emerald-500/20">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    <span className="flex items-center gap-1 border border-text-main bg-main-bg px-2 py-0.5 text-text-main shadow-[1px_1px_0_0_#000]">
+                      <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
                       {runtimeLabel} Ready
                     </span>
                   ) : (
-                    <span className="rounded-md border border-border-main bg-white px-2 py-0.5 shadow-sm text-text-main">
+                    <span className="border border-text-main bg-main-bg px-2 py-0.5 text-text-main shadow-[1px_1px_0_0_#000]">
                       Interactive Workspace
                     </span>
                   )}
 
                   {draftDirty && (
-                    <span className="rounded-md border border-border-main bg-white px-2 py-0.5 shadow-sm text-text-main">
+                    <span className="border border-text-main bg-main-bg px-2 py-0.5 text-text-main shadow-[1px_1px_0_0_#000]">
                       Modified
                     </span>
                   )}
                   {runReport && !runReportIsFresh && (
-                    <span className="rounded-md border border-border-main bg-amber-500/10 text-amber-700 px-2 py-0.5 shadow-sm">
+                    <span className="border border-text-main bg-amber-500/10 text-amber-700 px-2 py-0.5 shadow-[1px_1px_0_0_#000]">
                       Needs Rerun
                     </span>
                   )}
                   {activeRunReport?.allPassed && (
-                    <span className="rounded-md border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 px-2 py-0.5 shadow-sm">
+                    <span className="border border-text-main bg-primary px-2 py-0.5 text-main-bg shadow-[1px_1px_0_0_#000]">
                       All Passed
                     </span>
                   )}
                 </div>
 
-                <div className="flex-1 bg-white flex flex-col min-h-[600px]">
+                <div className="flex-1 flex flex-col min-h-[600px] overflow-auto">
                   {activeWorkspaceTab === "editor" && (
                     <div className="flex-1 flex flex-col h-full min-h-[700px]">
                       <CodeEditorPane
@@ -766,24 +766,24 @@ export function AcademyUnit() {
                           </p>
 
                           <div className="mb-6 grid grid-cols-2 gap-4">
-                            <div className="rounded-xl border border-border-main bg-white p-4 shadow-sm">
-                              <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-text-muted border-b border-border-main pb-2">
+                            <div className="border border-text-main bg-main-bg p-4 shadow-[2px_2px_0_0_#000]">
+                              <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-text-muted border-b border-text-main pb-2">
                                 Passed Tests
                               </div>
                               <div
-                                className={`font-heading text-3xl font-bold ${runReport.allPassed ? "text-emerald-500" : "text-text-main"}`}
+                                className={`font-heading text-3xl font-black mt-2 ${runReport.allPassed ? "text-emerald-500" : "text-text-main"}`}
                               >
                                 {runReport.passedCount}{" "}
-                                <span className="text-xl text-text-muted">
+                                <span className="text-xl text-text-muted font-bold">
                                   / {runReport.totalCount}
                                 </span>
                               </div>
                             </div>
-                            <div className="rounded-xl border border-border-main bg-white p-4 shadow-sm">
-                              <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-text-muted border-b border-border-main pb-2">
+                            <div className="border border-text-main bg-main-bg p-4 shadow-[2px_2px_0_0_#000]">
+                              <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-text-muted border-b border-text-main pb-2">
                                 Primary Function
                               </div>
-                              <div className="mt-1 truncate font-mono text-sm font-bold text-primary">
+                              <div className="mt-3 truncate font-mono text-sm font-bold text-primary">
                                 {runReport.primaryFunction || "Unknown"}
                               </div>
                             </div>
@@ -797,23 +797,23 @@ export function AcademyUnit() {
                               runReport.cases.map((caseItem, index) => (
                                 <div
                                   key={caseItem.id}
-                                  className={`rounded-xl border p-4 shadow-sm transition-all ${
+                                  className={`border p-4 shadow-[2px_2px_0_0_#000] transition-all ${
                                     caseItem.passed
-                                      ? "border-emerald-500/20 bg-emerald-500/5"
-                                      : "border-destructive/20 bg-destructive/5"
+                                      ? "border-emerald-500 bg-emerald-500/5 text-emerald-600"
+                                      : "border-destructive bg-destructive/5 text-destructive"
                                   }`}
                                 >
-                                  <div className="mb-3 flex items-center justify-between gap-4 border-b border-border-main/50 pb-2">
-                                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-main">
+                                  <div className="mb-3 flex items-center justify-between gap-4 border-b border-inherit/30 pb-2">
+                                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest flex-1">
                                       {caseItem.passed ? (
-                                        <div className="rounded-full bg-emerald-500/20 p-1 text-emerald-600">
+                                        <div className="bg-emerald-500/20 p-1 text-emerald-600 border border-emerald-500">
                                           <CheckCircle2
                                             className="h-3 w-3"
                                             strokeWidth={3}
                                           />
                                         </div>
                                       ) : (
-                                        <div className="rounded-full bg-destructive/20 p-1 text-destructive">
+                                        <div className="bg-destructive/20 p-1 text-destructive border border-destructive">
                                           <AlertTriangle
                                             className="h-3 w-3"
                                             strokeWidth={3}
@@ -825,7 +825,7 @@ export function AcademyUnit() {
                                         : `Public Test ${index + 1}`}
                                     </div>
                                   </div>
-                                  <div className="text-sm font-medium leading-relaxed text-text-muted">
+                                  <div className="text-sm font-medium leading-relaxed font-mono">
                                     {caseItem.description}
                                   </div>
                                   {caseItem.error && (
@@ -1087,11 +1087,11 @@ export function AcademyUnit() {
         </aside>
       </div>
 
-      <div className="mt-12 flex flex-col items-center justify-center gap-6 rounded-xl border border-border-main bg-white p-8 shadow-sm">
-        <h3 className="font-heading text-2xl font-bold uppercase text-text-main">
+      <div className="mt-12 flex flex-col items-center justify-center gap-6 border border-text-main bg-surface p-8 shadow-[4px_4px_0_0_#000]">
+        <h3 className="font-heading text-2xl font-black uppercase tracking-tight text-text-main">
           {unitDone ? "Unit Completed" : "Finish This Unit"}
         </h3>
-        <p className="max-w-xl text-center text-sm font-medium text-text-muted">
+        <p className="max-w-xl text-center text-sm font-mono text-text-muted">
           {unitDone
             ? "Great job! You have already finished this unit. You can proceed to the next unit when ready."
             : isPractice
@@ -1102,7 +1102,7 @@ export function AcademyUnit() {
         </p>
 
         {!unitDone && completionBlocked && (
-          <div className="flex items-center gap-2 rounded-md bg-amber-500/10 px-4 py-2 text-sm font-bold uppercase tracking-widest text-amber-700">
+          <div className="flex items-center justify-center gap-2 border border-amber-500 bg-amber-500/10 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-amber-700 shadow-[2px_2px_0_0_#f59e0b]">
             <AlertTriangle className="h-4 w-4" strokeWidth={2} />
             {runLoading ? "Running tests..." : "All tests must pass"}
           </div>
@@ -1113,14 +1113,14 @@ export function AcademyUnit() {
             type="button"
             onClick={() => void handleComplete()}
             disabled={completionBlocked || runLoading}
-            className="flex items-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-bold uppercase tracking-widest text-primary-foreground shadow-sm transition-all hover:-translate-y-1 hover:shadow-md disabled:pointer-events-none disabled:opacity-50"
+            className="flex items-center gap-3 border-2 border-text-main bg-primary px-8 py-4 text-sm font-black uppercase tracking-widest text-main-bg shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000] disabled:pointer-events-none disabled:opacity-50 disabled:grayscale"
           >
             <CheckCircle2 className="h-5 w-5" strokeWidth={3} />
             {isPractice ? "Submit Lab" : "Mark Complete"}
           </button>
         ) : (
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-6 py-3 text-sm font-bold uppercase tracking-widest text-emerald-600">
+            <div className="flex items-center gap-2 border-2 border-text-main bg-emerald-500/10 px-6 py-3 text-sm font-black uppercase tracking-widest text-emerald-600 shadow-[4px_4px_0_0_#000]">
               <CheckCircle2 className="h-5 w-5" strokeWidth={3} />
               Recorded
             </div>
@@ -1130,7 +1130,7 @@ export function AcademyUnit() {
                 onClick={() =>
                   navigate(`/academy/unit/${course.id}/${next_unit.id}`)
                 }
-                className="flex items-center gap-3 rounded-full bg-primary px-8 py-3 text-sm font-bold uppercase tracking-widest text-primary-foreground shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+                className="flex items-center gap-3 border-2 border-text-main bg-primary px-8 py-3 text-sm font-black uppercase tracking-widest text-main-bg shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000]"
               >
                 Next Unit
                 <ChevronRight className="h-5 w-5" strokeWidth={3} />
@@ -1140,7 +1140,7 @@ export function AcademyUnit() {
               <button
                 type="button"
                 onClick={() => navigate(`/academy/course/${course.id}`)}
-                className="flex items-center gap-3 rounded-full border border-border-main bg-white px-8 py-3 text-sm font-bold uppercase tracking-widest text-text-main shadow-sm transition-all hover:-translate-y-1 hover:shadow-md hover:bg-surface"
+                className="flex items-center gap-3 border-2 border-text-main bg-main-bg px-8 py-3 text-sm font-black uppercase tracking-widest text-text-main shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000] hover:bg-surface"
               >
                 Back to Course
               </button>
@@ -1188,17 +1188,17 @@ function SidebarPanel({
 }) {
   return (
     <div
-      className={`rounded-xl border border-border-main p-6 shadow-sm ${accent}`}
+      className={`border border-text-main p-6 shadow-[4px_4px_0_0_#000] ${accent}`}
     >
       <div
-        className={`mb-4 border-b border-border-main/50 pb-4 text-xs font-bold uppercase tracking-widest ${headerText}`}
+        className={`mb-4 border-b-2 border-text-main pb-4 text-xs font-black uppercase tracking-widest ${headerText}`}
       >
         {title}
       </div>
       <div>{children}</div>
       {footer && (
         <div
-          className={`mt-6 border-t border-border-main/50 pt-4 text-[10px] font-bold uppercase tracking-widest ${headerText}`}
+          className={`mt-6 border-t-2 border-text-main pt-4 text-[10px] font-black uppercase tracking-widest ${headerText}`}
         >
           {footer}
         </div>
@@ -1233,7 +1233,7 @@ function LabTabButton({
 
 function ProfileRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between border-b border-border-main/50 py-3 last:border-0 border-dashed">
+    <div className="flex items-center justify-between border-b-2 border-text-main py-3 last:border-b-0 border-dashed">
       <div className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
         {label}
       </div>
@@ -1258,7 +1258,7 @@ function NavUnitLink({
   if (disabled) {
     return (
       <div
-        className={`flex w-full flex-col rounded-xl border border-border-main/50 bg-main-bg p-6 opacity-60 sm:w-[48%] ${align === "right" ? "items-start sm:items-end sm:text-right" : "items-start"}`}
+        className={`flex w-full flex-col border border-border-main/50 bg-main-bg p-6 opacity-60 shadow-[4px_4px_0_0_#999] sm:w-[48%] ${align === "right" ? "items-start sm:items-end sm:text-right" : "items-start"}`}
       >
         <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-text-muted">
           {label}
@@ -1273,7 +1273,7 @@ function NavUnitLink({
   return (
     <Link
       to={href}
-      className={`group flex w-full flex-col rounded-xl border border-border-main bg-white p-6 shadow-sm transition-all hover:bg-surface sm:w-[48%] ${align === "right" ? "items-start sm:items-end sm:text-right" : "items-start"}`}
+      className={`group flex w-full flex-col border border-text-main bg-main-bg p-6 shadow-[4px_4px_0_0_#000] transition-all hover:bg-surface hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#000] sm:w-[48%] ${align === "right" ? "items-start sm:items-end sm:text-right" : "items-start"}`}
     >
       <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-text-muted transition-colors group-hover:text-primary">
         {label}
@@ -1281,7 +1281,7 @@ function NavUnitLink({
       <div className="max-w-full truncate font-heading text-2xl font-bold text-text-main transition-colors group-hover:text-primary">
         {unit?.title}
       </div>
-      <div className="mt-4 inline-block rounded-md border border-border-main bg-white px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-muted shadow-sm">
+      <div className="mt-4 inline-block border-2 border-text-main bg-main-bg px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-main shadow-[2px_2px_0_0_#000]">
         {unit?.section === "practice" ? "Interactive Lab" : "Theory Lesson"}
       </div>
     </Link>

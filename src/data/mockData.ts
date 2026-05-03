@@ -268,7 +268,7 @@ export const MEMBERS: Member[] = [
   {
     id: "user-3",
     name: "Charlie Dev",
-    role: "Learner",
+    role: "Community",
     avatar: "https://via.placeholder.com/150",
     skills: ["JavaScript", "HTML", "CSS"],
     memberType: "community",
@@ -283,7 +283,7 @@ export const MEMBERS: Member[] = [
   {
     id: "user-4",
     name: "Diana Designer",
-    role: "Designer",
+    role: "Media-Lead",
     avatar: "https://via.placeholder.com/150",
     skills: ["Figma", "UI/UX", "Tailwind"],
     memberType: "community",
@@ -298,7 +298,7 @@ export const MEMBERS: Member[] = [
   {
     id: "user-5",
     name: "Evan Enigma",
-    role: "Learner",
+    role: "Community",
     avatar: "https://via.placeholder.com/150",
     skills: ["Rust", "Solana", "Anchor"],
     memberType: "community",
@@ -313,7 +313,7 @@ export const MEMBERS: Member[] = [
   {
     id: "user-6",
     name: "Fiona Fullstack",
-    role: "Contributor",
+    role: "Community",
     avatar: "https://via.placeholder.com/150",
     skills: ["React", "Node.js", "MongoDB"],
     memberType: "community",

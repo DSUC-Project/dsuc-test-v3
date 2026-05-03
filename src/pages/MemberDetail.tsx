@@ -178,7 +178,7 @@ export function MemberDetail() {
             </div>
 
             {(member as any).streak > 0 && (
-              <div className="absolute top-4 -left-4 flex items-center gap-1 bg-highlight text-main-bg px-3 py-1 font-mono text-xs uppercase z-20 border-border-main shadow-md">
+              <div className="absolute top-4 -left-4 flex items-center gap-1 bg-surface text-text-main border-2 px-3 py-1 font-mono text-xs font-bold uppercase z-20 border-text-main shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#fff]">
                 {(member as any).streak} days <span className="ml-1">🔥</span>
               </div>
             )}
@@ -191,7 +191,7 @@ export function MemberDetail() {
                   Role
                 </span>
                 <span className="text-text-main text-lg font-heading font-black uppercase tracking-tight">
-                  {member.role || "Thành viên"}
+                  {member.role || "Member"}
                 </span>
               </div>
               <Shield className="text-text-muted w-6 h-6 group-hover/item:text-primary transition-colors" />
@@ -228,7 +228,7 @@ export function MemberDetail() {
               className="flex items-center gap-3 flex-wrap"
             >
               <div className="bg-primary text-main-bg px-3 py-1 font-mono tracking-widest uppercase text-[10px] border border-border-main">
-                {isCommunity ? "Community" : member.role}
+                {member.role || "Member"}
               </div>
               <div className="px-3 py-1 bg-surface border border-border-main font-mono text-text-muted uppercase text-[10px]">
                 ID: {member.id || "CLASSIFIED"}

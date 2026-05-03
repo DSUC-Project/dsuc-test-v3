@@ -12,7 +12,7 @@ export const PaperPanel = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("bg-surface border border-border-main p-8 shadow-sm", className)}
+      className={cn("bg-surface border-2 border-text-main p-8 shadow-[4px_4px_0_0_#000]", className)}
       {...props}
     />
   );
@@ -29,14 +29,14 @@ export const SoftBrutalCard = React.forwardRef<HTMLDivElement, SoftBrutalCardPro
   ({ className, intent = "default", interactive = false, withPattern = false, children, ...props }, ref) => {
     
     const baseColors = {
-      default: "border-border-main hover:border-primary/50",
-      primary: "border-primary/30 hover:border-primary",
-      accent: "border-accent/30 hover:border-accent",
-      success: "border-emerald-500/30 hover:border-emerald-500",
-      danger: "border-red-500/30 hover:border-red-500",
-      info: "border-cyan-500/30 hover:border-cyan-500",
-      warning: "border-orange-500/30 hover:border-orange-500",
-      locked: " border-border-main opacity-75 backdrop-grayscale",
+      default: "hover:border-primary",
+      primary: "border-primary hover:border-primary text-primary",
+      accent: "border-accent hover:border-accent text-accent",
+      success: "border-emerald-500 hover:border-emerald-500",
+      danger: "border-red-500 hover:border-red-500",
+      info: "border-cyan-500 hover:border-cyan-500",
+      warning: "border-orange-500 hover:border-orange-500",
+      locked: "opacity-75 backdrop-grayscale",
     };
 
     const stripColors = {
@@ -54,8 +54,8 @@ export const SoftBrutalCard = React.forwardRef<HTMLDivElement, SoftBrutalCardPro
       <motion.div
         ref={ref}
         className={cn(
-          "bg-surface border border-border-main p-6 overflow-hidden relative group transition-all duration-300 hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)]",
-          interactive ? "cursor-pointer focus:outline-none" : "shadow-sm",
+          "bg-surface border-2 border-text-main p-6 overflow-hidden relative group transition-all duration-300 shadow-[4px_4px_0_0_inherit] shadow-text-main",
+          interactive ? "cursor-pointer focus:outline-none hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_inherit]" : "",
           baseColors[intent],
           className
         )}
@@ -119,7 +119,7 @@ export const StatusBadge = ({
   return (
     <span
       className={cn(
-        "inline-flex items-center px-2 py-0.5 border border-border-main font-mono text-[10px] font-bold uppercase tracking-widest bg-main-bg text-text-main shadow-sm",
+        "inline-flex items-center px-2 py-0.5 border border-text-main font-mono text-[10px] font-bold uppercase tracking-widest bg-primary text-main-bg shadow-[2px_2px_0_0_#000]",
         className,
       )}
     >

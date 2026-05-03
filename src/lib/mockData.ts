@@ -29,7 +29,7 @@ export const mockMembers = [
   {
     id: "2",
     name: "Trần Thị Bình",
-    role: "Core Member",
+    role: "Tech-Lead",
     memberType: "member",
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=binh",
     skills: ["React", "TypeScript", "Web3.js"],
@@ -62,7 +62,7 @@ export const mockMembers = [
   {
     id: "5",
     name: "Hoàng Văn Em",
-    role: "Intern",
+    role: "Community",
     memberType: "community",
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=em",
     skills: ["NFT", "React"],

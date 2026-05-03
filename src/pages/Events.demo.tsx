@@ -67,54 +67,60 @@ export function Events() {
           ))}
         </div>
       ) : (
-      <div className="relative border-l-[3px] border-text-main ml-4 md:ml-8 pl-6 md:pl-12 py-4 space-y-10 before:content-[''] before:absolute before:border-l-[3px] before: before:border-surface before:left-[-3px] before:top-0 before:h-full before:w-0">
-        {[1, 2, 3].map((i) => (
+      <div className="relative py-8 md:py-12 space-y-8 md:space-y-16">
+        <div className="absolute left-[24px] md:left-1/2 top-0 bottom-0 w-[3px] bg-text-main -ml-[1.5px] z-0"></div>
+        {[1, 2, 3].map((i, idx) => {
+            const isEven = idx % 2 === 0;
+            return (
             <div 
               key={i} 
-              className={`relative group cursor-pointer`}
+              className={`relative w-full flex flex-col md:flex-row group cursor-pointer ${isEven ? 'md:justify-start' : 'md:justify-end'}`}
             >
               {/* Timeline Node Marker */}
-              <div className="absolute -left-[32px] md:-left-[56px] top-6 w-4 h-4 rounded-none bg-surface border-4 border-text-main group-hover:bg-primary group-hover:scale-125 transition-transform z-10 shadow-[2px_2px_0_0_rgba(0,0,0,1)] dark:shadow-[2px_2px_0_0_rgba(255,255,255,1)]" />
+              <div className="absolute left-[24px] md:left-1/2 top-8 md:top-1/2 w-5 h-5 bg-surface border-[4px] border-text-main -translate-x-1/2 md:-translate-y-1/2 group-hover:bg-primary group-hover:scale-125 transition-all z-10 shadow-[2px_2px_0_0_#000] dark:shadow-[2px_2px_0_0_#fff]" />
               
               {/* Compact Event Card */}
-              <div className="bg-surface border-2 border-text-main shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] group-hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:group-hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] group-hover:-translate-y-1 group-hover:-translate-x-1 transition-all duration-300 p-0 flex flex-row items-stretch">
+              <div className={`w-[calc(100%-48px)] md:w-[calc(50%-48px)] ml-auto md:ml-0 flex flex-col bg-surface border-2 border-text-main shadow-[4px_4px_0_0_#000] dark:shadow-[4px_4px_0_0_#fff] group-hover:shadow-[8px_8px_0_0_#000] dark:group-hover:shadow-[8px_8px_0_0_#fff] group-hover:-translate-y-1 group-hover:-translate-x-1 transition-all duration-300 p-0`}>
                 
-                {/* Date Block */}
-                <div className="flex flex-col items-center justify-center p-4 bg-main-bg border-r-2 border-text-main w-20 md:w-24 group-hover:bg-primary group-hover:text-surface transition-colors flex-shrink-0">
-                  <span className="font-heading font-black text-3xl leading-none">{20 + i}</span>
-                  <span className="font-mono text-[10px] uppercase font-bold tracking-widest mt-1 opacity-80">Oct</span>
+                <div className="w-full h-32 md:h-40 border-b-2 border-text-main overflow-hidden bg-highlight flex-shrink-0">
+                   <div className="w-full h-full bg-primary/20 flex flex-col items-center justify-center font-mono font-bold text-lg uppercase text-primary group-hover:scale-105 transition-transform duration-500">
+                     Demo Image
+                   </div>
                 </div>
-                
-                {/* Content Block */}
-                <div className="p-4 md:p-6 flex-1 flex flex-col justify-between min-w-0">
-                  <div>
-                    <div className="flex items-center gap-3 mb-2 flex-wrap">
+
+                <div className="flex flex-row items-stretch w-full">
+                  {/* Date Block */}
+                  <div className="flex flex-col items-center justify-center p-4 bg-main-bg border-r-2 border-text-main w-20 md:w-24 group-hover:bg-primary group-hover:text-surface transition-colors flex-shrink-0">
+                    <span className="font-heading font-black text-3xl leading-none">{20 + i}</span>
+                    <span className="font-mono text-[10px] uppercase font-bold tracking-widest mt-1 opacity-80">Oct</span>
+                  </div>
+                  
+                  {/* Content Block */}
+                  <div className="p-4 flex-1 flex flex-col justify-center min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
                       <StatusBadge status={"WORKSHOP"} className="bg-surface group-hover:bg-main-bg" />
                       <span className="font-mono text-[10px] text-text-muted font-bold tracking-widest">{i === 1 ? "Today" : "in 2 days"}</span>
                     </div>
-                    <h3 className="font-heading font-black text-xl md:text-2xl uppercase tracking-tight mb-2 text-text-main group-hover:text-primary transition-colors truncate">
+                    
+                    <h3 className="font-heading font-black text-lg md:text-xl uppercase tracking-tight text-text-main line-clamp-1 mb-1">
                       Solana Anchor Best Practices
                     </h3>
+                    
+                    <div className="flex items-center gap-3 font-mono text-[10px] font-bold text-text-muted mt-2">
+                       <span className="flex flex-1 items-center gap-1 truncate">
+                          Virtual (Discord)
+                       </span>
+                    </div>
                   </div>
-                  
-                  <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 mt-4 font-mono text-[10px] uppercase font-bold text-text-muted">
-                    <span className="flex items-center gap-2">
-                       18:00 ICT
-                    </span>
-                    <span className="flex items-center gap-2">
-                       Virtual (Discord)
-                    </span>
-                  </div>
-                </div>
 
-                <div className="hidden md:flex flex-col items-center justify-center border-l-2 border-text-main p-6 w-32 shrink-0 bg-surface group-hover:bg-main-bg transition-colors">
-                  <span className="font-mono text-[10px] uppercase font-bold tracking-widest block w-full text-center mb-2">RSVP</span>
-                  <span className="font-display font-black text-xl">LUMA</span>
-                  <span className="opacity-0 group-hover:opacity-100 mt-2 transition-opacity font-bold">&rarr;</span>
+                  {/* Action Block */}
+                  <div className="hidden sm:flex items-center justify-center px-4 md:px-6 border-l-2 border-text-main bg-main-bg text-text-muted group-hover:bg-text-main group-hover:text-surface transition-colors flex-shrink-0">
+                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
               </div>
             </div>
-          ))}
+          )})}
       </div>
       )}
     </div>

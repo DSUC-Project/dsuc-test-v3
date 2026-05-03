@@ -41,39 +41,41 @@
 
 @layer base {
   :root {
-    --bg-main: var(--color-paper);
-    --bg-surface: #ffffff;
-    --text-main: #111827;
-    --text-muted: #4b5563;
-    --border-main: #d1d5db;
+    --bg-main: #FAF9F6;
+    --bg-surface: #FFFFFF;
+    --text-main: #1A1A1A;
+    --text-muted: #5C5C5C;
+    --border-main: #E5E2DA;
 
-    --color-primary: var(--color-dsuc-blue);
-    --primary-foreground: #ffffff;
-    --color-primary-hover: var(--color-dsuc-blue-dark);
-    --color-accent: var(--color-dsuc-yellow-warm);
+    --color-primary: #1A56DB;
+    --primary-foreground: #FFFFFF;
+    --color-primary-hover: #1E40AF;
+    --color-accent: #F59E0B;
 
-    --shadow-md: 4px 4px 0px 0px rgba(17, 24, 39, 1);
-    --shadow-md-sm: 2px 2px 0px 0px rgba(17, 24, 39, 1);
+    --shadow-md: 4px 4px 0px 0px rgba(0, 0, 0, 0.08);
+    --shadow-md-sm: 2px 2px 0px 0px rgba(0, 0, 0, 0.08);
   }
 
   .dark {
-    --bg-main: var(--color-navy);
-    --bg-surface: var(--color-navy-surface);
-    --text-main: #f9fafb;
-    --text-muted: #9ca3af;
-    --border-main: #374151;
+    --bg-main: #141210;
+    --bg-surface: #1F1E1B;
+    --text-main: #E8E4DC;
+    --text-muted: #9CA3AF; /* Kept from previous for readability, maybe adapt slightly */
+    --border-main: #2C2A25;
 
-    --color-primary: var(--color-dsuc-yellow);
-    --primary-foreground: #000000;
-    --color-primary-hover: var(--color-dsuc-yellow-warm);
-    --color-accent: var(--color-dsuc-blue-neon);
+    --color-primary: #F5C842;
+    --primary-foreground: #141210;
+    --color-primary-hover: #FCD34D;
+    --color-accent: #60A5FA;
 
-    --shadow-md: 4px 4px 0px 0px rgba(0, 0, 0, 0.8);
-    --shadow-md-sm: 2px 2px 0px 0px rgba(0, 0, 0, 0.8);
+    --shadow-md: 4px 4px 0px 0px rgba(0, 0, 0, 0.5);
+    --shadow-md-sm: 2px 2px 0px 0px rgba(0, 0, 0, 0.5);
   }
 
   body {
     @apply bg-main-bg text-text-main font-sans antialiased;
+    background-image: radial-gradient(var(--border-main) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 
   html {
@@ -92,72 +94,95 @@
   .prose-dsuc {
     color: var(--text-muted);
     font-family: var(--font-sans);
-    font-size: 15px;
-    line-height: 1.8;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .prose-dsuc h1,
+  .prose-dsuc h2,
+  .prose-dsuc h3,
+  .prose-dsuc h4 {
+    font-family: var(--font-heading);
+    color: var(--text-main);
+    scroll-margin-top: 80px;
+  }
+
+  .prose-dsuc h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 48px;
+    margin-bottom: 24px;
   }
 
   .prose-dsuc h2 {
-    font-family: var(--font-heading);
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
-    color: var(--text-main);
     margin-top: 40px;
-    margin-bottom: 12px;
-    scroll-margin-top: 80px;
+    margin-bottom: 16px;
   }
 
   .prose-dsuc h3 {
-    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 12px;
+  }
+
+  .prose-dsuc h4 {
     font-size: 18px;
     font-weight: 600;
-    color: var(--text-main);
-    margin-top: 28px;
+    margin-top: 24px;
     margin-bottom: 8px;
-    scroll-margin-top: 80px;
   }
 
   .prose-dsuc p {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
   }
 
   .prose-dsuc ul,
   .prose-dsuc ol {
     padding-left: 24px;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
   }
   .prose-dsuc li {
-    margin: 6px 0;
-    line-height: 1.7;
+    margin: 8px 0;
+    line-height: 1.75;
   }
   .prose-dsuc ul li::marker {
     color: var(--color-primary);
   }
 
   .prose-dsuc blockquote {
-    border-left: 3px solid var(--color-primary);
-    padding: 12px 20px;
+    border-left: 4px solid var(--color-primary);
+    padding: 16px 24px;
     background: color-mix(in srgb, var(--color-primary) 6%, transparent);
-    margin: 20px 0;
+    margin: 24px 0;
     font-style: italic;
+    color: var(--text-main);
   }
 
   .prose-dsuc code {
     font-family: var(--font-mono);
-    font-size: 13px;
-    background: var(--bg-surface);
-    border: 1.5px solid var(--border-main);
-    border-radius: 3px;
-    padding: 2px 6px;
-    color: var(--color-dsuc-blue);
+    font-size: 14px;
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: var(--color-primary);
   }
 
   .prose-dsuc pre {
-    margin: 16px 0;
+    margin: 24px 0;
+    background: #0B0F17 !important; /* Force dark background for dark mode / light mode */
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
   }
   .prose-dsuc pre code {
     background: none;
     border: none;
     padding: 0;
+    color: #E2E8F0 !important; /* Force light text */
   }
 
   .prose-dsuc a {

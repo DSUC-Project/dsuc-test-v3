@@ -28,14 +28,14 @@ export function GlitchText({ className, words = ["DSUC", "BLOCKCHAIN", "DANANG"]
         if (iterations >= targetWord.length) {
           clearInterval(glitchInterval);
           setIndex(nextIndex);
-          timeoutId = setTimeout(changeWord, 3000);
+          timeoutId = setTimeout(changeWord, 1250);
         }
         
-        iterations += 1/3;
-      }, 30);
+        iterations += 1/2.5;
+      }, 25);
     };
 
-    timeoutId = setTimeout(changeWord, 3000);
+    timeoutId = setTimeout(changeWord, 1250);
 
     return () => {
       clearTimeout(timeoutId);

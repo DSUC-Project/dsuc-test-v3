@@ -62,6 +62,7 @@ export interface Event {
   status?: PublishStatus;
   luma_link?: string; // Backend snake_case
   description?: string;
+  image?: string;
 }
 
 export type PublishStatus = "Draft" | "Published" | "Archived";
