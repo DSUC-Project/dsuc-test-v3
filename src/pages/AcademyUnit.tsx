@@ -128,11 +128,11 @@ function isUnitLocked(
 
 function practiceModeText(unit: AcademyV2UnitDetail) {
   if (unit.language === "rust" && unit.deployable) {
-    return "Bài Lab Solana";
+    return "Solana Lab";
   }
 
   if (unit.language === "rust") {
-    return "Bài thực hành Rust";
+    return "Rust Lab";
   }
 
   if (unit.language === "typescript") {
@@ -170,6 +170,8 @@ export function AcademyUnit() {
   const [activeWorkspaceTab, setActiveWorkspaceTab] =
     useState<WorkspaceTab>("editor");
   const [solutionUnlocked, setSolutionUnlocked] = useState(false);
+  const [showHintsPanel, setShowHintsPanel] = useState(false);
+  const [showSolutionPanel, setShowSolutionPanel] = useState(false);
 
   const identity = useMemo(
     () => ({
@@ -275,16 +277,16 @@ export function AcademyUnit() {
     return (
       <div className="mx-auto w-full max-w-[1400px] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-4">
-          <div className="h-8 w-32 animate-pulse rounded-full bg-surface" />
-          <div className="h-16 w-3/4 animate-pulse rounded-lg bg-surface mt-2" />
-          <div className="h-6 w-1/2 animate-pulse rounded-lg bg-surface mt-2" />
+          <div className="h-8 w-32 animate-pulse bg-surface" />
+          <div className="h-16 w-3/4 animate-pulse bg-surface mt-2" />
+          <div className="h-6 w-1/2 animate-pulse bg-surface mt-2" />
         </div>
         <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-6">
-            <div className="h-96 w-full animate-pulse rounded-xl bg-surface" />
-            <div className="h-64 w-full animate-pulse rounded-xl bg-surface" />
+            <div className="h-96 w-full animate-pulse bg-surface" />
+            <div className="h-64 w-full animate-pulse bg-surface" />
           </div>
-          <div className="h-96 w-full animate-pulse rounded-xl bg-surface" />
+          <div className="h-96 w-full animate-pulse bg-surface" />
         </div>
       </div>
     );
@@ -292,27 +294,27 @@ export function AcademyUnit() {
 
   if (!unitData) {
     return (
-      <div className="mx-auto mt-12 max-w-2xl rounded-xl  bg-white p-12 text-center shadow-sm">
-        <div className="mb-6 mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10 text-destructive shadow-sm">
+      <div className="mx-auto mt-12 max-w-2xl bg-white p-12 text-center border-2 border-text-main shadow-[8px_8px_0_0_#000]">
+        <div className="mb-6 mx-auto flex h-16 w-16 items-center justify-center bg-destructive/10 text-destructive border-2 border-destructive">
           <AlertTriangle className="h-8 w-8" />
         </div>
         <h1 className="font-heading text-3xl font-bold uppercase tracking-tight text-text-main mb-4">
           Failed to load unit
         </h1>
-        <p className="mb-8 text-sm font-medium text-text-muted bg-surface rounded-lg p-4 border border-border-main">
+        <p className="mb-8 text-sm font-medium text-text-muted bg-surface p-4 border-2 border-border-main font-mono">
           {error || "The unit could not be loaded. Please try again later."}
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <button
             type="button"
             onClick={() => setReloadNonce((value) => value + 1)}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
+            className="inline-flex items-center gap-2 border-2 border-text-main bg-primary px-6 py-3 text-xs font-bold uppercase tracking-widest text-main-bg shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#000] transition-all"
           >
             Retry
           </button>
           <Link
             to="/academy"
-            className="inline-flex items-center gap-2 rounded-full border border-border-main bg-white px-6 py-3 text-xs font-bold uppercase tracking-widest text-text-main shadow-sm transition-transform hover:-translate-y-0.5 hover:bg-surface hover:shadow-md"
+            className="inline-flex items-center gap-2 border-2 border-text-main bg-white px-6 py-3 text-xs font-bold uppercase tracking-widest text-text-main shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#000] hover:bg-surface transition-all"
           >
             Back to Academy
           </Link>
@@ -398,8 +400,8 @@ export function AcademyUnit() {
 
     setNotice(
       saved
-        ? "Tiến độ được đồng bộ. Hoạt động luyện tập đã được lưu lại."
-        : "Tiến độ đã được lưu cục bộ. Hệ thống sẽ thử bộ lại lần tới khi bài học này được tải.",
+        ? "Progress synchronized. Practice session saved."
+        : "Progress saved locally. The system will attempt to sync next time this lab is loaded.",
     );
   }
 
@@ -409,12 +411,12 @@ export function AcademyUnit() {
     }
 
     void navigator.clipboard.writeText(draftCode);
-    setNotice("Code của bạn đã được copy vào clipboard.");
+    setNotice("Your code has been copied to clipboard.");
   }
 
   function resetDraft() {
     setDraftCode(unit.code || "");
-    setNotice("Khôi phục code gốc của bài học này thành công.");
+    setNotice("Successfully restored the original code of this lab.");
   }
 
   async function handleRunChallenge() {
@@ -443,13 +445,13 @@ export function AcademyUnit() {
         hiddenTotalCount: unit.tests.filter((item) => item.hidden === true)
           .length,
         primaryFunction: null,
-        runtimeLabel: "Thử thách trên trình duyệt",
-        message: error?.message || "Có lỗi xảy ra trong lúc thực thi.",
+        runtimeLabel: "Browser Challenge",
+        message: error?.message || "An error occurred during execution.",
         cases: [],
       });
       setLastRunSource(draftCode);
       setActiveWorkspaceTab("results");
-      setNotice(error?.message || "Có lỗi xảy ra trong lúc thực thi.");
+      setNotice(error?.message || "An error occurred during execution.");
     } finally {
       setRunLoading(false);
     }
@@ -461,27 +463,27 @@ export function AcademyUnit() {
       <div className="mb-8 flex flex-col gap-4">
         <Link
           to={`/academy/course/${course.id}`}
-          className="inline-flex w-fit items-center gap-2 rounded-full border border-border-main bg-surface px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-text-muted transition-colors hover:bg-main-bg hover:text-text-main shadow-sm"
+          className="inline-flex items-center gap-2 border-2 border-text-main bg-surface px-4 py-2 text-xs font-bold uppercase tracking-widest font-mono shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] transition-all text-text-main"
         >
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Back to Course
+          <ArrowLeft className="w-4 h-4" strokeWidth={2} />
+          BACK TO COURSE
         </Link>
 
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-block rounded-md border border-primary/20 bg-primary/10 px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
+            <span className="inline-block border border-primary/20 bg-primary/10 px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
               {course.title}
             </span>
             <span className="text-border-main text-xs font-bold">/</span>
-            <span className="inline-block rounded-md border border-border-main bg-surface px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-muted shadow-sm">
+            <span className="inline-block border border-border-main bg-surface px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-muted shadow-[2px_2px_0_0_#000]">
               {unit.module_title}
             </span>
             <span className="text-border-main text-xs font-bold">/</span>
-            <span className="inline-block rounded-md border border-border-main bg-surface px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-muted shadow-sm">
+            <span className="inline-block border border-border-main bg-surface px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-muted shadow-[2px_2px_0_0_#000]">
               {isPractice ? practiceModeText(unit) : "Lesson"}
             </span>
             {unitDone && (
-              <span className="ml-auto inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-emerald-600 shadow-sm">
+              <span className="ml-auto inline-flex items-center gap-1 bg-emerald-500/10 px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-emerald-600 shadow-[2px_2px_0_0_#000] border border-emerald-500/20">
                 <CheckCircle2 className="h-3 w-3" />
                 Completed
               </span>
@@ -500,39 +502,39 @@ export function AcademyUnit() {
       </div>
 
       {notice && (
-        <div className="mb-6 flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm font-medium text-primary shadow-sm">
+        <div className="mb-6 flex items-center gap-3 border-2 border-primary bg-primary/5 px-4 py-3 text-sm font-mono font-medium text-primary shadow-[4px_4px_0_0_#000]">
           <TerminalSquare className="h-5 w-5 shrink-0" />
           {notice}
         </div>
       )}
 
-      <div
-        className={`flex flex-col gap-8 ${isPractice ? "xl:grid xl:grid-cols-[34%_minmax(0,1fr)]" : "xl:grid xl:grid-cols-[minmax(0,1fr)_320px]"}`}
-      >
-        {isPractice && (
-          <div className="flex w-full min-w-0 flex-col gap-6 xl:order-1">
-            <section className="flex flex-col rounded-xl border border-border-main bg-surface shadow-[4px_4px_0_0_#000] xl:sticky xl:top-24 xl:max-h-[calc(100vh-120px)]">
-              <div className="mb-4 flex items-center gap-2 border-b-2 border-text-main bg-main-bg pb-3 p-5">
-                <div className="rounded-md border border-text-main bg-primary text-main-bg px-2 py-1 text-[10px] font-bold uppercase tracking-widest shadow-[2px_2px_0_0_#000]">
-                  Lab Instructions
-                </div>
+      {isPractice && (
+        <div className="flex w-full flex-col gap-6 mb-8">
+          <section className="flex flex-col border-2 border-text-main bg-surface shadow-[8px_8px_0_0_#000]">
+            <div className="mb-4 flex items-center gap-2 border-b-2 border-text-main bg-main-bg pb-3 p-5">
+              <div className="border-2 border-text-main bg-primary text-main-bg px-2 py-1 text-[10px] font-bold uppercase tracking-widest shadow-[2px_2px_0_0_#000]">
+                Lab Instructions
               </div>
-              <div className="flexible-container overflow-y-auto p-5 pt-0">
-                <div className="markdown-body prose-dsuc max-w-none">
-                  {renderMd(unit.content_md)}
-                </div>
+            </div>
+            <div className="p-5 pt-0">
+              <div className="markdown-body prose-dsuc max-w-none">
+                {renderMd(unit.content_md)}
               </div>
-            </section>
-          </div>
-        )}
+            </div>
+          </section>
+        </div>
+      )}
 
+      <div
+        className={`flex flex-col gap-8 ${isPractice ? "xl:grid xl:grid-cols-[minmax(0,1fr)_400px]" : "xl:grid xl:grid-cols-[minmax(0,1fr)_320px]"}`}
+      >
         <div
-          className={`flex min-w-0 flex-col gap-8 ${isPractice ? "flex-1 xl:order-2" : ""}`}
+          className={`flex min-w-0 flex-col gap-8 ${isPractice ? "flex-1 xl:order-1" : ""}`}
         >
           {!isPractice ? (
             <>
               {embedUrl && (
-                <section className="overflow-hidden border border-text-main bg-surface shadow-[4px_4px_0_0_#000]">
+                <section className="overflow-hidden border-2 border-text-main bg-surface shadow-[4px_4px_0_0_#000]">
                   <div className="border-b-2 border-text-main bg-main-bg px-6 py-4">
                     <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                       Video Lesson
@@ -553,10 +555,10 @@ export function AcademyUnit() {
                 </section>
               )}
 
-              <section className="bg-surface border border-text-main p-6 sm:p-10 shadow-[4px_4px_0_0_#000]">
+              <section className="bg-surface border-2 border-text-main p-6 sm:p-10 shadow-[4px_4px_0_0_#000]">
                 <div className="mb-8 flex flex-col gap-4 border-b-2 border-border-main pb-8 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <div className="mb-2 inline-block border border-text-main bg-primary px-2 py-1 text-xs font-bold uppercase tracking-widest text-main-bg shadow-[2px_2px_0_0_#000]">
+                    <div className="mb-2 inline-block border-2 border-text-main bg-primary px-2 py-1 text-xs font-bold uppercase tracking-widest text-main-bg shadow-[2px_2px_0_0_#000]">
                       Theory Lesson
                     </div>
                     <h2 className="font-heading text-3xl font-black uppercase tracking-tighter text-text-main sm:text-4xl mt-4">
@@ -564,7 +566,7 @@ export function AcademyUnit() {
                     </h2>
                   </div>
                   {outline.length > 0 && (
-                    <div className="shrink-0 border border-text-main bg-main-bg px-4 py-2 text-xs font-bold uppercase tracking-widest text-text-main shadow-[2px_2px_0_0_#000]">
+                    <div className="shrink-0 border-2 border-text-main bg-main-bg px-4 py-2 text-xs font-bold uppercase tracking-widest text-text-main shadow-[2px_2px_0_0_#000]">
                       {outline.length} sections
                     </div>
                   )}
@@ -580,10 +582,10 @@ export function AcademyUnit() {
                   onClick={() =>
                     navigate(`/academy/unit/${course.id}/${next_unit.id}`)
                   }
-                  className="group flex w-full items-center justify-between gap-4 border border-text-main bg-surface p-6 text-left shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000]"
+                  className="group flex w-full items-center justify-between gap-4 border-2 border-text-main bg-surface p-6 text-left shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000]"
                 >
                   <div className="min-w-0">
-                    <div className="mb-2 inline-block border border-text-main bg-main-bg px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-muted">
+                    <div className="mb-2 inline-block border-2 border-text-main bg-main-bg px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-muted">
                       Up Next
                     </div>
                     <h3 className="truncate font-heading text-xl font-bold uppercase text-text-main sm:text-2xl group-hover:text-primary transition-colors">
@@ -595,7 +597,7 @@ export function AcademyUnit() {
                         : "Continue with the next reading unit."}
                     </p>
                   </div>
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-text-main bg-main-bg shadow-[2px_2px_0_0_#000] transition-transform group-hover:-rotate-12 group-hover:text-primary group-hover:border-primary">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-text-main bg-main-bg shadow-[2px_2px_0_0_#000] transition-transform group-hover:-rotate-12 group-hover:text-primary group-hover:border-primary">
                     <ChevronRight
                       className="h-6 w-6"
                       strokeWidth={3}
@@ -607,7 +609,14 @@ export function AcademyUnit() {
             </>
           ) : (
             <>
-              <section className="relative flex flex-col border border-text-main bg-main-bg shadow-[4px_4px_0_0_#000] xl:max-h-[calc(100vh-120px)] overflow-hidden xl:sticky xl:top-24 xl:self-start">
+              <section
+                className={`relative flex flex-col border-2 border-text-main bg-main-bg shadow-[8px_8px_0_0_#000] xl:sticky xl:top-24 xl:self-start ${
+                  activeWorkspaceTab === "editor" ||
+                  activeWorkspaceTab === "results"
+                    ? "xl:max-h-[calc(100vh-120px)] overflow-hidden"
+                    : ""
+                }`}
+              >
                 <div className="flex flex-col justify-between gap-4 border-b-2 border-text-main bg-surface px-4 py-3 sm:flex-row sm:items-center">
                   <div className="flex flex-wrap items-center gap-2">
                     <LabTabButton
@@ -622,18 +631,31 @@ export function AcademyUnit() {
                         onClick={() => setActiveWorkspaceTab("results")}
                       />
                     )}
+                  </div>
+                  
+                  <div className="flex items-center gap-2 mt-2 sm:mt-0">
                     {unit.hints && unit.hints.length > 0 && (
-                      <LabTabButton
-                        label="Hints"
-                        active={activeWorkspaceTab === "hints"}
-                        onClick={() => setActiveWorkspaceTab("hints")}
-                      />
+                      <button
+                        onClick={() => setShowHintsPanel(!showHintsPanel)}
+                        className={`border-2 border-text-main px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest transition-all ${
+                          showHintsPanel
+                            ? "bg-amber-400 text-amber-900 shadow-[2px_2px_0_0_#f59e0b] -translate-y-0.5"
+                            : "bg-surface text-text-main hover:bg-main-bg hover:-translate-y-0.5 shadow-none hover:shadow-[2px_2px_0_0_#000]"
+                        }`}
+                      >
+                        {showHintsPanel ? "Hide Hints" : "Show Hints"}
+                      </button>
                     )}
-                    <LabTabButton
-                      label="Solution"
-                      active={activeWorkspaceTab === "solution"}
-                      onClick={() => setActiveWorkspaceTab("solution")}
-                    />
+                    <button
+                      onClick={() => setShowSolutionPanel(!showSolutionPanel)}
+                      className={`border-2 border-text-main px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest transition-all ${
+                        showSolutionPanel
+                          ? "bg-primary text-primary-foreground shadow-[2px_2px_0_0_#000] -translate-y-0.5"
+                          : "bg-surface text-text-main hover:bg-main-bg hover:-translate-y-0.5 shadow-none hover:shadow-[2px_2px_0_0_#000]"
+                      }`}
+                    >
+                      {showSolutionPanel ? "Hide Solution" : "Solution"}
+                    </button>
                   </div>
 
                   <div className="flex items-center gap-3">
@@ -707,7 +729,6 @@ export function AcademyUnit() {
                 </div>
 
                 <div className="flex-1 flex flex-col min-h-[600px] overflow-auto">
-                  {activeWorkspaceTab === "editor" && (
                     <div className="flex-1 flex flex-col h-full min-h-[700px]">
                       <CodeEditorPane
                         value={draftCode}
@@ -716,13 +737,12 @@ export function AcademyUnit() {
                         placeholder="Start typing your solution here..."
                       />
                     </div>
-                  )}
 
                   {activeWorkspaceTab === "results" && runnerSupported && (
                     <div className="flex-1 flex flex-col min-h-[700px]">
                       {!runReport ? (
                         <div className="flex flex-col flex-1 items-center justify-center p-12 text-center bg-surface">
-                          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm border border-border-main">
+                          <div className="mb-4 flex h-16 w-16 items-center justify-center border-2 border-text-main bg-white shadow-[4px_4px_0_0_#000]">
                             <TerminalSquare
                               className="h-8 w-8 text-text-muted"
                               strokeWidth={2}
@@ -743,12 +763,12 @@ export function AcademyUnit() {
                               Execution Results
                             </div>
                             <span
-                              className={`rounded-md border px-2 py-1 text-[10px] font-bold uppercase tracking-widest shadow-sm ${
+                              className={`border px-2 py-1 text-[10px] font-bold uppercase tracking-widest shadow-[2px_2px_0_0_#000] ${
                                 runReportIsFresh
                                   ? runReport.allPassed
-                                    ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600"
-                                    : "border-destructive/20 bg-destructive/10 text-destructive"
-                                  : "border-amber-500/20 bg-amber-500/10 text-amber-700"
+                                    ? "border-emerald-500 bg-emerald-500/10 text-emerald-600"
+                                    : "border-destructive bg-destructive/10 text-destructive"
+                                  : "border-amber-500 bg-amber-500/10 text-amber-700"
                               }`}
                             >
                               {runReportIsFresh
@@ -759,14 +779,14 @@ export function AcademyUnit() {
                             </span>
                           </div>
 
-                          <p className="mb-6 text-sm font-medium leading-relaxed text-text-muted bg-white p-4 rounded-lg border border-border-main">
+                          <p className="mb-6 text-sm font-mono leading-relaxed text-text-muted bg-main-bg p-4 border-2 border-text-main shadow-[2px_2px_0_0_#000]">
                             {runReportIsFresh
                               ? runReport.message
                               : "You have modified the code since the last run. Please run the checks again to see updated results."}
                           </p>
 
                           <div className="mb-6 grid grid-cols-2 gap-4">
-                            <div className="border border-text-main bg-main-bg p-4 shadow-[2px_2px_0_0_#000]">
+                            <div className="border-2 border-text-main bg-main-bg p-4 shadow-[2px_2px_0_0_#000]">
                               <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-text-muted border-b border-text-main pb-2">
                                 Passed Tests
                               </div>
@@ -779,7 +799,7 @@ export function AcademyUnit() {
                                 </span>
                               </div>
                             </div>
-                            <div className="border border-text-main bg-main-bg p-4 shadow-[2px_2px_0_0_#000]">
+                            <div className="border-2 border-text-main bg-main-bg p-4 shadow-[2px_2px_0_0_#000]">
                               <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-text-muted border-b border-text-main pb-2">
                                 Primary Function
                               </div>
@@ -797,7 +817,7 @@ export function AcademyUnit() {
                               runReport.cases.map((caseItem, index) => (
                                 <div
                                   key={caseItem.id}
-                                  className={`border p-4 shadow-[2px_2px_0_0_#000] transition-all ${
+                                  className={`border-2 p-4 shadow-[4px_4px_0_0_#000] transition-all ${
                                     caseItem.passed
                                       ? "border-emerald-500 bg-emerald-500/5 text-emerald-600"
                                       : "border-destructive bg-destructive/5 text-destructive"
@@ -806,14 +826,14 @@ export function AcademyUnit() {
                                   <div className="mb-3 flex items-center justify-between gap-4 border-b border-inherit/30 pb-2">
                                     <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest flex-1">
                                       {caseItem.passed ? (
-                                        <div className="bg-emerald-500/20 p-1 text-emerald-600 border border-emerald-500">
+                                        <div className="bg-emerald-500/20 p-1 text-emerald-600 border-2 border-emerald-500">
                                           <CheckCircle2
                                             className="h-3 w-3"
                                             strokeWidth={3}
                                           />
                                         </div>
                                       ) : (
-                                        <div className="bg-destructive/20 p-1 text-destructive border border-destructive">
+                                        <div className="bg-destructive/20 p-1 text-destructive border-2 border-destructive">
                                           <AlertTriangle
                                             className="h-3 w-3"
                                             strokeWidth={3}
@@ -841,7 +861,7 @@ export function AcademyUnit() {
                                 </div>
                               ))
                             ) : (
-                              <div className="rounded-xl border border-border-main bg-surface p-4 text-center text-sm font-medium text-text-muted">
+                              <div className="border-2 border-dashed border-text-main bg-surface p-4 text-center font-mono text-sm text-text-muted">
                                 The runner did not return structured results for
                                 this lab.
                               </div>
@@ -853,115 +873,17 @@ export function AcademyUnit() {
                   )}
                 </div>
 
-                {activeWorkspaceTab === "hints" && (
-                  <div className="flex-1 bg-white p-6 sm:p-8 min-h-[600px]">
-                    <div className="mb-6 flex items-center justify-between gap-4 border-b border-border-main pb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border-main bg-surface shadow-sm text-amber-500">
-                          <Lightbulb className="h-5 w-5" strokeWidth={2} />
-                        </div>
-                        <h3 className="font-heading text-xl font-bold uppercase text-text-main">
-                          Hints
-                        </h3>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setRevealedHints((value) =>
-                            Math.min(value + 1, unit.hints.length),
-                          )
-                        }
-                        disabled={revealedHints >= unit.hints.length}
-                        className="rounded-lg border border-border-main bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-text-main shadow-sm transition-all hover:-translate-y-0.5 hover:bg-surface disabled:pointer-events-none disabled:opacity-50"
-                      >
-                        Show More
-                      </button>
-                    </div>
-                    <div className="space-y-4">
-                      {unit.hints.slice(0, revealedHints).map((hint, index) => (
-                        <div
-                          key={`${hint}-${index}`}
-                          className="rounded-lg border border-amber-500/20 bg-amber-50 p-5 text-sm font-medium text-amber-900 shadow-sm"
-                        >
-                          {hint}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {activeWorkspaceTab === "solution" && (
-                  <div className="min-h-[600px] bg-white p-6 text-text-main">
-                    {!solutionUnlocked ? (
-                      <div className="flex h-full flex-col items-center justify-center rounded-xl border  border-border-main bg-surface py-20 text-center">
-                        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm border border-border-main">
-                          <Lightbulb
-                            className="h-8 w-8 text-amber-500 fill-amber-500/20"
-                            strokeWidth={2}
-                          />
-                        </div>
-                        <h3 className="mb-2 font-heading text-2xl font-bold uppercase text-text-main">
-                          Reference Solution Hidden
-                        </h3>
-                        <p className="mx-auto mb-8 max-w-md text-sm font-medium leading-relaxed text-text-muted">
-                          Try to solve the lab on your own first! The reference
-                          solution is here if you get completely stuck or want
-                          to compare approaches after finishing.
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => setSolutionUnlocked(true)}
-                          className="rounded-lg border border-border-main bg-white px-6 py-3 text-xs font-bold uppercase tracking-widest text-text-main shadow-sm transition-all hover:-translate-y-0.5 hover:bg-surface hover:text-primary"
-                        >
-                          Reveal Solution
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="mb-4 flex items-center justify-between border-b border-border-main pb-4">
-                          <div className="text-sm font-bold uppercase tracking-widest text-text-main">
-                            Reference Solution
-                          </div>
-                          <button
-                            type="button"
-                            disabled={!unit.solution}
-                            onClick={() => {
-                              if (unit.solution) {
-                                navigator.clipboard.writeText(unit.solution);
-                                setNotice("Solution copied to clipboard");
-                              }
-                            }}
-                            className="flex items-center gap-1.5 rounded-lg border border-border-main bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-text-main shadow-sm transition-colors hover:bg-surface disabled:opacity-50"
-                          >
-                            <ClipboardCopy className="h-3.5 w-3.5" />
-                            Copy
-                          </button>
-                        </div>
-                        {unit.solution ? (
-                          <CodeSurface
-                            code={unit.solution}
-                            language={unit.language || "text"}
-                            label="reference solution"
-                            maxHeightClass="max-h-[500px]"
-                          />
-                        ) : (
-                          <div className="rounded-xl border border-dashed border-border-main bg-surface p-8 text-center text-sm font-bold text-text-muted">
-                            No reference solution provided for this lab.
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
               </section>
+
+              {/* Hints and Solution have been moved to the right column */}
             </>
           )}
         </div>
 
         <aside
-          className={`space-y-8 ${isPractice ? "xl:order-1 hidden" : "xl:sticky xl:top-24 xl:self-start"}`}
+          className={`space-y-8 ${isPractice ? "flex flex-col gap-6 xl:order-2" : "xl:sticky xl:top-24 xl:self-start"}`}
         >
-          {outline.length > 0 ? (
+          {!isPractice && outline.length > 0 ? (
             <SidebarPanel
               title="Table of Contents"
               accent="bg-surface"
@@ -1039,27 +961,27 @@ export function AcademyUnit() {
                       !locked &&
                       navigate(`/academy/unit/${course.id}/${routeUnit.id}`)
                     }
-                    className={`flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-all ${
+                    className={`flex w-full items-center gap-3 border-2 p-3 text-left transition-all ${
                       current
-                        ? "border-primary/50 bg-primary/5 shadow-sm"
+                        ? "border-primary bg-primary/5 shadow-[2px_2px_0_0_#000]"
                         : locked
-                          ? "cursor-not-allowed border-border-main bg-main-bg opacity-60"
+                          ? "cursor-not-allowed border-text-main bg-main-bg opacity-60"
                           : done
-                            ? "border-border-main bg-white hover:bg-surface hover:shadow-sm"
-                            : "border-border-main bg-white hover:-translate-y-0.5 hover:border-primary/30 hover:bg-surface hover:shadow-sm"
+                            ? "border-text-main bg-surface hover:bg-main-bg hover:shadow-[2px_2px_0_0_#000]"
+                            : "border-text-main bg-surface hover:-translate-y-0.5 hover:border-primary/50 hover:bg-main-bg hover:shadow-[2px_2px_0_0_#000]"
                     }`}
                   >
                     <div
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md border ${
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center border-2 ${
                         current
-                          ? "border-primary bg-primary text-white"
+                          ? "border-primary bg-primary text-main-bg shadow-[2px_2px_0_0_#000]"
                           : done
                             ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600"
                             : locked
-                              ? "border-border-main bg-surface text-text-muted"
+                              ? "border-text-main bg-surface text-text-muted"
                               : routeUnit.section === "practice"
-                                ? "border-border-main bg-white text-text-main"
-                                : "border-border-main bg-white text-text-main"
+                                ? "border-text-main bg-surface text-text-main shadow-[2px_2px_0_0_#000]"
+                                : "border-text-main bg-surface text-text-main shadow-[2px_2px_0_0_#000]"
                       }`}
                     >
                       {locked ? (
@@ -1087,69 +1009,72 @@ export function AcademyUnit() {
         </aside>
       </div>
 
-      <div className="mt-12 flex flex-col items-center justify-center gap-6 border border-text-main bg-surface p-8 shadow-[4px_4px_0_0_#000]">
-        <h3 className="font-heading text-2xl font-black uppercase tracking-tight text-text-main">
-          {unitDone ? "Unit Completed" : "Finish This Unit"}
-        </h3>
-        <p className="max-w-xl text-center text-sm font-mono text-text-muted">
-          {unitDone
-            ? "Great job! You have already finished this unit. You can proceed to the next unit when ready."
-            : isPractice
-              ? runnerSupported
-                ? "Pass all tests by clicking Run Checks to unlock the Complete button."
-                : "Click complete below when you are ready to move on."
-              : "Take a moment to absorb the material before marking complete."}
-        </p>
+      <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-6 border-2 border-text-main bg-surface p-6 shadow-[4px_4px_0_0_#000]">
+        <div className="flex-1 text-center md:text-left">
+          <h3 className="font-heading text-xl font-black uppercase tracking-tight text-text-main">
+            {unitDone ? "Unit Completed" : "Finish This Unit"}
+          </h3>
+          <p className="max-w-md text-sm font-mono text-text-muted mt-2">
+            {unitDone
+              ? "Great job! You have finished this unit."
+              : isPractice
+                ? runnerSupported
+                  ? "Pass all tests to unlock the Complete button."
+                  : "Click complete below when you are ready."
+                : "Take a moment to absorb the material before marking complete."}
+          </p>
+        </div>
 
-        {!unitDone && completionBlocked && (
-          <div className="flex items-center justify-center gap-2 border border-amber-500 bg-amber-500/10 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-amber-700 shadow-[2px_2px_0_0_#f59e0b]">
-            <AlertTriangle className="h-4 w-4" strokeWidth={2} />
-            {runLoading ? "Running tests..." : "All tests must pass"}
-          </div>
-        )}
-
-        {!unitDone ? (
-          <button
-            type="button"
-            onClick={() => void handleComplete()}
-            disabled={completionBlocked || runLoading}
-            className="flex items-center gap-3 border-2 border-text-main bg-primary px-8 py-4 text-sm font-black uppercase tracking-widest text-main-bg shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000] disabled:pointer-events-none disabled:opacity-50 disabled:grayscale"
-          >
-            <CheckCircle2 className="h-5 w-5" strokeWidth={3} />
-            {isPractice ? "Submit Lab" : "Mark Complete"}
-          </button>
-        ) : (
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex items-center gap-2 border-2 border-text-main bg-emerald-500/10 px-6 py-3 text-sm font-black uppercase tracking-widest text-emerald-600 shadow-[4px_4px_0_0_#000]">
-              <CheckCircle2 className="h-5 w-5" strokeWidth={3} />
-              Recorded
+        <div className="flex flex-col items-center md:items-end gap-3">
+          {!unitDone && completionBlocked && (
+            <div className="flex items-center gap-2 border-2 border-amber-500 bg-amber-400/20 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-900 shadow-[2px_2px_0_0_#f59e0b]">
+              <AlertTriangle className="h-3 w-3" strokeWidth={3} />
+              {runLoading ? "Running tests..." : "All tests must pass"}
             </div>
-            {next_unit && (
-              <button
-                type="button"
-                onClick={() =>
-                  navigate(`/academy/unit/${course.id}/${next_unit.id}`)
-                }
-                className="flex items-center gap-3 border-2 border-text-main bg-primary px-8 py-3 text-sm font-black uppercase tracking-widest text-main-bg shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000]"
-              >
-                Next Unit
-                <ChevronRight className="h-5 w-5" strokeWidth={3} />
-              </button>
-            )}
-            {!next_unit && (
-              <button
-                type="button"
-                onClick={() => navigate(`/academy/course/${course.id}`)}
-                className="flex items-center gap-3 border-2 border-text-main bg-main-bg px-8 py-3 text-sm font-black uppercase tracking-widest text-text-main shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000] hover:bg-surface"
-              >
-                Back to Course
-              </button>
-            )}
-          </div>
-        )}
+          )}
+
+          {!unitDone ? (
+            <button
+              type="button"
+              onClick={() => void handleComplete()}
+              disabled={completionBlocked || runLoading}
+              className="flex items-center gap-2 border-2 border-text-main bg-primary px-6 py-3 text-sm font-black uppercase tracking-widest text-main-bg shadow-[2px_2px_0_0_#000] transition-all hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[4px_4px_0_0_#000] disabled:pointer-events-none disabled:opacity-50 disabled:grayscale"
+            >
+              <CheckCircle2 className="h-4 w-4" strokeWidth={3} />
+              {isPractice ? "Submit Lab" : "Mark Complete"}
+            </button>
+          ) : (
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex items-center gap-2 border-2 border-text-main bg-emerald-500/10 px-4 py-2 text-xs font-black uppercase tracking-widest text-emerald-600 shadow-[2px_2px_0_0_#000]">
+                <CheckCircle2 className="h-4 w-4" strokeWidth={3} />
+                Recorded
+              </div>
+              {next_unit ? (
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate(`/academy/unit/${course.id}/${next_unit.id}`)
+                  }
+                  className="flex items-center gap-2 border-2 border-text-main bg-primary px-4 py-2 text-xs font-black uppercase tracking-widest text-main-bg shadow-[2px_2px_0_0_#000] transition-all hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[4px_4px_0_0_#000]"
+                >
+                  Next Unit
+                  <ChevronRight className="h-4 w-4" strokeWidth={3} />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => navigate(`/academy/course/${course.id}`)}
+                  className="flex items-center gap-2 border-2 border-text-main bg-main-bg px-4 py-2 text-xs font-black uppercase tracking-widest text-text-main shadow-[2px_2px_0_0_#000] transition-all hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[4px_4px_0_0_#000] hover:bg-surface"
+                >
+                  Back to Course
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="mt-12 mb-20 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between  pt-10">
+      <div className="mt-8 mb-20 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t-2 border-text-main pt-6">
         <NavUnitLink
           label="Previous"
           unit={previous_unit}
@@ -1188,7 +1113,7 @@ function SidebarPanel({
 }) {
   return (
     <div
-      className={`border border-text-main p-6 shadow-[4px_4px_0_0_#000] ${accent}`}
+      className={`border-2 border-text-main p-6 shadow-[4px_4px_0_0_#000] ${accent}`}
     >
       <div
         className={`mb-4 border-b-2 border-text-main pb-4 text-xs font-black uppercase tracking-widest ${headerText}`}
@@ -1220,10 +1145,10 @@ function LabTabButton({
     <button
       type="button"
       onClick={onClick}
-      className={`relative px-4 py-2 text-xs font-bold uppercase tracking-widest transition-all rounded-md ${
+      className={`relative px-4 py-2 text-xs font-bold uppercase tracking-widest transition-all ${
         active
-          ? "bg-surface text-text-main shadow-sm border border-border-main"
-          : "bg-transparent text-text-muted hover:bg-surface/50 hover:text-text-main"
+          ? "bg-surface text-text-main shadow-[2px_2px_0_0_#000] border-2 border-text-main translate-x-[-1px] translate-y-[-1px]"
+          : "bg-main-bg border-2 border-transparent text-text-muted hover:bg-surface/50 hover:text-text-main"
       }`}
     >
       {label}
@@ -1258,12 +1183,12 @@ function NavUnitLink({
   if (disabled) {
     return (
       <div
-        className={`flex w-full flex-col border border-border-main/50 bg-main-bg p-6 opacity-60 shadow-[4px_4px_0_0_#999] sm:w-[48%] ${align === "right" ? "items-start sm:items-end sm:text-right" : "items-start"}`}
+        className={`flex w-full flex-col border-2 border-border-main bg-main-bg p-4 opacity-60 shadow-[2px_2px_0_0_var(--border-main)] sm:w-[48%] ${align === "right" ? "items-start sm:items-end sm:text-right" : "items-start"}`}
       >
-        <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-text-muted">
+        <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-text-muted">
           {label}
         </div>
-        <div className="font-heading text-xl font-bold text-text-muted">
+        <div className="font-heading text-lg font-bold text-text-muted">
           End of Route
         </div>
       </div>
@@ -1273,15 +1198,15 @@ function NavUnitLink({
   return (
     <Link
       to={href}
-      className={`group flex w-full flex-col border border-text-main bg-main-bg p-6 shadow-[4px_4px_0_0_#000] transition-all hover:bg-surface hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#000] sm:w-[48%] ${align === "right" ? "items-start sm:items-end sm:text-right" : "items-start"}`}
+      className={`group flex w-full flex-col border-2 border-text-main bg-main-bg p-4 shadow-[2px_2px_0_0_#000] transition-all hover:bg-surface hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[4px_4px_0_0_#000] sm:w-[48%] ${align === "right" ? "items-start sm:items-end sm:text-right" : "items-start"}`}
     >
-      <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-text-muted transition-colors group-hover:text-primary">
+      <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-text-muted transition-colors group-hover:text-primary">
         {label}
       </div>
-      <div className="max-w-full truncate font-heading text-2xl font-bold text-text-main transition-colors group-hover:text-primary">
+      <div className="max-w-full truncate font-heading text-lg font-bold text-text-main transition-colors group-hover:text-primary">
         {unit?.title}
       </div>
-      <div className="mt-4 inline-block border-2 border-text-main bg-main-bg px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-main shadow-[2px_2px_0_0_#000]">
+      <div className="mt-2 inline-block border-2 border-text-main bg-main-bg px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-text-main shadow-[2px_2px_0_0_#000]">
         {unit?.section === "practice" ? "Interactive Lab" : "Theory Lesson"}
       </div>
     </Link>

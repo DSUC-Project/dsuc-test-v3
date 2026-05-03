@@ -907,8 +907,8 @@ export function AcademyLesson() {
   if (loadingCatalog) {
     return (
       <div className="flex flex-col items-center justify-center py-32 space-y-4">
-        <div className="w-12 h-12  rounded-xl border-sky-200 border-t-sky-600 rounded-full animate-spin"></div>
-        <div className="text-sky-600 font-bold uppercase tracking-widest text-sm">
+        <div className="w-12 h-12 border-4 border-text-main border-t-primary animate-spin shadow-[4px_4px_0_0_#000]"></div>
+        <div className="text-text-main font-bold uppercase tracking-widest text-sm">
           Đang tải bài học...
         </div>
       </div>
@@ -917,7 +917,7 @@ export function AcademyLesson() {
 
   if (!lesson || !trackInfo) {
     return (
-      <div className="m-8 bg-white py-20 text-center text-sm font-bold uppercase tracking-widest text-gray-500 shadow-sm">
+      <div className="m-8 bg-surface border-2 border-text-main py-20 text-center text-sm font-bold uppercase tracking-widest text-text-muted shadow-[8px_8px_0_0_#000]">
         {err || "Không tìm thấy bài học"}
       </div>
     );
@@ -941,16 +941,17 @@ export function AcademyLesson() {
         onExit={() => void exitToAcademy()}
       />
 
-      <div className="sticky top-24 z-50 flex flex-col gap-4 bg-surface p-4 border border-text-main shadow-[4px_4px_0_0_#000]">
+      <div className="sticky top-24 z-50 flex flex-col gap-4 bg-surface p-4 border-2 border-text-main shadow-[4px_4px_0_0_#000]">
         <div className="flex items-center justify-between">
           <button
             onClick={() => navigate(`/academy/community/${track}`)}
-            className="flex h-12 w-12 items-center justify-center bg-main-bg border border-text-main text-text-main transition-colors shadow-[2px_2px_0_0_#000] hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000]"
+            className="inline-flex items-center gap-2 border-2 border-text-main bg-surface px-3 sm:px-4 py-2 text-xs font-bold uppercase tracking-widest font-mono shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] transition-all text-text-main shrink-0"
           >
-            <ArrowLeft className="h-6 w-6" strokeWidth={3} />
+            <ArrowLeft className="w-4 h-4" strokeWidth={2} />
+            <span className="hidden sm:inline">BACK</span>
           </button>
 
-          <div className="relative mx-6 h-6 flex-1 bg-main-bg border border-text-main shadow-inner">
+          <div className="relative mx-6 h-6 flex-1 bg-main-bg border border-text-main shadow-inner overflow-hidden">
             <div
               className="absolute left-0 top-0 h-full bg-primary text-primary-foreground transition-all duration-500 ease-out border-r border-text-main"
               style={{ width: `${progressPercentage}%` }}
@@ -959,7 +960,7 @@ export function AcademyLesson() {
 
           <div className="flex items-center gap-2 bg-main-bg text-text-main px-4 py-2 font-mono text-sm font-bold tracking-widest shadow-[2px_2px_0_0_#000] border border-text-main">
             <Trophy className="h-5 w-5 fill-text-main text-text-main" />
-            <span className="hidden sm:inline">Chuỗi: </span>
+            <span className="hidden sm:inline">Streak: </span>
             <span className="text-xl font-heading text-text-main leading-none">
               {currentUser?.streak || 0}
             </span>
@@ -976,7 +977,7 @@ export function AcademyLesson() {
         </div>
       </div>
 
-      <div className="relative flex min-h-[60vh] flex-col bg-surface p-6 sm:p-10 border border-text-main shadow-[4px_4px_0_0_#000]">
+      <div className="relative flex min-h-[60vh] flex-col bg-surface p-6 sm:p-10 border-2 border-text-main shadow-[4px_4px_0_0_#000]">
         {err && (
           <div className="mb-8 flex items-center gap-3 bg-primary text-primary-foreground px-5 py-4 font-mono text-[13px] font-bold uppercase tracking-widest shadow-[2px_2px_0_0_#000] border border-text-main">
             <Terminal size={20} className="shrink-0 text-white" /> {err}
@@ -1033,7 +1034,7 @@ export function AcademyLesson() {
                   CÂU HỎI [{currentStep}/{quiz.length}]
                 </h2>
 
-                <h3 className="mb-8 text-xl font-bold leading-relaxed bg-surface border border-border-main p-6 shadow-sm rounded-xl">
+                <h3 className="mb-8 text-xl font-bold leading-relaxed bg-surface border-2 border-text-main p-6 shadow-[4px_4px_0_0_#000]">
                   {currentQuizData.prompt}
                 </h3>
 
@@ -1044,21 +1045,21 @@ export function AcademyLesson() {
                       choice.id === currentQuizData.correctChoiceId;
 
                     let className =
-                      "border border-border-main hover:bg-surface hover:text-text-main bg-white shadow-sm transition-all hover:-translate-y-1 font-bold uppercase tracking-wide";
+                      "border-2 border-text-main hover:bg-main-bg bg-surface text-text-main shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000] transition-all hover:-translate-y-1 font-bold uppercase tracking-wide";
                     if (submitted) {
                       if (isChoiceCorrect) {
                         className =
-                          "bg-surface text-text-main border-border-main font-bold shadow-sm";
+                          "bg-surface text-text-main border-text-main font-bold shadow-[4px_4px_0_0_#000]";
                       } else if (selected && !isChoiceCorrect) {
                         className =
-                          "bg-primary text-primary-foreground border-border-main font-bold shadow-sm scale-[0.98]";
+                          "bg-primary text-primary-foreground border-text-main font-bold shadow-[2px_2px_0_0_#000] scale-[0.98]";
                       } else {
                         className =
-                          "bg-gray-200 border border-border-main text-gray-500 cursor-not-allowed font-medium opacity-80";
+                          "bg-main-bg border-text-main text-text-muted cursor-not-allowed font-medium opacity-80";
                       }
                     } else if (selected) {
                       className =
-                        "border border-border-main bg-primary text-primary-foreground shadow-none -translate-y-1 font-bold uppercase tracking-wide";
+                        "border-2 border-text-main bg-primary text-primary-foreground -translate-y-1 font-bold uppercase tracking-wide shadow-[6px_6px_0_0_#000]";
                     }
 
                     return (
@@ -1080,12 +1081,12 @@ export function AcademyLesson() {
                         className={`flex w-full cursor-pointer items-start p-5 text-left transition-all sm:items-center ${className}`}
                       >
                         <div
-                          className={`mr-4 mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center border border-border-main rounded-xl transition-colors sm:mt-0 ${
+                          className={`mr-4 mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center border-2 border-text-main transition-colors shadow-[2px_2px_0_0_#000] sm:mt-0 ${
                             submitted && isChoiceCorrect
                               ? "bg-primary text-primary-foreground border-border-main"
                               : selected && !submitted
-                                ? "border-border-main bg-white text-primary"
-                                : "border-border-main bg-white"
+                                ? "border-text-main bg-main-bg text-primary"
+                                : "border-text-main bg-main-bg"
                           }`}
                         >
                           {(submitted && isChoiceCorrect) ||
@@ -1103,14 +1104,14 @@ export function AcademyLesson() {
 
                 {submitted && (
                   <div
-                    className={`animate-in zoom-in-95 border border-border-main rounded-xl p-6 duration-300 shadow-sm ${
+                    className={`animate-in zoom-in-95 border-2 border-text-main p-6 duration-300 shadow-[4px_4px_0_0_#000] ${
                       correct
-                        ? "bg-surface text-text-main border-border-main"
-                        : "bg-primary text-primary-foreground border-border-main"
+                        ? "bg-surface text-text-main"
+                        : "bg-primary text-primary-foreground"
                     }`}
                   >
                     <p
-                      className={`mb-3 flex w-fit items-center gap-2 text-sm font-bold uppercase tracking-widest border border-border-main bg-white px-4 py-2 ${correct ? "text-primary" : "text-primary"}`}
+                      className={`mb-3 flex w-fit items-center gap-2 text-sm font-bold uppercase tracking-widest border-2 border-text-main px-4 py-2 ${correct ? "bg-main-bg text-primary" : "bg-main-bg text-primary"}`}
                     >
                       <Terminal size={20} strokeWidth={3} />
                       {correct ? "CHÍNH XÁC" : "CHƯA ĐÚNG"}
@@ -1124,7 +1125,7 @@ export function AcademyLesson() {
             );
           })()}
 
-        <div className="mt-auto flex justify-end -main pt-8 gap-4 flex-col sm:flex-row">
+        <div className="mt-auto flex justify-end border-t border-border-main pt-8 gap-4 flex-col sm:flex-row">
           {currentStep === 0 ? (
             <button
               onClick={() => {
@@ -1135,7 +1136,7 @@ export function AcademyLesson() {
                   void finishLesson();
                 }
               }}
-              className="flex w-full items-center justify-center gap-3 bg-primary text-primary-foreground border border-border-main px-8 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-sm transition-all hover:bg-primary hover:text-primary-foreground hover:-translate-y-1 sm:w-auto "
+              className="flex w-full items-center justify-center gap-3 bg-primary text-primary-foreground border-2 border-text-main px-8 py-4 text-sm font-bold uppercase tracking-widest shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] sm:w-auto"
             >
               {quiz.length > 0
                 ? "LÀM BÀI KIỂM TRA"
@@ -1156,7 +1157,7 @@ export function AcademyLesson() {
                   <button
                     onClick={() => submitQuestion(currentQuizData.id)}
                     disabled={!hasSelected}
-                    className="flex w-full items-center justify-center gap-3 bg-primary text-primary-foreground border border-border-main px-8 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-sm transition-all hover:bg-surface hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-200 disabled:text-gray-500 disabled:shadow-none sm:w-auto "
+                    className="flex w-full items-center justify-center gap-3 bg-primary text-primary-foreground border-2 border-text-main px-8 py-4 text-sm font-bold uppercase tracking-widest shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-200 disabled:text-gray-500 disabled:shadow-none sm:w-auto"
                   >
                     XÁC NHẬN CHỌN
                   </button>
@@ -1170,7 +1171,7 @@ export function AcademyLesson() {
                       setCurrentStep((prev) => prev + 1);
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
-                    className="flex w-full items-center justify-center gap-3 bg-surface text-text-main border border-border-main px-8 py-4 text-sm font-bold uppercase tracking-widest shadow-sm transition-all hover:bg-primary hover:text-primary-foreground hover:-translate-y-1 sm:w-auto "
+                    className="flex w-full items-center justify-center gap-3 bg-surface text-text-main border-2 border-text-main px-8 py-4 text-sm font-bold uppercase tracking-widest shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] sm:w-auto"
                   >
                     CÂU TIẾP THEO{" "}
                     <ArrowRight className="h-6 w-6" strokeWidth={3} />
@@ -1182,7 +1183,7 @@ export function AcademyLesson() {
                 <button
                   onClick={() => void finishLesson()}
                   disabled={busyFinish}
-                  className="flex w-full items-center justify-center gap-3 bg-surface text-text-main border border-border-main px-8 py-4 text-sm font-bold uppercase tracking-widest shadow-sm transition-all hover:bg-primary hover:text-primary-foreground hover:-translate-y-1 disabled:opacity-50 sm:w-auto overflow-hidden "
+                  className="flex w-full items-center justify-center gap-3 bg-surface text-text-main border-2 border-text-main px-8 py-4 text-sm font-bold uppercase tracking-widest shadow-[4px_4px_0_0_#000] transition-all hover:bg-primary hover:text-primary-foreground hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] disabled:opacity-50 sm:w-auto"
                 >
                   {busyFinish
                     ? "ĐANG LƯU..."
@@ -1304,7 +1305,7 @@ function CompletionCelebration({
               reduceMotion ? { opacity: 0 } : { y: 12, opacity: 0, scale: 0.98 }
             }
             transition={{ duration: reduceMotion ? 0 : 0.34, ease: "easeOut" }}
-            className="relative z-10 w-full max-w-2xl overflow-hidden bg-surface p-8 sm:p-12 shadow-sm text-center border border-border-main rounded-xl "
+            className="relative z-10 w-full max-w-2xl bg-surface p-8 sm:p-12 text-center border-2 border-text-main shadow-[8px_8px_0_0_#000]"
           >
             <motion.div
               animate={
@@ -1317,34 +1318,33 @@ function CompletionCelebration({
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="mx-auto mb-8 flex h-24 w-24 items-center justify-center bg-surface text-text-main shadow-sm border border-border-main"
+              className="mx-auto mb-8 flex h-24 w-24 items-center justify-center bg-surface text-text-main border-2 border-text-main shadow-[4px_4px_0_0_#000]"
             >
               <Sparkles size={48} aria-hidden="true" strokeWidth={3} />
             </motion.div>
 
-            <div className="relative mx-auto mb-6 flex w-fit items-center gap-2 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-text-main -main shadow-sm">
+            <div className="relative mx-auto mb-6 flex w-fit items-center gap-2 bg-main-bg px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-text-main border-2 border-text-main shadow-[2px_2px_0_0_#000]">
               <span className="h-3 w-3 bg-primary text-primary-foreground animate-pulse border border-border-main" />
-              ĐÃ MỞ KHÓA TỐT NGHIỆP
+              GRADUATION UNLOCKED
             </div>
 
-            <div className="mb-4 inline-block px-3 py-1 text-sm font-bold uppercase tracking-wider text-text-main bg-white -main shadow-sm">
-              Hoàn thành {trackTitle}
+            <div className="mb-4 inline-block px-3 py-1 text-sm font-bold uppercase tracking-wider text-text-main bg-main-bg border-2 border-text-main shadow-[2px_2px_0_0_#000]">
+              Completed {trackTitle}
             </div>
             <h2
               id="academy-completion-title"
               className="relative font-heading text-4xl font-bold text-text-main sm:text-5xl uppercase tracking-tighter decoration-primary/30 decoration-4 underline underline-offset-8 mt-4"
             >
-              Chúc mừng tốt nghiệp!
+              Congratulations on graduating!
             </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg font-bold leading-relaxed text-text-main bg-white/80 p-4 border border-border-main">
-              Bạn đã chính thức vượt qua chuyên đề{" "}
+            <p className="mx-auto mt-6 max-w-xl text-lg font-bold leading-relaxed text-text-main bg-main-bg p-4 border border-text-main">
+              You have officially completed the{" "}
               <span className="font-bold text-primary">{graduationLabel}</span>{" "}
-              bằng việc hoàn thành bài học cuối cùng{" "}
-              <span className="font-bold text-primary">{lessonTitle}</span>. Hãy
-              tiếp tục duy trì thành tích đăng nhập này nhé.
+              track by finishing the final lesson{" "}
+              <span className="font-bold text-primary">{lessonTitle}</span>. Keep up your learning streak!
             </p>
 
-            <div className="mx-auto mt-8 w-fit bg-surface text-text-main -main px-6 py-3 text-xs font-bold uppercase tracking-widest shadow-sm">
+            <div className="mx-auto mt-8 w-fit bg-surface text-text-main border-2 border-text-main px-6 py-3 text-xs font-bold uppercase tracking-widest shadow-[4px_4px_0_0_#000]">
               {saveStatus === "saving" && "Đang lưu tiến trình..."}
               {saveStatus === "saved" && "Đã lưu lại thành tích."}
               {saveStatus === "error" && "Không lưu được. Hãy thử lại."}
@@ -1356,7 +1356,7 @@ function CompletionCelebration({
                 type="button"
                 onClick={onFinalize}
                 disabled={busy}
-                className="flex items-center justify-center gap-2 min-h-14 bg-primary text-primary-foreground px-6 py-4 text-sm font-bold uppercase tracking-wider shadow-sm transition-all hover:bg-primary hover:text-primary-foreground hover:-translate-y-1 disabled:opacity-50 border border-border-main "
+                className="flex items-center justify-center gap-2 min-h-14 bg-primary text-primary-foreground px-6 py-4 text-sm font-bold uppercase tracking-wider shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#000] disabled:opacity-50 border-2 border-text-main"
               >
                 {busy || saveStatus === "saving" ? "ĐANG LƯU..." : "NHẬN CÚP"}
                 <CheckCircle2 size={24} strokeWidth={3} />
@@ -1365,7 +1365,7 @@ function CompletionCelebration({
                 type="button"
                 onClick={onExit}
                 disabled={busy}
-                className="flex items-center justify-center min-h-14 bg-white border border-border-main px-6 py-4 text-sm font-bold uppercase tracking-wider text-text-main shadow-sm transition-all hover:bg-primary hover:text-primary-foreground hover:-translate-y-1 hover:shadow-sm disabled:opacity-50 "
+                className="flex items-center justify-center min-h-14 bg-surface border-2 border-text-main px-6 py-4 text-sm font-bold uppercase tracking-wider text-text-main shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#000] disabled:opacity-50"
               >
                 <span className="inline-flex items-center justify-center gap-3">
                   <Home size={24} strokeWidth={3} aria-hidden="true" />

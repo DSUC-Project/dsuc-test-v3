@@ -136,22 +136,23 @@ export function AcademyTrack() {
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 shadow-sm">
         <Link
           to="/academy"
-          className="inline-flex items-center text-sm font-bold uppercase tracking-widest text-text-main hover:-translate-x-1 transition-transform"
+          className="inline-flex items-center gap-2 border-2 border-text-main bg-surface px-4 py-2 text-xs font-bold uppercase tracking-widest font-mono shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] transition-all text-text-main"
         >
-          <ArrowLeft className="w-5 h-5 mr-2" strokeWidth={3} /> Quay lại
+          <ArrowLeft className="w-4 h-4" strokeWidth={2} />
+          BACK
         </Link>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground -main shadow-sm text-text-main text-xs font-bold uppercase tracking-widest">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground border-2 border-text-main shadow-[2px_2px_0_0_#000] text-xs font-bold uppercase tracking-widest">
             <Star size={16} strokeWidth={3} className="fill-text-main" />
             <span className="hidden sm:inline">
-              Chuỗi: {currentUser?.streak || 0}
+              Streak: {currentUser?.streak || 0}
             </span>
             <span className="sm:hidden">{currentUser?.streak || 0}</span>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground -main shadow-sm text-white text-xs font-bold uppercase tracking-widest">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground border-2 border-text-main shadow-[2px_2px_0_0_#000] text-xs font-bold uppercase tracking-widest">
             <Terminal size={16} strokeWidth={3} />
             <span className="hidden sm:inline">
-              Bản dựng: {currentUser?.builds || 0}
+              Builds: {currentUser?.builds || 0}
             </span>
             <span className="sm:hidden">{currentUser?.builds || 0}</span>
           </div>
@@ -159,7 +160,7 @@ export function AcademyTrack() {
       </div>
 
       <header className="text-center space-y-6 pt-4 relative">
-        <div className="inline-flex px-4 py-1.5 font-bold tracking-widest uppercase mb-2 bg-surface text-text-main -main shadow-sm text-sm">
+        <div className="inline-flex px-4 py-1.5 font-bold tracking-widest uppercase mb-2 bg-surface text-text-main border-2 border-text-main shadow-[4px_4px_0_0_#000] text-sm">
           Chuyên đề: {trackInfo.id}
         </div>
         <h1
@@ -171,9 +172,9 @@ export function AcademyTrack() {
       </header>
 
       <div className="relative mt-16 px-2 sm:px-4">
-        <div className="absolute left-6 sm:left-8 top-8 bottom-8 w-2 bg-white -main shadow-sm">
+        <div className="absolute left-6 sm:left-8 top-8 bottom-8 w-2 bg-white border-2 border-text-main shadow-[2px_2px_0_0_#000]">
           <div
-            className="w-full bg-primary text-primary-foreground -main transition-all duration-1000"
+            className="w-full bg-primary text-primary-foreground border-b-2 border-text-main transition-all duration-1000"
             style={{ height: `${progressPercent}%` }}
           />
         </div>
@@ -205,12 +206,12 @@ export function AcademyTrack() {
                   disabled={isLocked}
                 >
                   <div
-                    className={`relative flex-shrink-0 flex items-center justify-center w-12 h-12  transition-colors z-10 ${
+                    className={`relative flex-shrink-0 flex items-center justify-center w-12 h-12 border-2 border-text-main transition-colors z-10 ${
                       isLocked
                         ? "bg-gray-200"
                         : isCompleted
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-primary text-primary-foreground shadow-sm"
+                          ? "bg-primary text-primary-foreground shadow-[2px_2px_0_0_#000]"
+                          : "bg-primary text-primary-foreground shadow-[2px_2px_0_0_#000]"
                     }`}
                   >
                     {isCompleted ? (
@@ -227,12 +228,12 @@ export function AcademyTrack() {
                   </div>
 
                   <div
-                    className={`relative flex-grow p-6 sm:p-8 border border-border-main transition-all overflow-hidden ${
+                    className={`relative flex-grow p-6 sm:p-8 border-2 border-text-main transition-all overflow-hidden ${
                       isCompleted
-                        ? "bg-white shadow-sm"
+                        ? "bg-white shadow-[4px_4px_0_0_#000]"
                         : isLocked
-                          ? "bg-gray-100"
-                          : "bg-white shadow-sm"
+                          ? "bg-gray-100 shadow-[4px_4px_0_0_#000]"
+                          : "bg-white shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000]"
                     }`}
                   >
                     {isCurrent && (
@@ -242,19 +243,19 @@ export function AcademyTrack() {
                       <div>
                         <div className="flex items-center gap-3 mb-3">
                           <span
-                            className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest border border-border-main ${
+                            className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest border-2 border-text-main ${
                               isCompleted
-                                ? "bg-surface text-text-main shadow-sm"
+                                ? "bg-surface text-text-main shadow-[2px_2px_0_0_#000]"
                                 : isCurrent
-                                  ? "bg-primary text-primary-foreground shadow-sm"
+                                  ? "bg-primary text-primary-foreground shadow-[2px_2px_0_0_#000]"
                                   : "bg-white text-gray-500"
                             }`}
                           >
-                            Bài {index + 1}
+                            Lesson {index + 1}
                           </span>
                           {isCurrent && (
                             <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-surface text-text-main border border-border-main shadow-sm animate-pulse">
-                              Đang học
+                              In Progress
                             </span>
                           )}
                         </div>
@@ -279,12 +280,12 @@ export function AcademyTrack() {
                           PHÚT
                         </span>
                         {isLocked ? (
-                          <div className="p-2 -main bg-gray-200 text-gray-400">
+                          <div className="p-2 border-2 border-gray-400 bg-gray-200 text-gray-400">
                             <Lock size={18} strokeWidth={3} />
                           </div>
                         ) : (
                           <div
-                            className={`px-5 py-2 border border-border-main shadow-sm transition-transform ${isCompleted ? "bg-white text-text-main group-hover:-translate-y-0.5" : "bg-primary text-primary-foreground group-hover:-translate-y-0.5"}`}
+                            className={`px-5 py-2 border-2 border-text-main shadow-[4px_4px_0_0_#000] transition-transform ${isCompleted ? "bg-surface text-text-main group-hover:-translate-y-1" : "bg-primary text-primary-foreground group-hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000]"}`}
                           >
                             {isCompleted ? "Học lại" : "Bắt đầu"}
                           </div>
@@ -296,7 +297,7 @@ export function AcademyTrack() {
               );
             })
           ) : (
-            <div className="text-text-main font-bold uppercase tracking-widest w-full text-center bg-white -main shadow-sm p-12">
+            <div className="text-text-main font-bold uppercase tracking-widest w-full text-center bg-white border-2 border-text-main shadow-[4px_4px_0_0_#000] p-12">
               Không có bài học nào trong chuyên đề này.
             </div>
           )}

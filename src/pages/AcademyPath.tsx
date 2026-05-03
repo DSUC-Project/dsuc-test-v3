@@ -107,7 +107,7 @@ export function AcademyPath() {
   if (!path) {
     return (
       <div className="container mx-auto px-4 py-24 text-center">
-        <div className="p-8 -main bg-surface text-text-muted font-mono text-sm max-w-md mx-auto">
+        <div className="p-8 border border-border-main bg-surface text-text-muted font-mono text-sm max-w-md mx-auto">
           {error || "Path not found."}
         </div>
         <div className="mt-8">
@@ -129,19 +129,27 @@ export function AcademyPath() {
       <section className="relative">
         <Link
           to="/academy"
-          className="inline-flex items-center gap-2 mb-8 text-[10px] font-mono uppercase tracking-widest text-text-muted hover:text-primary transition-colors"
+          className="inline-flex items-center gap-2 mb-8 border-2 border-text-main bg-surface px-4 py-2 text-xs font-bold uppercase tracking-widest font-mono shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] transition-all text-text-main"
         >
-          <ArrowLeft className="w-3 h-3" />
-          Back to Academy
+          <ArrowLeft className="w-4 h-4" strokeWidth={2} />
+          BACK TO ACADEMY
         </Link>
 
         <div className="flex flex-col lg:flex-row gap-12 lg:items-end justify-between">
           <div className="flex flex-col gap-6 max-w-3xl">
             <div>
-              <StatusBadge
-                status={path.tag || path.difficulty}
-                className="mb-6 inline-flex"
-              />
+              <div className="flex items-center gap-3 mb-6">
+                <StatusBadge
+                  status={path.tag || path.difficulty}
+                  className="inline-flex border-2 border-text-main bg-blue-600 text-white"
+                />
+                {completedCourses === path.courses.length && path.courses.length > 0 && (
+                  <StatusBadge
+                    status="Path Completed"
+                    className="inline-flex border-2 border-emerald-500 text-emerald-500 bg-emerald-500/10"
+                  />
+                )}
+              </div>
               <h1 className="font-heading font-bold text-5xl md:text-7xl uppercase tracking-tighter leading-none mb-6">
                 {path.title}
               </h1>
@@ -189,7 +197,7 @@ export function AcademyPath() {
         />
 
         {path.courses.length === 0 ? (
-          <div className="p-12 text-center bg-surface -main  font-mono text-sm text-text-muted mt-8">
+          <div className="p-12 text-center bg-surface border border-border-main font-mono text-sm text-text-muted mt-8">
             This path is currently under construction.
           </div>
         ) : (
@@ -220,22 +228,22 @@ export function AcademyPath() {
                   onClick={() =>
                     !locked && navigate(`/academy/course/${course.id}`)
                   }
-                  className={`group w-full flex flex-col md:flex-row p-6 md:p-8 text-left transition-all relative overflow-hidden bg-surface ${
+                  className={`group w-full flex flex-col md:flex-row p-6 md:p-8 text-left transition-all relative overflow-hidden bg-surface border-2 border-text-main shadow-[4px_4px_0_0_#000] mb-4 ${
                     locked
                       ? "cursor-not-allowed opacity-60 grayscale"
-                      : "hover:border-primary focus-visible:outline-none focus:ring-1 focus:ring-primary"
+                      : "hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000]"
                   }`}
                 >
-                  <div className="absolute top-0 left-0 h-full w-1 bg-main-bg">
+                  <div className="absolute top-0 left-0 w-full h-1.5 bg-main-bg border-b-2 border-text-main">
                     <div
-                      className={`w-full transition-all duration-1000 ease-out ${isCompleted ? "bg-emerald-500" : "bg-primary"}`}
-                      style={{ height: `${completionPercent}%` }}
+                      className={`h-full transition-all duration-1000 ease-out ${isCompleted ? "bg-emerald-500" : "bg-primary"}`}
+                      style={{ width: `${completionPercent}%` }}
                     />
                   </div>
 
                   <div className="flex-1 min-w-0 pr-8">
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="font-mono text-[10px] uppercase tracking-widest text-text-muted">
+                      <span className="inline-block px-3 py-1 font-mono text-[10px] uppercase tracking-widest font-bold border-2 border-text-main bg-blue-600 text-white shadow-[2px_2px_0_0_#000]">
                         Stage {String(index + 1).padStart(2, "0")}
                       </span>
                       {locked ? (

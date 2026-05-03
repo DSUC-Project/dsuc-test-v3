@@ -244,7 +244,7 @@ export function AcademyHome() {
             </p>
 
             <div className="grid grid-cols-3 gap-4 w-full max-w-lg mb-8">
-              <div className="p-4 bg-surface text-center">
+              <div className="p-4 bg-surface text-center border-2 border-text-main shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">
                 <BookOpen className="w-5 h-5 mx-auto mb-2 text-primary" />
                 <p className="font-display text-2xl font-bold">
                   {paths.length}
@@ -253,7 +253,7 @@ export function AcademyHome() {
                   Paths
                 </p>
               </div>
-              <div className="p-4 bg-surface text-center">
+              <div className="p-4 bg-surface text-center border-2 border-text-main shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">
                 <Boxes className="w-5 h-5 mx-auto mb-2 text-primary" />
                 <p className="font-display text-2xl font-bold">
                   {totalCuratedUnits}
@@ -262,7 +262,7 @@ export function AcademyHome() {
                   Total Units
                 </p>
               </div>
-              <div className="p-4 bg-surface text-center">
+              <div className="p-4 bg-surface text-center border-2 border-text-main shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all">
                 <Flame className="w-5 h-5 mx-auto mb-2 text-primary" />
                 <p className="font-display text-2xl font-bold">
                   {totalCompletedUnits}
@@ -348,17 +348,19 @@ export function AcademyHome() {
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col h-full justify-center items-center text-center p-6 bg-main-bg border border-dashed border-border-main">
-                  <StatusBadge status="Preview Mode" className="mb-6" />
-                  <h3 className="font-heading text-xl font-bold mb-4">
-                    Track Your Learning
+                <div className="flex flex-col h-full justify-center items-center text-center p-8 bg-surface">
+                  <div className="w-20 h-20 bg-main-bg border-4 border-text-main shadow-[4px_4px_0_0_#000] flex items-center justify-center mb-6 -rotate-6">
+                    <Flame className="w-10 h-10 text-text-muted" strokeWidth={3} />
+                  </div>
+                  <StatusBadge status="Preview Mode" className="mb-4 bg-main-bg border-2 border-text-main" />
+                  <h3 className="font-heading text-2xl font-black uppercase text-text-main mb-4 tracking-tight">
+                    Building Habit
                   </h3>
-                  <p className="text-sm text-text-muted mb-8 max-w-sm">
-                    Sign in to save your streak, track completion, and earn
-                    credentials.
+                  <p className="text-sm font-sans text-text-muted mb-8 max-w-sm">
+                    Connect your wallet or login to save your streak, track lesson progress, and build your builder reputation.
                   </p>
-                  <ActionButton variant="secondary">
-                    Login to Start
+                  <ActionButton onClick={() => document.dispatchEvent(new CustomEvent('open-login-modal'))} variant="primary" className="shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000] -translate-y-1">
+                    Connect to Start
                   </ActionButton>
                 </div>
               )}
@@ -415,7 +417,7 @@ export function AcademyHome() {
                     </div>
                     <div className="px-6 py-5 flex flex-col flex-1">
                       <div className="flex justify-between items-start mb-4">
-                        <StatusBadge status={path.tag || path.difficulty} className="border border-text-main bg-main-bg" />
+                        <StatusBadge status={path.tag || path.difficulty} className="border-2 border-text-main bg-blue-600 text-white" />
                         <div className="text-xl font-display font-black text-text-main group-hover:text-primary transition-colors">
                           {progressPercent}%
                         </div>
@@ -458,7 +460,7 @@ export function AcademyHome() {
       {/* Community Tracks Section */}
       <section>
         <SectionHeader
-          title="More Quiz"
+          title="Community Tracks"
           subtitle="Additional topics curated by the DSUC community."
         />
 
@@ -479,31 +481,45 @@ export function AcademyHome() {
               { id: "cm-3", title: "DeFi Concepts", description: "Test your knowledge on AMMs, liquidity pools and flash loans.", lesson_count: 3, total_minutes: 10 },
             ]).map((track: any) => (
               <Link key={track.id} to={`/academy/community/${track.id}`} className="focus:outline-none">
-                <div className="group h-full flex flex-col bg-surface border-2 border-text-main shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000] transition-all p-5">
-                  <div className="flex items-start justify-between gap-4 border-b-2 border-text-main mb-4 pb-3">
-                    <StatusBadge status="Community" className="bg-main-bg border border-text-main text-text-main" />
-                    <Boxes className="w-5 h-5 text-text-main group-hover:text-primary transition-colors" />
-                  </div>
+                <div className="group h-full flex flex-col bg-surface border-2 border-text-main shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000] transition-all p-0">
+                  <div className="relative w-full h-1.5 border-b-2 border-text-main bg-text-main" />
+                  <div className="px-6 py-5 flex flex-col flex-1">
+                    <div className="flex items-start justify-between gap-4 border-b-2 border-border-main mb-4 pb-3">
+                      <StatusBadge status="Community" className="bg-main-bg border-2 border-text-main text-text-main" />
+                      <Boxes className="w-5 h-5 text-text-main group-hover:text-primary transition-colors" />
+                    </div>
 
-                  <h3 className="font-heading text-lg font-black mb-2 uppercase tracking-tight group-hover:text-primary transition-colors">
-                    {track.title}
-                  </h3>
+                    <h3 className="font-heading text-lg font-black mb-2 uppercase tracking-tight group-hover:text-primary transition-colors">
+                      {track.title}
+                    </h3>
 
-                  <p className="text-xs text-text-muted line-clamp-2 leading-relaxed mb-6 flex-1 font-mono">
-                    {track.subtitle ||
-                      track.description ||
-                      "Community contributed curriculum."}
-                  </p>
+                    <p className="text-xs text-text-muted line-clamp-2 leading-relaxed mb-6 flex-1 font-mono">
+                      {track.subtitle ||
+                        track.description ||
+                        "Community contributed curriculum."}
+                    </p>
 
-                  <div className="flex flex-wrap items-center justify-between border-t-2 border-text-main pt-3 mt-auto">
-                    <div className="flex gap-2 items-center font-mono text-[9px] font-bold text-text-main uppercase">
-                      <span>{track.lesson_count || 0} Lessons</span>
-                      <span>•</span>
-                      <span>
-                        ~{Math.max(1, Math.round((track.total_minutes || 0) / 60))} hr
+                    <div className="grid grid-cols-2 gap-3 mb-6 w-full mt-auto font-mono text-center">
+                      <div className="px-3 py-2 border-2 border-border-main bg-main-bg">
+                        <div className="font-black text-xl text-text-main">{track.lesson_count || 0}</div>
+                        <div className="text-[9px] uppercase font-bold text-text-muted mt-1">Lessons</div>
+                      </div>
+                      <div className="px-3 py-2 border-2 border-border-main bg-main-bg">
+                        <div className="font-black text-xl text-text-main">
+                          {Math.max(1, Math.round((track.total_minutes || 0) / 60))}
+                        </div>
+                        <div className="text-[9px] uppercase font-bold text-text-muted mt-1">Hours</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-4 text-xs font-bold font-mono border-t border-dashed border-border-main mt-auto">
+                      <span className="text-text-muted uppercase">
+                        Community
+                      </span>
+                      <span className="inline-flex items-center gap-2 text-primary uppercase text-[10px] tracking-wider transition-all">
+                        Start <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                       </span>
                     </div>
-                    <ArrowRight className="h-4 w-4 text-text-main group-hover:text-primary transition-all -translate-x-2 group-hover:translate-x-0" />
                   </div>
                 </div>
               </Link>

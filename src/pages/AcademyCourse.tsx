@@ -141,13 +141,13 @@ export function AcademyCourse() {
   if (!course) {
     return (
       <div className="container mx-auto px-4 py-24 text-center">
-        <div className="mb-4 inline-flex h-14 w-14 items-center justify-center bg-surface -main text-text-muted">
+        <div className="mb-4 inline-flex h-14 w-14 items-center justify-center bg-surface border border-border-main text-text-muted">
           <Code2 className="w-6 h-6" />
         </div>
         <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">
           Could not load course
         </h1>
-        <p className="mx-auto mt-4 max-w-xl p-4 text-sm text-text-muted bg-surface  font-mono">
+        <p className="mx-auto mt-4 max-w-xl p-4 text-sm text-text-muted bg-surface border border-border-main font-mono">
           {error || "Course data is unavailable. Please try again later."}
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -201,10 +201,10 @@ export function AcademyCourse() {
       <section className="relative">
         <Link
           to={course.path_id ? `/academy/path/${course.path_id}` : "/academy"}
-          className="inline-flex items-center gap-2 mb-8 text-[10px] font-mono uppercase tracking-widest text-text-muted hover:text-primary transition-colors"
+          className="inline-flex items-center gap-2 mb-8 border-2 border-text-main bg-surface px-4 py-2 text-xs font-bold uppercase tracking-widest font-mono shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] transition-all text-text-main"
         >
-          <ArrowLeft className="w-3 h-3" />
-          Back to {course.path_title ? "Path" : "Academy"}
+          <ArrowLeft className="w-4 h-4" strokeWidth={2} />
+          BACK TO {course.path_title ? "PATH" : "ACADEMY"}
         </Link>
 
         <div className="flex flex-col lg:flex-row gap-12 lg:items-start justify-between">
@@ -440,7 +440,7 @@ export function AcademyCourse() {
                 Instructor
               </div>
               <div className="flex flex-col gap-4">
-                <div className="flex h-16 w-16 items-center justify-center bg-surface -main">
+                <div className="flex h-16 w-16 items-center justify-center bg-surface border border-border-main">
                   <User
                     className="h-6 w-6 text-text-muted"
                     aria-hidden="true"
@@ -525,7 +525,7 @@ function UnitLane({
 
   if (units.length === 0) {
     return (
-      <div className="-main border-dashed p-6 flex flex-col items-center justify-center text-center bg-surface">
+      <div className="border border-dashed border-border-main p-6 flex flex-col items-center justify-center text-center bg-surface">
         <div className="text-[10px] font-mono uppercase bg-main-bg text-text-muted px-2 py-1 mb-3">
           {title}
         </div>
@@ -537,7 +537,7 @@ function UnitLane({
   }
 
   return (
-    <div className="flex flex-col h-full bg-surface -main">
+    <div className="flex flex-col h-full bg-surface border border-border-main">
       <div className="flex items-center justify-between gap-4 p-4 bg-main-bg/50">
         <div className="text-[10px] font-mono uppercase tracking-widest text-text-muted">
           {title}
@@ -568,9 +568,9 @@ function UnitLane({
               onClick={() =>
                 !locked && navigate(`/academy/unit/${courseId}/${unit.id}`)
               }
-              className={`group w-full p-4 text-left transition-all relative overflow-hidden flex items-start justify-between gap-4 last:border-b-0 ${
+              className={`group w-full p-4 text-left transition-all relative flex items-start justify-between gap-4 border-b border-border-main last:border-b-0 ${
                 locked
-                  ? "cursor-not-allowed opacity-50 grayscale bg-main-bg"
+                  ? "cursor-not-allowed opacity-40 grayscale bg-main-bg"
                   : "hover:bg-main-bg focus-visible:outline-none focus:bg-main-bg"
               }`}
             >
