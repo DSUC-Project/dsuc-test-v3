@@ -52,9 +52,8 @@ export function Members() {
           </div>
         </div>
 
-        {/* Status indicator */}
-        <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-2 py-1 bg-surface  font-mono text-[9px] uppercase font-black text-text-main">
-          <span className={`w-2 h-2 rounded-full animate-pulse ${intent === "primary" ? "bg-primary" : "bg-warning"}`}></span>
+        <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-2 py-1 bg-surface font-mono text-[9px] uppercase font-black text-text-main border border-border-main">
+          <span className={`w-2 h-2 rounded-full ${member.is_active ? 'bg-primary animate-pulse' : 'bg-gray-400'}`}></span>
           {member.memberType === "community" ? "COMMUNITY" : "CORE"}
         </div>
 
@@ -142,12 +141,12 @@ export function Members() {
     <div className="container mx-auto px-4 py-8 md:py-16 space-y-16">
       <div className="flex flex-col md:flex-row md:items-end justify-between items-start gap-6 pb-8">
         <div className="flex flex-col">
-          <span className="font-mono text-xs uppercase tracking-widest text-primary font-bold mb-2">
-            DIRECTORY
-          </span>
           <h1 className="text-4xl md:text-5xl font-heading font-black uppercase tracking-tight text-text-main">
             Members
           </h1>
+          <p className="text-gray-500 font-mono text-xs uppercase tracking-widest mt-3">
+            Browse the builders and learners in our community.
+          </p>
         </div>
 
         <div className="relative w-full md:w-80 shrink-0">
@@ -170,7 +169,7 @@ export function Members() {
           </h2>
         </div>
         {officialMembers.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {officialMembers.map((member) => (
               <MemberCard key={member.id} member={member} intent="primary" />
             ))}
@@ -190,9 +189,9 @@ export function Members() {
           </h2>
         </div>
         {communityMembers.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {communityMembers.map((member) => (
-              <MemberCard key={member.id} member={member} intent="warning" />
+              <MemberCard key={member.id} member={member} intent="primary" />
             ))}
           </div>
         ) : (

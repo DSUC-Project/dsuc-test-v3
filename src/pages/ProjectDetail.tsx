@@ -36,9 +36,9 @@ export function ProjectDetail() {
     <div className="container mx-auto px-4 py-8 md:py-16 space-y-12">
       <button
         onClick={() => navigate("/projects")}
-        className="flex items-center gap-2 text-text-muted hover:text-text-main transition-colors font-mono text-xs uppercase tracking-widest w-fit  px-4 py-2 bg-surface hover:bg-main-bg shadow-sm hover:-translate-y-0.5"
+        className="group flex items-center gap-2 text-text-muted hover:text-text-main transition-colors font-mono text-xs font-bold uppercase tracking-widest w-fit p-2 focus:outline-none"
       >
-        <ArrowLeft size={16} /> Back to Projects
+        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> BACK TO PROJECTS
       </button>
 
       <motion.div

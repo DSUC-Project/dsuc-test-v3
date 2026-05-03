@@ -39,34 +39,33 @@ export function Leaderboard() {
     let iconColor = "text-text-main";
 
     if (rank === 1) {
-      style = "bg-accent";
-      iconColor = "text-text-main";
+      style = "bg-yellow-400 border-2 border-text-main shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#FFF]";
+      iconColor = "text-black";
     } else if (rank === 2) {
-      style = "bg-primary";
-      iconColor = "text-main-bg";
+      style = "bg-blue-500 border-2 border-text-main shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#FFF]";
+      iconColor = "text-white";
     } else if (rank === 3) {
-      style = "bg-main-bg";
-      iconColor = "text-text-main";
+      style = "bg-purple-500 border-2 border-text-main shadow-[8px_8px_0_0_#000] dark:shadow-[8px_8px_0_0_#FFF]";
+      iconColor = "text-white";
     }
 
     const { streak } = member;
     const heightModifier =
       rank === 1
-        ? "min-h-[250px] md:h-[420px] md:pb-12 z-20"
+        ? "min-h-[250px] md:h-[420px] md:pb-12 z-20 scale-100"
         : rank === 2
-          ? "min-h-[200px] md:h-[360px] md:pb-8 z-10 opacity-100"
-          : "min-h-[200px] md:h-[320px] md:pb-6 z-0 opacity-100";
+          ? "min-h-[200px] md:h-[360px] md:pb-8 z-10 opacity-100 scale-95"
+          : "min-h-[200px] md:h-[320px] md:pb-6 z-0 opacity-100 scale-90";
 
     return (
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: rank * 0.1 }}
-        className={`relative flex flex-col items-center justify-end p-6  ${style} ${heightModifier} transition-all group`}
+        className={`relative flex flex-col items-center justify-end p-6 ${style} ${heightModifier} transition-all group hover:-translate-y-2`}
       >
-        {/* Background Number / Chip Graphic */}
         <div
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[180px] sm:text-[220px] font-display font-bold leading-none pointer-events-none opacity-[0.1] select-none ${iconColor}`}
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[180px] sm:text-[220px] font-display font-black leading-none pointer-events-none opacity-20 select-none ${iconColor}`}
         >
           0{rank}
         </div>
@@ -85,25 +84,25 @@ export function Leaderboard() {
               <Crown
                 size={48}
                 className={`mb-4 ${iconColor}`}
-                strokeWidth={2}
+                strokeWidth={3}
               />
             ) : rank === 2 ? (
               <Hexagon
                 size={32}
                 className={`mb-4 ${iconColor}`}
-                strokeWidth={2}
+                strokeWidth={3}
               />
             ) : (
               <Hexagon
                 size={32}
                 className={`mb-4 ${iconColor}`}
-                strokeWidth={2}
+                strokeWidth={3}
               />
             )}
           </motion.div>
 
           <div
-            className={`w-20 h-20 sm:w-32 sm:h-32 mb-5 border border-border-main relative select-none shrink-0 overflow-hidden bg-main-bg`}
+            className={`w-20 h-20 sm:w-28 sm:h-28 mb-5 border-4 relative select-none shrink-0 overflow-hidden bg-main-bg shadow-sm ${rank === 1 ? "border-yellow-200" : rank === 2 ? "border-blue-200" : "border-purple-200"}`}
           >
             <img
               src={member.avatar || "https://via.placeholder.com/150"}
@@ -113,27 +112,21 @@ export function Leaderboard() {
           </div>
 
           <div
-            className={`text-[10px] font-mono font-bold uppercase tracking-widest mb-1 ${iconColor} bg-surface border border-border-main px-2 py-0.5 text-text-main`}
+            className={`text-[10px] font-mono font-black uppercase tracking-widest mb-1 ${iconColor} bg-black/20 px-2 py-0.5 border ${rank===1 ? "border-black/50" : "border-white/50"}`}
           >
             RANK 0{rank}
           </div>
           <h3
-            className={`text-base sm:text-xl font-display font-bold text-center mb-5 truncate w-full px-2 max-w-[180px] ${rank === 2 ? "text-main-bg" : "text-text-main"}`}
+            className={`text-base sm:text-xl font-heading font-black text-center mb-4 truncate w-full px-2 max-w-[180px] ${iconColor}`}
           >
             {member.name}
           </h3>
 
           <div
-            className={`flex items-center justify-center gap-2 px-4 py-2 border border-border-main text-xs font-mono font-bold tracking-widest bg-surface text-text-main w-full max-w-[140px]`}
+            className={`flex items-center justify-center gap-2 px-4 py-2 border-2 text-xs font-mono font-black tracking-widest bg-black/10 w-full max-w-[140px] ${iconColor} ${rank === 1 ? "border-black/50" : "border-white/50"}`}
           >
             <FlameIcon
-              color={
-                rank === 1
-                  ? "text-error"
-                  : rank === 2
-                    ? "text-primary"
-                    : "text-success"
-              }
+              color={iconColor}
             />
             {streak} days
           </div>
@@ -218,56 +211,49 @@ export function Leaderboard() {
                   transition={{ delay: idx * 0.05 }}
                   key={member.id}
                 >
-                  <SoftBrutalCard
-                    intent={isCurrentUser ? "primary" : "default"}
-                    interactive
-                    className={`flex items-center gap-4 sm:gap-6 p-3 sm:p-4 transition-colors ${
-                      isCurrentUser ? "text-main-bg" : "text-text-main"
+                  <div
+                    className={`flex items-center gap-3 p-2 border-2 shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] transition-all cursor-pointer ${
+                      isCurrentUser ? "bg-primary text-primary-foreground border-text-main" : "bg-surface text-text-main border-text-main"
                     }`}
                   >
                     <div
-                      className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center font-mono font-bold text-sm sm:text-xl border border-border-main bg-main-bg shrink-0 ${isCurrentUser ? "text-primary border-main-bg/30" : "text-text-main"}`}
+                      className={`w-8 h-8 flex items-center justify-center font-mono font-black text-xs border-2 bg-main-bg shrink-0 ${isCurrentUser ? "text-primary border-text-main" : "text-text-main border-text-main"}`}
                     >
                       {rank < 10 ? `0${rank}` : rank}
                     </div>
 
                     <div
-                      className={`w-10 h-10 flex-shrink-0 relative overflow-hidden border ${isCurrentUser ? "border-main-bg/30" : "border-border-main"} bg-main-bg`}
+                      className={`w-8 h-8 flex-shrink-0 border-2 ${isCurrentUser ? "border-text-main" : "border-text-main"} bg-main-bg`}
                     >
                       <img
                         src={member.avatar || "https://via.placeholder.com/50"}
                         alt={member.name}
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all"
+                        className="w-full h-full object-cover"
                       />
                     </div>
 
-                    <div className="flex flex-col flex-grow min-w-0 justify-center">
-                      <div className="flex items-center gap-2 sm:gap-4 truncate mb-0.5">
+                    <div className="flex flex-col flex-grow min-w-0 justify-center leading-tight">
+                      <div className="flex items-center gap-2 truncate">
                         <span
-                          className={`font-heading font-bold tracking-tight text-base sm:text-lg truncate pl-1 ${isCurrentUser ? "text-main-bg" : "text-text-main"}`}
+                          className={`font-heading font-black tracking-tight text-sm truncate ${isCurrentUser ? "text-primary-foreground" : "text-text-main"}`}
                         >
                           {member.name}
                         </span>
                         {isCurrentUser && (
-                          <span className="px-1.5 py-0.5 border border-main-bg/30 bg-main-bg text-primary text-[8px] font-mono font-bold uppercase tracking-widest shrink-0">
+                          <span className="px-1 py-0.5 border border-primary-foreground bg-primary-foreground text-primary text-[8px] font-mono font-bold uppercase tracking-widest shrink-0">
                             YOU
                           </span>
                         )}
                       </div>
-                      <div
-                        className={`text-[9px] font-mono font-bold uppercase tracking-widest truncate pl-1 ${isCurrentUser ? "text-main-bg/80" : "text-text-muted"}`}
-                      >
-                        {member.role || "Member"}
-                      </div>
                     </div>
 
                     <div
-                      className={`flex items-center justify-center gap-1.5 px-3 py-1.5 bg-main-bg border ${isCurrentUser ? "border-main-bg/30 text-text-main" : "border-border-main text-text-main"} text-[10px] sm:text-xs font-mono font-bold tracking-widest shrink-0 min-w-[60px]`}
+                      className={`flex items-center justify-center gap-1.5 px-3 py-1.5 bg-black/10 border-2 ${isCurrentUser ? "border-primary-foreground text-primary-foreground" : "border-text-main text-text-main"} text-xs font-mono font-black tracking-widest shrink-0`}
                     >
-                      <FlameIcon color="text-error" />
+                      <FlameIcon color={isCurrentUser ? "text-primary-foreground" : "text-error"} />
                       {member.streak}
                     </div>
-                  </SoftBrutalCard>
+                  </div>
                 </motion.div>
               );
             })}

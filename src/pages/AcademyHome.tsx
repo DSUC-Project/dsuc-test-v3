@@ -7,6 +7,8 @@ import {
   Flame,
   Sparkles,
   Trophy,
+  CheckCircle,
+  Code
 } from "lucide-react";
 
 import type {
@@ -274,63 +276,73 @@ export function AcademyHome() {
 
           {/* Streak Board */}
           <div className="lg:col-span-5 relative w-full h-full min-h-[300px]">
-            <div className="w-full bg-surface border border-border-main p-6 shadow-sm flex flex-col h-full">
+            <div className="w-full bg-surface border-2 border-text-main p-0 shadow-[8px_8px_0_0_#000] flex flex-col h-full group transition-all hover:-translate-y-1 hover:shadow-[12px_12px_0_0_#000]">
               {currentUser ? (
-                <div className="space-y-6 flex-1 flex flex-col">
-                  <div className="flex items-start justify-between  pb-6">
+                <div className="flex-1 flex flex-col">
+                  {/* Header part */}
+                  <div className="flex items-start justify-between p-6 bg-main-bg border-b-2 border-text-main">
                     <div>
                       <StatusBadge
                         status="Active Streak"
-                        className="mb-4 bg-primary/10 text-primary border-primary/20"
+                        className="mb-4 bg-transparent border-text-main text-text-main font-black uppercase text-[10px]"
                       />
-                      <div className="font-display text-6xl font-bold leading-none">
+                      <div className="font-display text-5xl md:text-6xl text-text-main font-black leading-none drop-shadow-[2px_2px_0_rgba(0,0,0,0.1)]">
                         {currentStreak}
                       </div>
-                      <div className="mt-2 text-xs font-mono uppercase tracking-widest text-text-muted">
+                      <div className="mt-2 text-[10px] font-mono text-text-muted font-bold uppercase tracking-widest">
                         {streakHeadline}
                       </div>
                     </div>
-                    <Flame className="w-12 h-12 text-primary" />
-                  </div>
-
-                  <div className="grid grid-cols-7 gap-2 my-auto">
-                    {streakDays.map((day, idx) => (
-                      <div
-                        key={idx}
-                        className="flex flex-col items-center gap-2"
-                      >
-                        <span className="text-[10px] font-mono text-text-muted uppercase">
-                          {academyWeekdayFormatter.format(day.date)}
-                        </span>
-                        <div
-                          className={`flex h-10 w-full sm:h-12 items-center justify-center border border-border-main transition-all ${day.completed ? "bg-primary text-white" : "bg-main-bg text-text-muted/30"} ${day.isToday && !day.completed ? "border-primary " : ""}`}
-                        >
-                          {day.completed || day.isToday ? (
-                            <Flame className="w-4 h-4" />
-                          ) : null}
-                        </div>
-                        <span
-                          className={`text-[10px] font-bold font-mono ${day.isToday ? "text-primary" : "text-text-muted"}`}
-                        >
-                          {academyDayNumberFormatter.format(day.date)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 mt-auto">
-                    <div className="border border-border-main bg-main-bg p-3">
-                      <div className="text-[10px] font-mono uppercase tracking-widest text-text-muted">
-                        Current
-                      </div>
-                      <div className="mt-1 font-bold">{currentStreak} Days</div>
+                    <div className="w-16 h-16 border-2 border-text-main bg-primary flex items-center justify-center shrink-0 shadow-[4px_4px_0_0_#000]">
+                      <Flame className="w-8 h-8 text-primary-foreground" />
                     </div>
-                    <div className="border border-border-main bg-main-bg p-3">
-                      <div className="text-[10px] font-mono uppercase tracking-widest text-text-muted">
-                        Last Active
+                  </div>
+
+                  {/* Calendar part */}
+                  <div className="p-6 bg-surface flex-1 flex flex-col justify-center">
+                    <div className="grid grid-cols-7 gap-1.5 md:gap-2 mb-6">
+                      {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(day => (
+                        <div key={day} className="text-center font-mono text-[9px] uppercase font-bold text-text-muted mb-1">
+                          {day}
+                        </div>
+                      ))}
+                      {streakDays.map((day, idx) => (
+                        <div
+                          key={idx}
+                          className="flex flex-col items-center gap-1 group relative"
+                        >
+                          <div
+                            className={`w-full aspect-square flex items-center justify-center border-2 transition-all ${day.completed ? "bg-primary border-text-main text-primary-foreground shadow-[2px_2px_0_0_#000] z-10" : "bg-main-bg border-border-main text-text-muted"} ${day.isToday && !day.completed ? "border-dashed border-primary bg-primary/10 animate-pulse" : ""} ${day.isToday && day.completed ? "animate-pulse" : ""}`}
+                          >
+                            {day.completed ? (
+                              <CheckCircle className="w-3 h-3 md:w-4 md:h-4 stroke-[3]" />
+                            ) : day.isToday ? (
+                              <div className="w-2 h-2 rounded-full bg-primary" />
+                            ) : null}
+                          </div>
+                          
+                          {/* Tooltip on hover */}
+                          <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-text-main text-surface text-[10px] font-mono font-bold px-2 py-1 opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-20">
+                            {academyDayNumberFormatter.format(day.date)} {academyWeekdayFormatter.format(day.date)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 mt-auto">
+                      <div className="border-2 border-text-main bg-main-bg p-3 shadow-[2px_2px_0_0_#000]">
+                        <div className="text-[9px] font-mono uppercase tracking-widest font-black text-text-muted mb-1 flex items-center gap-1">
+                          <Flame size={10} className="text-primary"/> Current Streak
+                        </div>
+                        <div className="font-heading font-black text-xl md:text-2xl">{currentStreak} Days</div>
                       </div>
-                      <div className="mt-1 font-bold text-sm truncate">
-                        {lastActivityLabel || "Never"}
+                      <div className="border-2 border-text-main bg-main-bg p-3 shadow-[2px_2px_0_0_#000]">
+                        <div className="text-[9px] font-mono uppercase tracking-widest font-black text-text-muted mb-1 flex items-center gap-1">
+                          <Code size={10} /> Last Active
+                        </div>
+                        <div className="font-heading font-black text-xl md:text-xl truncate leading-relaxed">
+                          {lastActivityLabel || "Never"}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -394,57 +406,48 @@ export function AcademyHome() {
 
               return (
                 <Link key={path.id} to={`/academy/path/${path.id}`} className="focus:outline-none">
-                  <SoftBrutalCard
-                    intent="primary"
-                    interactive
-                    className="h-full flex flex-col"
-                  >
-          <div className="absolute top-0 left-0 w-full h-1 border-b border-border-main">
+                  <div className="group h-full flex flex-col bg-surface border-2 border-text-main shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000] transition-all p-0">
+                    <div className="relative w-full h-1.5 border-b-2 border-text-main bg-main-bg">
                       <div
                         className="h-full bg-primary transition-all duration-1000 ease-out"
                         style={{ width: `${progressPercent}%` }}
                       />
                     </div>
-
-                    <div className="pt-4 flex-1 flex flex-col">
-                      <div className="flex justify-between items-start mb-6">
-                        <StatusBadge status={path.tag || path.difficulty} />
-                        <div className="text-right">
-                          <div className="text-2xl font-display font-bold text-text-main group-hover:text-primary transition-colors">
-                            {progressPercent}%
-                          </div>
+                    <div className="px-6 py-5 flex flex-col flex-1">
+                      <div className="flex justify-between items-start mb-4">
+                        <StatusBadge status={path.tag || path.difficulty} className="border border-text-main bg-main-bg" />
+                        <div className="text-xl font-display font-black text-text-main group-hover:text-primary transition-colors">
+                          {progressPercent}%
                         </div>
                       </div>
-
-                      <h3 className="font-heading text-2xl font-bold uppercase tracking-tight mb-6">
+                      <h3 className="font-heading text-xl font-black uppercase tracking-tight mb-2 group-hover:text-primary transition-colors line-clamp-2">
                         {path.title}
                       </h3>
-
-                      <div className="grid grid-cols-2 gap-3 mb-8 w-full mt-auto">
-                        <div className="px-3 py-2">
-                          <div className="font-bold text-2xl">{path.course_count}</div>
-                          <div className="text-[10px] font-mono text-text-muted uppercase mt-0.5">
-                            Courses
-                          </div>
+                      <p className="font-mono text-xs text-text-muted mb-6 flex-1 line-clamp-3">
+                        {path.description || "Master the concepts with structured learning paths."}
+                      </p>
+                      
+                      <div className="grid grid-cols-2 gap-3 mb-6 w-full mt-auto font-mono text-center">
+                        <div className="px-3 py-2 border-2 border-border-main bg-main-bg">
+                          <div className="font-black text-xl text-text-main">{path.course_count}</div>
+                          <div className="text-[9px] uppercase font-bold text-text-muted mt-1">Courses</div>
                         </div>
-                        <div className="px-3 py-2">
-                          <div className="font-bold text-2xl">{path.total_unit_count}</div>
-                          <div className="text-[10px] font-mono text-text-muted uppercase mt-0.5">
-                            Units
-                          </div>
+                        <div className="px-3 py-2 border-2 border-border-main bg-main-bg">
+                          <div className="font-black text-xl text-text-main">{path.total_unit_count}</div>
+                          <div className="text-[9px] uppercase font-bold text-text-muted mt-1">Units</div>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-4 text-sm font-bold mt-auto">
-                        <span className="text-text-muted capitalize">
+                      <div className="flex items-center justify-between pt-4 text-xs font-bold font-mono border-t border-dashed border-border-main mt-auto">
+                        <span className="text-text-muted uppercase">
                           {path.difficulty}
                         </span>
                         <span className="inline-flex items-center gap-2 text-primary uppercase text-[10px] tracking-wider transition-all">
-                          Open Path <ArrowRight className="w-3 h-3" />
+                          Open Path <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                         </span>
                       </div>
                     </div>
-                  </SoftBrutalCard>
+                  </div>
                 </Link>
               );
             })}
@@ -455,7 +458,7 @@ export function AcademyHome() {
       {/* Community Tracks Section */}
       <section>
         <SectionHeader
-          title="Community Extensions"
+          title="More Quiz"
           subtitle="Additional topics curated by the DSUC community."
         />
 
@@ -468,42 +471,41 @@ export function AcademyHome() {
               />
             ))}
           </div>
-        ) : communityTracks.length === 0 ? (
-          <div className="p-12 text-center bg-surface border-2 border-dashed border-border-main font-mono text-sm text-text-muted">
-            No community tracks available yet.
-          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {communityTracks.map((track) => (
+            {(communityTracks.length > 0 ? communityTracks : [
+              { id: "cm-1", title: "Solana Basics Quiz", description: "Test your Solana knowledge with this quick community quiz focusing on accounts and rent.", lesson_count: 5, total_minutes: 15 },
+              { id: "cm-2", title: "Rust Ownership Challenges", description: "A few hard questions to test your understanding of Rust borrowing and lifetimes.", lesson_count: 8, total_minutes: 20 },
+              { id: "cm-3", title: "DeFi Concepts", description: "Test your knowledge on AMMs, liquidity pools and flash loans.", lesson_count: 3, total_minutes: 10 },
+            ]).map((track: any) => (
               <Link key={track.id} to={`/academy/community/${track.id}`} className="focus:outline-none">
-                <SoftBrutalCard intent="info" interactive className="h-full flex flex-col p-6 text-left">
-                  <div className="flex items-start justify-between gap-4 border-b border-dashed border-border-main mb-4 pb-4">
-                    <StatusBadge status="Community" className="bg-main-bg" />
-                    <Boxes className="w-5 h-5 text-text-muted group-hover:text-cyan-400 transition-colors" />
+                <div className="group h-full flex flex-col bg-surface border-2 border-text-main shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000] transition-all p-5">
+                  <div className="flex items-start justify-between gap-4 border-b-2 border-text-main mb-4 pb-3">
+                    <StatusBadge status="Community" className="bg-main-bg border border-text-main text-text-main" />
+                    <Boxes className="w-5 h-5 text-text-main group-hover:text-primary transition-colors" />
                   </div>
 
-                  <h3 className="font-heading text-lg font-bold mb-3 uppercase tracking-tight group-hover:text-cyan-400 transition-colors">
+                  <h3 className="font-heading text-lg font-black mb-2 uppercase tracking-tight group-hover:text-primary transition-colors">
                     {track.title}
                   </h3>
 
-                  <p className="text-sm text-text-muted line-clamp-2 leading-relaxed mb-6 flex-1 font-mono">
+                  <p className="text-xs text-text-muted line-clamp-2 leading-relaxed mb-6 flex-1 font-mono">
                     {track.subtitle ||
                       track.description ||
                       "Community contributed curriculum."}
                   </p>
 
-                  <div className="flex flex-wrap items-center justify-between border-t border-dashed border-border-main pt-4 mt-auto">
-                    <div className="flex gap-3 items-center font-mono text-[10px] text-text-muted uppercase">
-                      <span>{track.lesson_count} Lessons</span>
+                  <div className="flex flex-wrap items-center justify-between border-t-2 border-text-main pt-3 mt-auto">
+                    <div className="flex gap-2 items-center font-mono text-[9px] font-bold text-text-main uppercase">
+                      <span>{track.lesson_count || 0} Lessons</span>
                       <span>•</span>
                       <span>
-                        ~{Math.max(1, Math.round(track.total_minutes / 60))} hr
+                        ~{Math.max(1, Math.round((track.total_minutes || 0) / 60))} hr
                       </span>
                     </div>
-
-                    <ArrowRight className="h-4 w-4 text-cyan-400 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                    <ArrowRight className="h-4 w-4 text-text-main group-hover:text-primary transition-all -translate-x-2 group-hover:translate-x-0" />
                   </div>
-                </SoftBrutalCard>
+                </div>
               </Link>
             ))}
           </div>

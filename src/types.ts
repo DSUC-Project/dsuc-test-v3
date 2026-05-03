@@ -14,6 +14,7 @@ export interface Member {
     twitter?: string;
     telegram?: string;
     facebook?: string;
+    portfolio?: string;
   };
   bankInfo?: {
     bankId: string;

@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Link } from "react-router-dom";
-import {
-  ActionButton,
-  SoftBrutalCard,
-  StatusBadge,
-  SectionHeader,
-} from "@/components/ui/Primitives";
+import { ActionButton, SoftBrutalCard, StatusBadge, SectionHeader } from "@/components/ui/Primitives";
 import { ContactModal } from "@/components/ui/ContactModal";
+import { GlitchText } from "@/components/GlitchText";
 import { useStore } from "@/store/useStore";
 import { ArrowRight } from "lucide-react";
 
@@ -84,40 +80,37 @@ export function Home() {
       />
       {/* HERO SECTION */}
       <section className="container mx-auto px-4 py-12 md:py-24 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* LEFT: 6-7 columns */}
-          <div className="lg:col-span-7 flex flex-col items-start z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          {/* LEFT: Content list */}
+          <div className="lg:col-span-7 flex flex-col items-start z-10 order-1">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1  mb-8 bg-surface uppercase font-mono text-xs tracking-widest text-text-muted"
+              transition={{ delay: 0 }}
+              className="inline-flex items-center gap-2 px-3 py-1 bg-surface font-mono text-[10px] tracking-widest uppercase font-bold text-text-main mb-8 border-2 border-text-main shadow-[2px_2px_0_0_#000] dark:shadow-[2px_2px_0_0_#fff]"
             >
-              <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-              DSUC Labs / Builder Operating System
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+              System Live
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="font-display font-bold text-6xl md:text-8xl lg:text-9xl tracking-tighter leading-[0.85] uppercase mb-8"
+              className="font-display font-black text-6xl md:text-7xl lg:text-8xl tracking-tighter leading-[0.85] uppercase mb-8"
             >
-              Build.
+              WE
               <br />
-              <span className="text-primary hover:text-accent transition-colors">
-                Learn.
-              </span>
+              <GlitchText words={["BUILD", "LEARN", "SHIP"]} className="text-primary hover:text-accent transition-colors drop-shadow-[2px_2px_0_rgba(0,0,0,0.1)]" />
               <br />
-              Ship.
-              <br />
-              Together.
+              TOGETHER.
             </motion.h1>
 
-            <motion.p
+             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-lg md:text-xl text-text-muted max-w-lg mb-10 leading-relaxed font-sans"
+              className="text-lg md:text-xl text-text-muted max-w-sm mb-10 leading-relaxed font-mono"
             >
               A student builder operating system for learning code, running
               community, shipping projects, and growing DSUC.
@@ -127,168 +120,65 @@ export function Home() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-col sm:flex-row gap-4 w-full"
             >
-              <Link to="/academy">
-                <ActionButton variant="primary">
+              <Link to="/academy" className="w-full sm:w-auto">
+                <ActionButton variant="primary" className="w-full justify-center">
                   Start Learning &rarr;
                 </ActionButton>
               </Link>
-              <Link to="/projects">
-                <ActionButton variant="secondary">
+              <Link to="/projects" className="w-full sm:w-auto">
+                <ActionButton variant="secondary" className="w-full justify-center">
                   Explore Projects
                 </ActionButton>
               </Link>
-              <ActionButton
-                variant="secondary"
-                className=""
-                onClick={() => setContactOpen(true)}
-              >
-                Contact DSUC
-              </ActionButton>
             </motion.div>
           </div>
 
-          {/* RIGHT: 5-6 columns - Composed System View */}
-          <div className="lg:col-span-5 relative w-full h-[500px] hidden lg:block overflow-visible mt-12 lg:mt-0">
-            {/* Main Window - Code Interface */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] z-10 flex flex-col bg-[#0B0F17] rounded-md shadow-2xl -800 overflow-hidden text-gray-300">
+          {/* RIGHT: Code Interface Panel */}
+          <div className="lg:col-span-5 hidden lg:flex flex-col justify-center order-2 relative z-10 w-full max-w-[400px] h-full min-h-[400px] ml-auto">
+             <div className="w-full h-full flex flex-col bg-[#0B0F17] border-2 border-text-main shadow-[8px_8px_0_0_rgba(17,24,39,1)] dark:shadow-[8px_8px_0_0_#fff] overflow-hidden text-gray-300 transform md:-rotate-1 hover:rotate-0 transition-transform duration-500 text-xs">
               {/* Terminal Bar */}
-              <div className="flex items-center gap-2 px-3 py-2 bg-gray-900 -800">
+              <div className="flex items-center gap-2 px-4 py-2 bg-text-main border-b-2 border-text-main">
                 <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
                 </div>
                 <div className="mx-auto flex items-center gap-2">
-                  <span className="font-mono text-[10px] uppercase text-gray-500">
+                  <span className="font-mono text-[10px] uppercase text-surface font-bold tracking-widest">
                     dsuc@system:~
                   </span>
                 </div>
               </div>
 
               {/* Terminal Content */}
-              <div className="p-4 font-mono text-xs leading-relaxed space-y-3">
-                <div className="flex gap-2">
-                  <span className="text-emerald-400">➜</span>
-                  <span className="text-blue-400">dsuc</span>
-                  <span className="text-gray-300">status --check</span>
+              <div className="p-5 font-mono text-[9px] sm:text-[10px] leading-relaxed flex-1 flex flex-col text-gray-300 overflow-hidden">
+                <div className="select-none leading-relaxed text-[8px] sm:text-[10px] w-full">
+                  <div><span className="text-blue-400">fn</span> <span className="text-yellow-200">main</span>() {"{"}</div>
+                  <div className="pl-4"><span className="text-blue-400">let</span> key = <span className="text-emerald-400">b"DSUC"</span>;</div>
+                  <br />
+                  <div className="pl-4"><span className="text-blue-400">let</span> encrypted = [</div>
+                  <div className="pl-8 text-gray-300">10, 50, 56, 38, 100, 115, 117, 99, 100, 105, 117, 7, 17, 7, 117, 16,</div>
+                  <div className="pl-8 text-gray-300">17, 3, 16, 17, 16, 22, 20, 14, 100, 6, 27, 10, 18, 22, 7, 16,</div>
+                  <div className="pl-8 text-gray-300">13, 7, 12, 99, 7, 31, 0, 1, 78, 21, 58, 54, 42, 55, 48, 39,</div>
+                  <div className="pl-8 text-gray-300">100, 115, 111, 99, 117, 106, 123, 115, 113, 125, 103, 115, 118, 102,</div>
+                  <div className="pl-8 text-gray-300">95, 1, 43, 50, 39, 39, 100, 115, 117, 99, 126, 115, 15, 2,</div>
+                  <div className="pl-8 text-gray-300">12, 115, 122, 99, 16, 27, 26, 7, 13, 6, 24, 99, 107, 115,</div>
+                  <div className="pl-8 text-gray-300">31, 6, 22, 1, 12,</div>
+                  <div className="pl-4">];</div>
+                  <br />
+                  <div className="pl-4"><span className="text-blue-400">let</span> decoded: <span className="text-emerald-300">String</span> = encrypted</div>
+                  <div className="pl-8">.iter()</div>
+                  <div className="pl-8">.enumerate()</div>
+                  <div className="pl-8">.map(|(i, b)| (b ^ key[i % key.len()]) <span className="text-blue-400">as</span> <span className="text-emerald-300">char</span>)</div>
+                  <div className="pl-8">.collect();</div>
+                  <br />
+                  <div className="pl-4"><span className="text-yellow-200">println!</span>(<span className="text-emerald-400">"{'{'}{'}'}"</span>, decoded);</div>
+                  <div>{"}"}</div>
                 </div>
-                <div className="pl-4 space-y-1 text-gray-400">
-                  <p>
-                    ['SYSTEM'] ............
-                    <span
-                      className={
-                        sysStatus === "ONLINE"
-                          ? "text-emerald-400 font-bold"
-                          : sysStatus === "OFFLINE"
-                            ? "text-red-500 font-bold"
-                            : "text-yellow-400"
-                      }
-                    >
-                      {" "}
-                      {sysStatus}
-                    </span>
-                  </p>
-                  <p>
-                    ['DB_REGION'] .........{" "}
-                    <span className="text-yellow-400">SGP_ASIA</span>
-                  </p>
-                  <p>
-                    ['USER_MODE'] .........{" "}
-                    <span className="text-primary">
-                      {currentUser ? "AUTH_VERIFIED" : "GUEST_MODE"}
-                    </span>
-                  </p>
-                </div>
-
-                <div className="flex gap-2 mt-4">
-                  <span className="text-emerald-400">➜</span>
-                  <span className="text-blue-400">dsuc</span>
-                  <span className="text-gray-300">metrics get all</span>
-                </div>
-                <div className="pl-4 space-y-1 text-gray-400">
-                  <p>
-                    ['BUILDERS'] ..........{" "}
-                    <span className="text-white font-bold">
-                      {members.length || 0}
-                    </span>
-                  </p>
-                  <p>
-                    ['PROJECTS'] ..........{" "}
-                    <span className="text-white font-bold">
-                      {projects.length || 0}
-                    </span>
-                  </p>
-                  <p>
-                    ['EVENTS'] ............{" "}
-                    <span className="text-white font-bold">
-                      {events.length || 0}
-                    </span>
-                  </p>
-                </div>
-                <div className="pt-2 animate-pulse text-gray-500">_</div>
               </div>
             </div>
-
-            {/* Float 1 - Learning Path */}
-            <motion.div
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-[5%] -left-8 z-20 w-56"
-            >
-              <SoftBrutalCard intent="info" withPattern>
-                <div className="flex justify-between items-center mb-3">
-                  <p className="font-mono text-[10px] uppercase text-text-muted">
-                    Active Path
-                  </p>
-                  <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span>
-                </div>
-                <h4 className="font-heading font-bold text-sm mb-3">
-                  Solana Core
-                </h4>
-                <div className="w-full bg-main-bg border border-border-main h-2 mb-1">
-                  <div className="h-full bg-cyan-400 w-[35%]"></div>
-                </div>
-                <p className="font-mono text-[10px] text-right text-text-muted">
-                  35% COMPLETED
-                </p>
-              </SoftBrutalCard>
-            </motion.div>
-
-            {/* Float 2 - Next Event */}
-            {events.length > 0 && (
-              <motion.div
-                animate={{ y: [0, 6, 0] }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1,
-                }}
-                className="absolute bottom-[10%] -right-4 z-20 w-64"
-              >
-                <SoftBrutalCard intent="accent" withPattern>
-                  <p className="font-mono text-[10px] uppercase text-text-muted mb-2  pb-1">
-                    Incoming Event
-                  </p>
-                  <div className="pt-1">
-                    <h4 className="font-heading font-bold text-sm mb-1 truncate">
-                      {events[0].title}
-                    </h4>
-                    <p className="text-xs text-text-muted font-mono mb-2">
-                      {events[0].date} @ {events[0].time || "TBA"}
-                    </p>
-                    <Link
-                      to="/events"
-                      className="text-[10px] items-center gap-1 flex font-bold uppercase tracking-wider text-accent hover:underline"
-                    >
-                      RSVP NOW <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  </div>
-                </SoftBrutalCard>
-              </motion.div>
-            )}
           </div>
         </div>
       </section>

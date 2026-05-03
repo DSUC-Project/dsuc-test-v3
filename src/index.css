@@ -33,6 +33,7 @@
 
   --color-primary: var(--color-primary);
   --color-primary-hover: var(--color-primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--color-accent);
 }
 
@@ -47,6 +48,7 @@
     --border-main: #d1d5db;
 
     --color-primary: var(--color-dsuc-blue);
+    --primary-foreground: #ffffff;
     --color-primary-hover: var(--color-dsuc-blue-dark);
     --color-accent: var(--color-dsuc-yellow-warm);
 
@@ -62,6 +64,7 @@
     --border-main: #374151;
 
     --color-primary: var(--color-dsuc-yellow);
+    --primary-foreground: #000000;
     --color-primary-hover: var(--color-dsuc-yellow-warm);
     --color-accent: var(--color-dsuc-blue-neon);
 

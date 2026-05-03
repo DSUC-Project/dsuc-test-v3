@@ -92,12 +92,12 @@ export const ActionButton = React.forwardRef<
     "px-6 py-2.5 font-bold uppercase tracking-widest text-xs transition-all  active:translate-y-[2px]";
   let variants = {
     primary:
-      "bg-primary text-primary-foreground shadow-sm hover:shadow-md hover:bg-primary/90",
+      "bg-primary text-primary-foreground shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] border-2 border-text-main",
     secondary:
-      "bg-surface text-text-main shadow-sm hover:bg-main-bg hover:shadow-md",
-    danger: "bg-red-500 text-white shadow-sm hover:shadow-md hover:bg-red-600",
+      "bg-surface text-text-main shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,1)] border-2 border-text-main",
+    danger: "bg-red-500 text-white shadow-sm hover:shadow-md hover:bg-red-600 border-2 border-text-main",
     success:
-      "bg-emerald-500 text-white shadow-sm hover:shadow-md hover:bg-emerald-600",
+      "bg-emerald-500 text-white shadow-sm hover:shadow-md hover:bg-emerald-600 border-2 border-text-main",
   };
   return (
     <button

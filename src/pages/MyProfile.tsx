@@ -20,6 +20,7 @@ import {
   Flame,
   Code,
   ArrowRight,
+  Globe,
 } from "lucide-react";
 import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
@@ -59,6 +60,7 @@ export function MyProfile() {
   const [twitter, setTwitter] = useState("");
   const [telegram, setTelegram] = useState("");
   const [facebook, setFacebook] = useState("");
+  const [portfolio, setPortfolio] = useState("");
 
   // Banking state
   const [bankId, setBankId] = useState("");
@@ -67,6 +69,9 @@ export function MyProfile() {
   const [isEditingBank, setIsEditingBank] = useState(false);
   // Social links state
   const [isEditingSocials, setIsEditingSocials] = useState(false);
+  // Additional edit states
+  const [isEditingIdentity, setIsEditingIdentity] = useState(false);
+  const [isEditingSkills, setIsEditingSkills] = useState(false);
 
   const isOfficialMember = currentUser?.memberType === "member";
   const isOnboarding =
@@ -95,6 +100,7 @@ export function MyProfile() {
     setTwitter(currentUser.socials?.twitter || "");
     setTelegram(currentUser.socials?.telegram || "");
     setFacebook(currentUser.socials?.facebook || "");
+    setPortfolio(currentUser.socials?.portfolio || "");
     setBankId(currentUser.bankInfo?.bankId || "");
     setAccountNo(currentUser.bankInfo?.accountNo || "");
     setAccountName(currentUser.bankInfo?.accountName || currentUser.name || "");
@@ -164,10 +170,43 @@ export function MyProfile() {
     }
   };
 
+  const handleSaveIdentity = async () => {
+    try {
+      if (name.trim().length < 2) {
+        toast.error("Name must be at least 2 characters.");
+        return;
+      }
+      const updates: any = {};
+      if (name !== currentUser.name) updates.name = name;
+      if (avatar !== currentUser.avatar) updates.avatar = avatar;
+      if (Object.keys(updates).length > 0) {
+        await updateCurrentUser(updates);
+      }
+      setIsEditingIdentity(false);
+      toast.success("Identity updated successfully");
+    } catch (err) {
+      toast.error("Failed to update identity.");
+    }
+  };
+
+  const handleSaveSkills = async () => {
+    try {
+      const updates: any = {};
+      if (skills !== currentUser.skills) updates.skills = skills;
+      if (Object.keys(updates).length > 0) {
+        await updateCurrentUser(updates);
+      }
+      setIsEditingSkills(false);
+      toast.success("Skills updated successfully");
+    } catch (err) {
+      toast.error("Failed to update skills.");
+    }
+  };
+
   const handleSaveSocials = async () => {
     try {
       await updateCurrentUser({
-        socials: { github, twitter, telegram, facebook },
+        socials: { github, twitter, telegram, facebook, portfolio },
       });
       setIsEditingSocials(false);
     } catch (err) {
@@ -268,12 +307,6 @@ export function MyProfile() {
           >
             <LogOut size={20} /> Log Out
           </button>
-          <button
-            onClick={handleSaveAll}
-            className="flex-1 md:flex-none bg-highlight hover:opacity-90 text-main-bg font-bold text-xs px-6 py-4 flex items-center justify-center gap-2 transition-all uppercase tracking-wider border border-border-main shadow-sm focus:outline-none"
-          >
-            <Save size={20} /> Save Changes
-          </button>
         </div>
       </div>
 
@@ -285,7 +318,24 @@ export function MyProfile() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <SoftBrutalCard intent="info" className="p-8 relative group overflow-hidden">
+            <SoftBrutalCard className="p-8 relative group overflow-hidden">
+              <div className="flex justify-end mb-4 relative z-10">
+                {!isEditingIdentity ? (
+                  <button
+                    onClick={() => setIsEditingIdentity(true)}
+                    className="p-2 border border-border-main bg-surface text-text-main hover:bg-main-bg transition-colors shadow-sm"
+                  >
+                    <Edit2 size={18} />
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSaveIdentity}
+                    className="bg-primary border border-border-main text-main-bg font-bold text-xs uppercase tracking-wider px-4 py-2 shadow-sm hover:opacity-90 transition-colors"
+                  >
+                    Save
+                  </button>
+                )}
+              </div>
               <div className="flex flex-col items-center relative z-10">
                 <div className="w-32 h-32 p-1 border border-border-main mb-6 relative group/avatar bg-main-bg shadow-sm transition-transform duration-500 hover:scale-105">
                   <img
@@ -295,18 +345,20 @@ export function MyProfile() {
                     alt="Avatar"
                     className="w-full h-full object-cover transition-all duration-300"
                   />
-                  <label className="absolute inset-0 bg-text-main/80 flex flex-col items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer">
-                    <Upload className="text-white mb-1" size={24} />
-                    <span className="text-[10px] font-bold text-white uppercase tracking-widest mt-1">
-                      Edit
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleImageUpload}
-                    />
-                  </label>
+                  {isEditingIdentity && (
+                    <label className="absolute inset-0 bg-text-main/80 flex flex-col items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer">
+                      <Upload className="text-white mb-1" size={24} />
+                      <span className="text-[10px] font-bold text-white uppercase tracking-widest mt-1">
+                        Edit
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleImageUpload}
+                      />
+                    </label>
+                  )}
                 </div>
 
                 <div className="mb-6 flex w-fit items-center gap-2 border border-border-main bg-cyan-400 px-4 py-2 font-bold uppercase tracking-widest text-surface shadow-sm">
@@ -322,11 +374,17 @@ export function MyProfile() {
                     <label className="text-[10px] font-bold text-text-main uppercase tracking-widest pl-1">
                       Display Name
                     </label>
-                    <input
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full bg-main-bg border border-border-main px-4 py-3 text-text-main outline-none font-display font-bold text-lg transition-colors shadow-sm focus:border-cyan-400"
-                    />
+                    {isEditingIdentity ? (
+                      <input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full bg-main-bg border border-border-main px-4 py-3 text-text-main outline-none font-display font-bold text-lg transition-colors shadow-sm focus:border-cyan-400"
+                      />
+                    ) : (
+                      <div className="w-full bg-main-bg border border-border-main px-4 py-3 text-text-main font-display font-bold text-lg shadow-sm truncate">
+                        {name || "Not provided"}
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold text-text-main uppercase tracking-widest pl-1">
@@ -376,7 +434,7 @@ export function MyProfile() {
             transition={{ delay: 0.1 }}
           >
             <SoftBrutalCard intent="accent" className="p-8">
-              <div className="flex justify-between items-start mb-6 border-b  border-border-main pb-5">
+              <div className="flex justify-between items-start mb-6">
                 <div>
                   <h3 className="text-xl font-display font-bold text-text-main flex items-center gap-2">
                     <Link2 size={24} className="text-accent" /> Social Links
@@ -429,10 +487,17 @@ export function MyProfile() {
                     placeholder: "facebook.com/username",
                     label: "Facebook",
                   },
+                  {
+                    icon: Globe,
+                    value: portfolio,
+                    setter: setPortfolio,
+                    placeholder: "https://your-portfolio.com",
+                    label: "Portfolio",
+                  },
                 ].map((social, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-3 bg-surface border border-border-main px-4 py-3 shadow-sm focus-within:border-accent transition-colors"
+                    className="flex items-center gap-3 py-3 focus-within:text-accent transition-colors"
                   >
                     <social.icon
                       className="text-text-main flex-shrink-0"
@@ -444,7 +509,7 @@ export function MyProfile() {
                         value={social.value}
                         onChange={(e) => social.setter(e.target.value)}
                         placeholder={social.placeholder}
-                        className="flex-1 bg-transparent text-text-main outline-none font-bold text-sm placeholder:text-text-muted"
+                        className="flex-1 bg-surface border border-border-main px-4 py-2 outline-none font-bold text-sm placeholder:text-text-muted focus:border-cyan-400"
                       />
                     ) : (
                       <div className="flex-1 font-bold text-sm truncate">
@@ -478,20 +543,20 @@ export function MyProfile() {
             transition={{ delay: 0.2 }}
             className="w-full"
           >
-            <SoftBrutalCard intent="primary" className="overflow-hidden p-0 w-full">
-              <div className="p-8 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-border-main relative z-10 gap-6 bg-primary/10">
+            <SoftBrutalCard intent="primary" className="overflow-hidden p-0 w-full bg-primary text-primary-foreground">
+              <div className="p-8 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-border-main relative z-10 gap-6">
                 <div>
-                  <h3 className="text-2xl font-display font-bold text-text-main flex items-center gap-3">
-                    <Trophy className="text-primary" size={32} />
+                  <h3 className="text-2xl font-display font-bold flex items-center gap-3">
+                    <Trophy size={32} />
                     Learning Progress
                   </h3>
-                  <p className="text-text-muted font-bold text-sm mt-2">
+                  <p className="font-bold text-sm mt-2 opacity-90">
                     Overview of your learning journey and achievements.
                   </p>
                 </div>
                 <button
                   onClick={() => navigate("/academy")}
-                  className="group flex items-center justify-center gap-2 bg-primary hover:opacity-90 text-main-bg border border-border-main shadow-sm px-6 py-4 font-bold text-xs uppercase tracking-wider transition-all "
+                  className="group flex items-center justify-center gap-2 bg-surface hover:bg-main-bg text-text-main border border-border-main shadow-[4px_4px_0_0_#000] px-6 py-4 font-bold text-xs uppercase tracking-wider transition-all hover:shadow-[6px_6px_0_0_#000] hover:-translate-y-1 hover:-translate-x-1"
                 >
                   Go to Academy{" "}
                   <ArrowRight
@@ -501,45 +566,45 @@ export function MyProfile() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-border-main relative z-10 w-full bg-surface">
-                <div className="p-8 flex flex-col items-center justify-center text-center hover:bg-primary/10 transition-colors">
-                  <Flame className="text-primary mb-3" size={32} />
-                  <div className="text-4xl font-display font-bold text-text-main">
+              <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-border-main relative z-10 w-full">
+                <div className="p-8 flex flex-col items-center justify-center text-center hover:bg-black/10 transition-colors">
+                  <Flame className="mb-3" size={32} />
+                  <div className="text-4xl font-display font-bold">
                     {currentUser.streak || 0}
                   </div>
-                  <div className="text-[10px] font-bold text-text-main uppercase tracking-widest mt-2  pt-2 w-full">
+                  <div className="text-[10px] font-bold uppercase tracking-widest mt-2 pt-2 w-full">
                     Learning Streak
                   </div>
                 </div>
-                <div className="p-8 flex flex-col items-center justify-center text-center hover:bg-emerald-400/10 transition-colors">
-                  <Code className="text-emerald-500 mb-3" size={32} />
-                  <div className="text-4xl font-display font-bold text-text-main">
+                <div className="p-8 flex flex-col items-center justify-center text-center hover:bg-black/10 transition-colors">
+                  <Code className="mb-3" size={32} />
+                  <div className="text-4xl font-display font-bold">
                     1
                   </div>
-                  <div className="text-[10px] font-bold text-text-main uppercase tracking-widest mt-2 border-t border-border-main pt-2 w-full">
+                  <div className="text-[10px] font-bold uppercase tracking-widest mt-2 pt-2 w-full">
                     Projects Completed
                   </div>
                 </div>
-                <div className="p-8 flex flex-col items-center justify-center text-center hover:bg-blue-400/10 transition-colors">
-                  <div className="font-display font-bold text-text-main text-3xl mb-3">
+                <div className="p-8 flex flex-col items-center justify-center text-center hover:bg-black/10 transition-colors">
+                  <div className="font-display font-bold text-3xl mb-3">
                     {"< />"}
                   </div>
-                  <div className="text-4xl font-display font-bold text-text-main">
+                  <div className="text-4xl font-display font-bold">
                     12
                   </div>
-                  <div className="text-[10px] font-bold text-text-main uppercase tracking-widest mt-2 border-t border-border-main pt-2 w-full">
+                  <div className="text-[10px] font-bold uppercase tracking-widest mt-2 pt-2 w-full">
                     Lessons
                   </div>
                 </div>
-                <div className="p-8 flex flex-col items-center justify-center text-center hover:bg-primary/10 transition-colors group">
+                <div className="p-8 flex flex-col items-center justify-center text-center hover:bg-black/10 transition-colors group">
                   <Hexagon
-                    className="text-primary group-hover:text-primary mb-3"
+                    className="mb-3"
                     size={32}
                   />
-                  <div className="text-2xl font-display font-bold text-text-main group-hover:text-primary mt-1">
+                  <div className="text-2xl font-display font-bold mt-1">
                     GENIN
                   </div>
-                  <div className="text-[10px] font-bold text-text-main group-hover:text-primary uppercase tracking-widest mt-2 border-t border-border-main pt-2 w-full">
+                  <div className="text-[10px] font-bold uppercase tracking-widest mt-2 pt-2 w-full">
                     Rank
                   </div>
                 </div>
@@ -555,7 +620,7 @@ export function MyProfile() {
               transition={{ delay: 0.3 }}
             >
               <SoftBrutalCard intent="accent" className="p-8">
-                <div className="flex justify-between items-start mb-8 border-b border-dashed border-border-main pb-5">
+                <div className="flex justify-between items-start mb-8">
                   <div>
                     <h3 className="text-xl font-display font-bold text-text-main flex items-center gap-3">
                       <CreditCard className="text-accent" size={24} /> BANK
@@ -591,7 +656,7 @@ export function MyProfile() {
                     <select
                       value={selectedBank?.id || bankId}
                       onChange={(e) => setBankId(e.target.value)}
-                      className="w-full bg-surface border border-border-main px-4 py-3 text-text-main focus:bg-primary/10 outline-none font-bold text-sm transition-colors shadow-sm appearance-none"
+                      className="w-full bg-surface border border-border-main px-4 py-3 text-text-main focus:border-cyan-400 outline-none font-bold text-sm transition-colors shadow-sm appearance-none"
                     >
                       <option value="">-- SELECT BANK --</option>
                       {BANKS.map((b) => (
@@ -609,7 +674,7 @@ export function MyProfile() {
                       value={accountNo}
                       onChange={(e) => setAccountNo(e.target.value)}
                       placeholder="Enter account number"
-                      className="w-full bg-surface border border-border-main px-4 py-3 text-text-main focus:bg-primary/10 outline-none font-bold text-sm transition-colors shadow-sm"
+                      className="w-full bg-surface border border-border-main px-4 py-3 text-text-main focus:border-cyan-400 outline-none font-bold text-sm transition-colors shadow-sm"
                     />
                   </div>
                   <div className="space-y-2">
@@ -620,7 +685,7 @@ export function MyProfile() {
                       value={bankId}
                       onChange={(e) => setBankId(e.target.value)}
                       placeholder="e.g., 970422"
-                      className="w-full bg-surface border border-border-main px-4 py-3 text-text-main focus:bg-primary/10 outline-none font-bold text-sm transition-colors shadow-sm"
+                      className="w-full bg-surface border border-border-main px-4 py-3 text-text-main focus:border-cyan-400 outline-none font-bold text-sm transition-colors shadow-sm"
                     />
                   </div>
                   <div className="space-y-2">
@@ -631,45 +696,45 @@ export function MyProfile() {
                       value={accountName}
                       onChange={(e) => setAccountName(e.target.value)}
                       placeholder="NGUYEN VAN A"
-                      className="w-full bg-surface border border-border-main px-4 py-3 text-text-main focus:bg-primary/10 outline-none font-bold uppercase text-sm transition-colors shadow-sm"
+                      className="w-full bg-surface border border-border-main px-4 py-3 text-text-main focus:border-cyan-400 outline-none font-bold uppercase text-sm transition-colors shadow-sm"
                     />
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="bg-accent/10 border border-border-main p-5 shadow-sm">
-                    <div className="text-[10px] font-bold text-text-main uppercase tracking-widest mb-2 border-b border-dashed border-border-main pb-1">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-text-main uppercase tracking-widest ml-1">
                       Bank
-                    </div>
-                    <div className="font-display font-bold text-text-main text-lg">
+                    </label>
+                    <div className="w-full bg-main-bg border border-border-main px-4 py-3 font-display font-bold text-text-main text-sm shadow-sm">
                       {selectedBank
                         ? `${selectedBank.shortName} (${selectedBank.bin})`
                         : bankId || "Not Setup"}
                     </div>
                   </div>
-                  <div className="bg-surface border border-border-main p-5 shadow-sm">
-                    <div className="text-[10px] font-bold text-text-main uppercase tracking-widest mb-2 border-b border-dashed border-border-main pb-1">
-                      Bank Code
-                    </div>
-                    <div className="font-mono text-text-main font-bold text-lg tracking-wider">
-                      {selectedBank?.code || "Not Setup"}
-                    </div>
-                  </div>
-                  <div className="bg-surface border border-border-main p-5 shadow-sm">
-                    <div className="text-[10px] font-bold text-text-main uppercase tracking-widest mb-2 border-b border-dashed border-border-main pb-1">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-text-main uppercase tracking-widest ml-1">
                       Account Number
-                    </div>
-                    <div className="font-mono text-text-main font-bold text-lg tracking-wider">
+                    </label>
+                    <div className="w-full bg-main-bg border border-border-main px-4 py-3 font-mono font-bold text-text-main text-sm shadow-sm tracking-wider">
                       {accountNo
                         ? accountNo.replace(/\d(?=\d{4})/g, "*")
                         : "Not Setup"}
                     </div>
                   </div>
-                  <div className="bg-accent border border-border-main p-5 shadow-sm">
-                    <div className="text-[10px] font-bold text-main-bg uppercase tracking-widest mb-2 -bg pb-1">
-                      Account Holder
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-text-main uppercase tracking-widest ml-1">
+                      Bank Code (BIN)
+                    </label>
+                    <div className="w-full bg-main-bg border border-border-main px-4 py-3 font-mono font-bold text-text-main text-sm shadow-sm tracking-wider">
+                      {selectedBank?.code || "Not Setup"}
                     </div>
-                    <div className="font-bold text-main-bg text-lg uppercase">
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-text-main uppercase tracking-widest ml-1">
+                      Account Holder Name
+                    </label>
+                    <div className="w-full bg-main-bg border border-border-main px-4 py-3 font-bold text-text-main text-sm shadow-sm uppercase">
                       {accountName || "Not Setup"}
                     </div>
                   </div>
@@ -686,10 +751,52 @@ export function MyProfile() {
             transition={{ delay: 0.4 }}
             className="bg-surface border border-border-main p-8 shadow-sm"
           >
-            <h3 className="text-xl font-display font-bold text-text-main mb-6 flex items-center gap-3 border-b border-border-main pb-5 uppercase">
-              <Hexagon className="text-primary" size={24} /> Skills & Expertise
-            </h3>
-            <SkillInput skills={skills} onChange={setSkills} maxSkills={5} />
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h3 className="text-xl font-display font-bold text-text-main flex items-center gap-3 uppercase">
+                  <Hexagon className="text-primary" size={24} /> Skills & Expertise
+                </h3>
+                <p className="text-sm text-text-muted font-bold mt-2">
+                  Add multiple skills to showcase your expertise (e.g., TypeScript, React, System Design, UX/UI).
+                </p>
+              </div>
+              {!isEditingSkills ? (
+                <button
+                  onClick={() => setIsEditingSkills(true)}
+                  className="p-2 border border-border-main bg-surface text-text-main hover:bg-main-bg transition-colors shadow-sm ml-4 shrink-0"
+                >
+                  <Edit2 size={18} />
+                </button>
+              ) : (
+                <button
+                  onClick={handleSaveSkills}
+                  className="bg-primary border border-border-main text-main-bg font-bold text-xs uppercase tracking-wider px-4 py-2 shadow-sm hover:opacity-90 transition-colors ml-4 shrink-0"
+                >
+                  Save
+                </button>
+              )}
+            </div>
+            
+            {isEditingSkills ? (
+              <SkillInput skills={skills} onChange={setSkills} maxSkills={5} />
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {skills.length > 0 ? (
+                  skills.map((skill) => (
+                    <div
+                      key={skill}
+                      className="flex items-center gap-2 bg-main-bg border border-border-main px-3 py-1.5 shadow-sm"
+                    >
+                      <span className="font-mono text-xs font-bold uppercase text-text-main">
+                        {skill}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <span className="text-text-muted font-mono text-xs">No skills added yet.</span>
+                )}
+              </div>
+            )}
           </motion.div>
 
           {/* Google Auth - Only show if not fully integrated native */}

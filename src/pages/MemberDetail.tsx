@@ -55,9 +55,9 @@ export function MemberDetail() {
     <div className="container mx-auto pt-10 px-4 sm:px-6 pb-20 space-y-12">
       <button
         onClick={() => navigate("/members")}
-        className="flex items-center gap-2 text-text-muted hover:text-text-main transition-colors font-mono text-xs uppercase tracking-widest w-fit px-4 py-2 bg-surface hover:bg-main-bg"
+        className="group flex items-center gap-2 text-text-muted hover:text-text-main transition-colors font-mono text-xs font-bold uppercase tracking-widest w-fit p-2 focus:outline-none"
       >
-        <ArrowLeft size={16} /> Back to Members
+        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> BACK TO MEMBERS
       </button>
 
       {/* Contact Popup */}
