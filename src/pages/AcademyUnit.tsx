@@ -431,7 +431,6 @@ export function AcademyUnit() {
       setRunReport(report);
       setLastRunSource(draftCode);
       setActiveWorkspaceTab("results");
-      setNotice(report.message);
     } catch (error: any) {
       setRunReport({
         supported: true,
@@ -451,7 +450,6 @@ export function AcademyUnit() {
       });
       setLastRunSource(draftCode);
       setActiveWorkspaceTab("results");
-      setNotice(error?.message || "An error occurred during execution.");
     } finally {
       setRunLoading(false);
     }
@@ -463,7 +461,7 @@ export function AcademyUnit() {
       <div className="mb-8 flex flex-col gap-4">
         <Link
           to={`/academy/course/${course.id}`}
-          className="inline-flex items-center gap-2 border-2 border-text-main bg-surface px-4 py-2 text-xs font-bold uppercase tracking-widest font-mono shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] transition-all text-text-main"
+          className="self-start inline-flex items-center gap-2 border-2 border-text-main bg-surface px-4 py-2 text-xs font-bold uppercase tracking-widest font-mono shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] transition-all text-text-main"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={2} />
           BACK TO COURSE
@@ -510,6 +508,108 @@ export function AcademyUnit() {
 
       {isPractice && (
         <div className="flex w-full flex-col gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <SidebarPanel
+              title="Lab Configuration"
+              accent="bg-surface"
+              headerText="text-text-main"
+              footer={practiceModeText(unit)}
+            >
+              <div className="space-y-0">
+                <ProfileRow
+                  label="Test Cases"
+                  value={String(unit.tests.length)}
+                />
+                <ProfileRow label="Hints" value={String(unit.hints.length)} />
+                <ProfileRow label="Language" value={unit.language || "None"} />
+                <ProfileRow
+                  label="Build Type"
+                  value={unit.build_type || "Standard"}
+                />
+              </div>
+            </SidebarPanel>
+
+            <SidebarPanel
+              title={currentModule?.title || "Module"}
+              accent="bg-surface"
+              headerText="text-text-main"
+              footer={
+                currentModule
+                  ? `${currentModuleCompleted}/${currentModuleUnits.length} lessons completed`
+                  : "No module info"
+              }
+            >
+              <div className="mt-4 flex flex-col gap-2 max-h-[160px] overflow-y-auto pr-2">
+                {currentModuleUnits.map((routeUnit) => {
+                  const done = isAcademyV2UnitCompleted(
+                    progress.state.completedLessons,
+                    course.id,
+                    routeUnit.id,
+                  );
+                  const locked = isUnitLocked(
+                    progress.state.completedLessons,
+                    course.id,
+                    flatCourseUnits,
+                    routeUnit.id,
+                  );
+                  const current = routeUnit.id === unit.id;
+
+                  return (
+                    <button
+                      key={routeUnit.id}
+                      type="button"
+                      disabled={locked}
+                      onClick={() =>
+                        !locked &&
+                        navigate(`/academy/unit/${course.id}/${routeUnit.id}`)
+                      }
+                      className={`flex w-full items-center gap-3 border-2 p-2 text-left transition-all ${
+                        current
+                          ? "border-primary bg-primary/5 shadow-[2px_2px_0_0_#000]"
+                          : locked
+                            ? "cursor-not-allowed border-text-main bg-main-bg opacity-60"
+                            : done
+                              ? "border-text-main bg-surface hover:bg-main-bg hover:shadow-[2px_2px_0_0_#000]"
+                              : "border-text-main bg-surface hover:-translate-y-0.5 hover:border-primary/50 hover:bg-main-bg hover:shadow-[2px_2px_0_0_#000]"
+                      }`}
+                    >
+                      <div
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center border-2 ${
+                          current
+                            ? "border-primary bg-primary text-main-bg shadow-[2px_2px_0_0_#000]"
+                            : done
+                              ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600"
+                              : locked
+                                ? "border-text-main bg-surface text-text-muted"
+                                : routeUnit.section === "practice"
+                                  ? "border-text-main bg-surface text-text-main shadow-[2px_2px_0_0_#000]"
+                                  : "border-text-main bg-surface text-text-main shadow-[2px_2px_0_0_#000]"
+                        }`}
+                      >
+                        {locked ? (
+                          <Lock className="h-3 w-3" strokeWidth={2} />
+                        ) : done ? (
+                          <CheckCircle2 className="h-3 w-3" strokeWidth={2} />
+                        ) : routeUnit.section === "practice" ? (
+                          <Code2 className="h-3 w-3" strokeWidth={2} />
+                        ) : (
+                          <BookOpen className="h-3 w-3" strokeWidth={2} />
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div
+                          className={`truncate text-[10px] font-bold uppercase tracking-wider ${current ? "text-primary" : "text-text-main"}`}
+                        >
+                          {routeUnit.title}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </SidebarPanel>
+          </div>
+
           <section className="flex flex-col border-2 border-text-main bg-surface shadow-[8px_8px_0_0_#000]">
             <div className="mb-4 flex items-center gap-2 border-b-2 border-text-main bg-main-bg pb-3 p-5">
               <div className="border-2 border-text-main bg-primary text-main-bg px-2 py-1 text-[10px] font-bold uppercase tracking-widest shadow-[2px_2px_0_0_#000]">
@@ -575,37 +675,6 @@ export function AcademyUnit() {
                   {renderMd(unit.content_md)}
                 </div>
               </section>
-
-              {next_unit && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    navigate(`/academy/unit/${course.id}/${next_unit.id}`)
-                  }
-                  className="group flex w-full items-center justify-between gap-4 border-2 border-text-main bg-surface p-6 text-left shadow-[4px_4px_0_0_#000] transition-all hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0_0_#000]"
-                >
-                  <div className="min-w-0">
-                    <div className="mb-2 inline-block border-2 border-text-main bg-main-bg px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-text-muted">
-                      Up Next
-                    </div>
-                    <h3 className="truncate font-heading text-xl font-bold uppercase text-text-main sm:text-2xl group-hover:text-primary transition-colors">
-                      {next_unit.title}
-                    </h3>
-                    <p className="mt-2 text-sm font-mono leading-relaxed text-text-muted">
-                      {next_unit.section === "practice"
-                        ? "Next step is a practical lab to apply what you just learned."
-                        : "Continue with the next reading unit."}
-                    </p>
-                  </div>
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-text-main bg-main-bg shadow-[2px_2px_0_0_#000] transition-transform group-hover:-rotate-12 group-hover:text-primary group-hover:border-primary">
-                    <ChevronRight
-                      className="h-6 w-6"
-                      strokeWidth={3}
-                      aria-hidden="true"
-                    />
-                  </div>
-                </button>
-              )}
             </>
           ) : (
             <>
@@ -729,6 +798,7 @@ export function AcademyUnit() {
                 </div>
 
                 <div className="flex-1 flex flex-col min-h-[600px] overflow-auto">
+                  {activeWorkspaceTab === "editor" && (
                     <div className="flex-1 flex flex-col h-full min-h-[700px]">
                       <CodeEditorPane
                         value={draftCode}
@@ -737,6 +807,7 @@ export function AcademyUnit() {
                         placeholder="Start typing your solution here..."
                       />
                     </div>
+                  )}
 
                   {activeWorkspaceTab === "results" && runnerSupported && (
                     <div className="flex-1 flex flex-col min-h-[700px]">
@@ -883,7 +954,7 @@ export function AcademyUnit() {
         <aside
           className={`space-y-8 ${isPractice ? "flex flex-col gap-6 xl:order-2" : "xl:sticky xl:top-24 xl:self-start"}`}
         >
-          {!isPractice && outline.length > 0 ? (
+          {!isPractice && outline.length > 0 && (
             <SidebarPanel
               title="Table of Contents"
               accent="bg-surface"
@@ -905,7 +976,9 @@ export function AcademyUnit() {
                 ))}
               </div>
             </SidebarPanel>
-          ) : (
+          )}
+
+          {!isPractice && outline.length === 0 && (
             <SidebarPanel
               title="Lab Configuration"
               accent="bg-surface"
@@ -927,7 +1000,8 @@ export function AcademyUnit() {
             </SidebarPanel>
           )}
 
-          <SidebarPanel
+          {!isPractice && (
+            <SidebarPanel
             title={currentModule?.title || "Module"}
             accent="bg-surface"
             headerText="text-text-main"
@@ -1006,6 +1080,47 @@ export function AcademyUnit() {
               })}
             </div>
           </SidebarPanel>
+          )}
+
+          {isPractice && showHintsPanel && unit.hints && unit.hints.length > 0 && (
+            <SidebarPanel
+              title="Hints"
+              accent="bg-surface"
+              headerText="text-text-main"
+            >
+              <div className="space-y-4 font-mono text-sm max-h-[400px] overflow-y-auto">
+                {unit.hints.map((hint, i) => (
+                  <div key={i} className="border-l-4 border-amber-500 pl-4 py-1">
+                    <span className="font-bold uppercase text-[10px] text-amber-700 block mb-1">Hint {i + 1}</span>
+                    <div className="markdown-body bg-transparent">
+                      {renderMd(hint)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </SidebarPanel>
+          )}
+
+          {isPractice && showSolutionPanel && unit.solution && (
+            <SidebarPanel
+              title="Solution"
+              accent="bg-surface"
+              headerText="text-text-main"
+            >
+              <div className="font-mono text-sm space-y-4">
+                <div className="markdown-body bg-transparent">
+                  {renderMd(unit.solution)}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setDraftCode(unit.solution!)}
+                  className="mt-4 border-2 border-emerald-600 bg-emerald-500 text-white px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-[2px_2px_0_0_#059669] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#059669] transition-all w-full"
+                >
+                  Apply Solution
+                </button>
+              </div>
+            </SidebarPanel>
+          )}
         </aside>
       </div>
 
